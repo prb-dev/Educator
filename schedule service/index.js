@@ -17,7 +17,7 @@ mongoose
 const app = express();
 
 app.listen(3000, () => {
-  console.log("learner service is running on port 3000");
+  console.log("schedule service is running on port 3000");
 });
 
 app.use("/schedule", scheduleRouter);
