@@ -1,0 +1,36 @@
+version: '3'
+services:
+
+  schedule:
+    build:
+      dockerfile: DockerFile
+      context: ./schedule
+    container_name: schedule
+    ports:
+      - "8001:8001"
+    restart: always
+    volumes:
+      - .:/app
+      - /app/schedule/node_modules
+
+  test:
+    build:
+      dockerfile: DockerFile
+      context: ./test
+    container_name: test
+    ports:
+      - "8002:8002"
+    restart: always
+    volumes:
+      - .:/app
+      - /app/test/node_modules
+
+  nginx:
+    build:
+      dockerfile: DockerFile
+      context: ./proxy
+    ports:
+      - "80:80"
+    depends_on:
+      - schedule
+      - test
