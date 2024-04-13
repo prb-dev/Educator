@@ -2,7 +2,7 @@ import express from "express";
 import mongoose from "mongoose";
 import dotenv from "dotenv";
 import scheduleRouter from "./routes/schedule.route.js";
-import { createChannel } from "./utils/message passing/rabbit_mq.js";
+import { RPCObserver } from "./utils/message passing/rabbit_mq.js";
 
 dotenv.config();
 
@@ -15,13 +15,13 @@ mongoose
     console.log(error);
   });
 
-export const channel = await createChannel();
-
 const app = express();
 
-app.listen(3000, () => {
-  console.log("schedule service is running on port 3000");
+app.listen(8000, () => {
+  console.log("schedule service is running on port 8000");
 });
+
+RPCObserver(process.env.SCHEDULE_QUEUE_NAME);
 
 app.use(express.json());
 
