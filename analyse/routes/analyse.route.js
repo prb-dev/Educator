@@ -1,8 +1,8 @@
 import express from "express";
-import { studentProgress } from "../controllers/analyse.controller.js";
+import { studentCourseProgress } from "../controllers/analyse.controller.js";
 
 const router = express.Router();
 
-router.post("/", studentProgress);
+router.get("/:uid/:cid", studentCourseProgress);
 
 export default router;

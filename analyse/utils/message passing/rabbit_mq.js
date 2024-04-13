@@ -1,42 +1,81 @@
 import amqplib from "amqplib";
+import Service from "../../services/service.js";
+import { v4 as uuidv4 } from "uuid";
 
-export const createChannel = async () => {
-  try {
-    const connection = await amqplib.connect(process.env.RABBITMQ_URI);
-    const channel = await connection.createChannel();
+let connection = null;
+const service = new Service();
 
-    await channel.assertExchange(process.env.EXCHANGE_NAME, "direct", false);
-
-    return channel;
-  } catch (error) {
-    console.log(error);
+const getChannel = async () => {
+  if (!connection) {
+    connection = await amqplib.connect(process.env.RABBITMQ_URI);
   }
+
+  return await connection.createChannel();
 };
 
-export const publishMessage = async (channel, bind_key, message) => {
-  try {
-    await channel.publish(
-      process.env.EXCHANGE_NAME,
-      bind_key,
-      Buffer.from(message)
+export const RPCObserver = async (QUEUE_NAME) => {
+  const channel = await getChannel();
+
+  await channel.assertQueue(QUEUE_NAME, {
+    durable: false,
+  });
+
+  channel.prefetch(1);
+  channel.consume(
+    QUEUE_NAME,
+    async (msg) => {
+      if (msg.content) {
+        const payload = JSON.parse(msg.content.toString());
+        const response = await service.eventHandler(payload);
+
+        channel.sendToQueue(
+          msg.properties.replyTo,
+          Buffer.from(JSON.stringify(response)),
+          {
+            correlationId: msg.properties.correlationId,
+          }
+        );
+
+        channel.ack(msg);
+      }
+    },
+    {
+      noAck: false,
+    }
+  );
+};
+
+const requestData = async (QUEUE_NAME, payload, uuid) => {
+  const channel = await getChannel();
+
+  const q = await channel.assertQueue("", {
+    exclusive: true,
+  });
+
+  channel.sendToQueue(QUEUE_NAME, Buffer.from(JSON.stringify(payload)), {
+    replyTo: q.queue,
+    correlationId: uuid,
+  });
+
+  return new Promise((resolve, reject) => {
+    channel.consume(
+      q.queue,
+      (msg) => {
+        if (msg.properties.correlationId === uuid) {
+          resolve(JSON.parse(msg.content.toString()));
+        } else {
+          reject("Data not found");
+        }
+      },
+      {
+        noAck: true,
+      }
     );
-  } catch (error) {
-    console.log(error);
-  }
+  });
 };
 
-export const subscribeMessage = async (channel, service) => {
-  try {
-    const appQueue = await channel.assertQueue(process.env.QUEUE_NAME);
-    channel.bindQueue(appQueue.queue, process.env.EXCHANGE_NAME, process.env.TEST_BINDING_KEY);
-    
-    channel.consume(appQueue.queue, (data) => {
-      console.log("received data");
-      console.log(data.content.toString());
-      channel.ack(data);
-    });
+export const RPCRequest = async (QUEUE_NAME, payload) => {
+  const uuid = uuidv4();
 
-  } catch (error) {
-    console.log(error);
-  }
+  return await requestData(QUEUE_NAME, payload, uuid);
 };

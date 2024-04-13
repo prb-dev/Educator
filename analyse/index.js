@@ -2,10 +2,6 @@ import express from "express";
 import mongoose from "mongoose";
 import dotenv from "dotenv";
 import analyseRouter from "./routes/analyse.route.js";
-import {
-  createChannel,
-  subscribeMessage,
-} from "./utils/message passing/rabbit_mq.js";
 
 dotenv.config();
 
@@ -17,9 +13,6 @@ mongoose
   .catch((error) => {
     console.log(error);
   });
-
-export const channel = await createChannel();
-subscribeMessage(channel);
 
 const app = express();
 
