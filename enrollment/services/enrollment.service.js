@@ -86,7 +86,8 @@ class EnrollmentService {
 
     user.courses.push({
       course: cid,
-      completedSteps: 0,
+      completedLectureCount: 0,
+      completedQuizCount: 0,
     });
 
     requestPayload = {

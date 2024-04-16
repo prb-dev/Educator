@@ -4,9 +4,7 @@ import { v4 as uuidv4 } from "uuid";
 let connection = null;
 
 export const getChannel = async () => {
-  if (!connection) {
-    connection = await amqplib.connect(process.env.RABBITMQ_URI);
-  }
+  connection = await amqplib.connect(process.env.RABBITMQ_URI);
 
   return await connection.createChannel();
 };
