@@ -6,9 +6,9 @@ let connection = null;
 const service = new Service();
 
 const getChannel = async () => {
-  if (!connection) {
+  
     connection = await amqplib.connect(process.env.RABBITMQ_URI);
-  }
+  
 
   return await connection.createChannel();
 };

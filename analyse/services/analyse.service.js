@@ -9,11 +9,13 @@ class AnalyseService {
 
     const user = await RPCRequest(process.env.USER_QUEUE_NAME, requestPayload);
 
-    let completedSteps;
+    let completedLectureCount;
+    let completedQuizCount;
 
     user.courses.forEach((c) => {
       if (c.course == cid) {
-        completedSteps = c.completedSteps;
+        completedLectureCount = c.completedLectureCount;
+        completedQuizCount = c.completedQuizCount;
       }
     });
 
@@ -27,12 +29,34 @@ class AnalyseService {
       requestPayload
     );
 
-    let progress = 0;
+    let progress;
 
-    if (course.totalSteps > 0)
-      progress = Math.ceil((completedSteps / course.totalSteps) * 100);
+    if (course.steps) {
+      progress = course.steps;
+      progress.completedLectureCount = completedLectureCount;
+      progress.completedQuizCount = completedQuizCount;
+      progress.totalSteps = course.steps.lectureCount + course.steps.quizCount;
+      progress.overallProgress =
+        (completedLectureCount + completedQuizCount) / progress.totalSteps;
 
-    return { progress, message: `${progress}%` };
+      progress.lectureProgress =
+        completedLectureCount / course.steps.lectureCount;
+
+      progress.quizProgress = completedQuizCount / course.steps.quizCount;
+    }
+
+    return progress;
+  }
+
+  async getTotalStudents(cid) {
+    let requestPayload = {
+      event: "GET_STUDENT_COUNT",
+      cid,
+    };
+
+    const count = await RPCRequest(process.env.USER_QUEUE_NAME, requestPayload);
+
+    return count;
   }
 }
 
