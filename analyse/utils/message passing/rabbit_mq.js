@@ -1,12 +1,14 @@
 import amqplib from "amqplib";
-import ScheduleService from "../../services/schedule.service.js";
+import Service from "../../services/service.js";
 import { v4 as uuidv4 } from "uuid";
 
 let connection = null;
-const service = new ScheduleService();
+const service = new Service();
 
-export const getChannel = async () => {
-  connection = await amqplib.connect(process.env.RABBITMQ_URI);
+const getChannel = async () => {
+  
+    connection = await amqplib.connect(process.env.RABBITMQ_URI);
+  
 
   return await connection.createChannel();
 };

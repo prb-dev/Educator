@@ -7,7 +7,7 @@ services:
       context: ./schedule
     container_name: schedule
     ports:
-      - "8001:8001"
+      - "8000:8000"
     restart: always
     volumes:
       - .:/app
@@ -19,11 +19,35 @@ services:
       context: ./test
     container_name: test
     ports:
-      - "8002:8002"
+      - "8001:8001"
     restart: always
     volumes:
       - .:/app
       - /app/test/node_modules
+
+  analyse:
+    build:
+      dockerfile: DockerFile
+      context: ./analyse
+    container_name: analyse
+    ports:
+      - "8003:8003"
+    restart: always
+    volumes:
+      - .:/app
+      - /app/analyse/node_modules
+
+  enrollment:
+    build:
+      dockerfile: DockerFile
+      context: ./enrollment
+    container_name: enrollment
+    ports:
+      - "8002:8002"
+    restart: always
+    volumes:
+      - .:/app
+      - /app/enrollment/node_modules
 
   nginx:
     build:

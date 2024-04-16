@@ -1,8 +1,7 @@
 import express from "express";
 import mongoose from "mongoose";
 import dotenv from "dotenv";
-import scheduleRouter from "./routes/schedule.route.js";
-import { RPCObserver } from "./utils/message passing/rabbit_mq.js";
+import enrollmentRouter from "./routes/enrollment.route.js";
 import cors from "cors";
 
 dotenv.config();
@@ -18,16 +17,14 @@ mongoose
 
 const app = express();
 
-app.listen(8000, () => {
-  console.log("schedule service is running on port 8000");
+app.listen(8002, () => {
+  console.log("enrollment service is running on port 8002");
 });
-
-RPCObserver(process.env.SCHEDULE_QUEUE_NAME);
 
 app.use(express.json());
 app.use(cors());
 
-app.use("/schedule", scheduleRouter);
+app.use("/enrollment", enrollmentRouter);
 
 app.use((error, req, res, next) => {
   const statusCode = error.statusCode || 500;

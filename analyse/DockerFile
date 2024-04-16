@@ -1,6 +1,6 @@
 FROM node
 
-WORKDIR app/schedule
+WORKDIR app/analyse
 
 COPY package.json .
 
@@ -8,6 +8,6 @@ RUN npm install
 
 COPY . .
 
-EXPOSE 8000
+EXPOSE 8003
 
 CMD [ "npm", "start" ]
