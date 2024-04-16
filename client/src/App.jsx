@@ -1,35 +1,38 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import "./index.css";
+import Dashboard from "./pages/instructor/Dashboard.jsx";
+import Sidebar from "./components/Sidebar.jsx";
+import { Layout } from "antd";
+import AppHeader from "./components/AppHeader.jsx";
+import Students from "./pages/instructor/Students.jsx";
+import AddSchedule from "./pages/instructor/schedule/AddSchedule.jsx";
+import DeleteSchedule from "./pages/instructor/schedule/DeleteSchedule.jsx";
+import EditSchedule from "./pages/instructor/schedule/EditSchedule.jsx";
 
 function App() {
-  const [count, setCount] = useState(0)
+  const instructor = true;
 
   return (
-    <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+    <BrowserRouter>
+      {instructor && (
+        <Layout className="app">
+          <AppHeader />
+          <Layout>
+            <Sidebar />
+            <Layout style={{ backgroundColor: "rgb(20, 27, 45)" }}>
+              <Routes>
+                <Route path="/" element={<Dashboard />} />
+                <Route path="/students" element={<Students />} />
+                <Route path="/schedules/add" element={<AddSchedule />} />
+                <Route path="/schedules/edit" element={<EditSchedule />} />
+                <Route path="/schedules/delete" element={<DeleteSchedule />} />
+              </Routes>
+            </Layout>
+          </Layout>
+        </Layout>
+      )}
+    </BrowserRouter>
+  );
 }
 
-export default App
+export default App;
