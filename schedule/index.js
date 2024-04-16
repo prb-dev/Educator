@@ -3,6 +3,7 @@ import mongoose from "mongoose";
 import dotenv from "dotenv";
 import scheduleRouter from "./routes/schedule.route.js";
 import { RPCObserver } from "./utils/message passing/rabbit_mq.js";
+import cors from "cors";
 
 dotenv.config();
 
@@ -24,6 +25,7 @@ app.listen(8000, () => {
 RPCObserver(process.env.SCHEDULE_QUEUE_NAME);
 
 app.use(express.json());
+app.use(cors());
 
 app.use("/schedule", scheduleRouter);
 

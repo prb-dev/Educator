@@ -6,9 +6,7 @@ let connection = null;
 const service = new ScheduleService();
 
 export const getChannel = async () => {
-  if (!connection) {
-    connection = await amqplib.connect(process.env.RABBITMQ_URI);
-  }
+  connection = await amqplib.connect(process.env.RABBITMQ_URI);
 
   return await connection.createChannel();
 };
