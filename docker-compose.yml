@@ -49,6 +49,18 @@ services:
       - .:/app
       - /app/enrollment/node_modules
 
+  payment:
+    build:
+      dockerfile: DockerFile
+      context: ./paymentService
+    container_name: payment
+    ports:
+      - "8006:8006"
+    restart: always
+    volumes:
+      - .:/app
+      - /app/paymentService/node_modules
+
   nginx:
     build:
       dockerfile: DockerFile
