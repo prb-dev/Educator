@@ -19,9 +19,9 @@ app.use(bodyParser.json());
 // Use the payment routes
 app.use("/payment", paymentRoutes);
 
-port = process.env.PORT || 8021;
+port = process.env.PORT || 8006;
 app.listen(port, () => {
-  console.log(`Server is running on port ${port}`);
+  console.log(`payment service is running on port ${port}`);
 });
 app.get("/", (req, res) => {
   res.send("Hello, World!");
