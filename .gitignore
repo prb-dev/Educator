@@ -25,3 +25,9 @@ dist-ssr
 
 .env
 test
+
+# Ignore node_modules directory
+node_modules/
+
+# Ignore .env files
+*.env
