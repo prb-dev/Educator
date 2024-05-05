@@ -23,6 +23,6 @@ port = process.env.PORT || 8006;
 app.listen(port, () => {
   console.log(`payment service is running on port ${port}`);
 });
-app.get("/", (req, res) => {
+app.get("/payment", (req, res) => {
   res.send("Hello, World!");
 });
