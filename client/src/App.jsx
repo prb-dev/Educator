@@ -8,9 +8,12 @@ import Students from "./pages/instructor/Students.jsx";
 import AddSchedule from "./pages/instructor/schedule/AddSchedule.jsx";
 import DeleteSchedule from "./pages/instructor/schedule/DeleteSchedule.jsx";
 import EditSchedule from "./pages/instructor/schedule/EditSchedule.jsx";
+import Home from "./pages/student/Home.jsx";
+import NavBar from "./components/student/NavBar.jsx";
 
 function App() {
-  const instructor = true;
+  const instructor = false;
+  const student = true;
 
   return (
     <BrowserRouter>
@@ -26,6 +29,19 @@ function App() {
                 <Route path="/schedules/add" element={<AddSchedule />} />
                 <Route path="/schedules/edit" element={<EditSchedule />} />
                 <Route path="/schedules/delete" element={<DeleteSchedule />} />
+              </Routes>
+            </Layout>
+          </Layout>
+        </Layout>
+      )}
+      {student && (
+        <Layout className="app">
+          <NavBar />
+          <Layout>
+            {/* <Sidebar /> */}
+            <Layout style={{ backgroundColor: "rgb(20, 27, 45)" }}>
+              <Routes>
+                <Route path="/" element={<Home />} />
               </Routes>
             </Layout>
           </Layout>
