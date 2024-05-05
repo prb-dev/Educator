@@ -1,9 +1,8 @@
-import express from "express";
-
-import mongoose from "mongoose";
-import dotenv from "dotenv";
-import enrollmentRouter from "./routes/UserManagement.route.js";
-import cors from "cors";
+const express = require('express');
+const mongoose = require('mongoose');
+const dotenv = require('dotenv');
+const cors = require('cors');
+const UserManagementRouter = require('./routes/UserManagement.route');
 
 dotenv.config();
 
@@ -18,14 +17,14 @@ mongoose
 
 const app = express();
 
-app.listen(8009, () => {
-  console.log("enrollment service is running on port 8002");
+app.listen(8008, () => {
+  console.log("usermanagement service is running on port 8008");
 });
 
 app.use(express.json());
 app.use(cors());
 
-app.use("/enrollment", enrollmentRouter);
+app.use("/UserManagement", UserManagementRouter);
 
 app.use((error, req, res, next) => {
   const statusCode = error.statusCode || 500;
