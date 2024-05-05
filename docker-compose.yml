@@ -61,6 +61,18 @@ services:
       - .:/app
       - /app/paymentService/node_modules
 
+  notification:
+    build:
+      dockerfile: DockerFile
+      context: ./notificationService
+    container_name: notification
+    ports:
+      - "8007:8007"
+    restart: always
+    volumes:
+      - .:/app
+      - /app/notificationService/node_modules
+
   nginx:
     build:
       dockerfile: DockerFile
@@ -73,3 +85,4 @@ services:
       - enrollment
       - analyse
       - payment
+      - notification
