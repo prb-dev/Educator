@@ -70,3 +70,6 @@ services:
     depends_on:
       - schedule
       - test
+      - enrollment
+      - analyse
+      - payment
