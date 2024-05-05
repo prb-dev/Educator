@@ -73,6 +73,18 @@ services:
       - .:/app
       - /app/notificationService/node_modules
 
+  user:
+    build:
+      dockerfile: DockerFile
+      context: ./Usermanagement
+    container_name: user
+    ports:
+      - "8008:8008"
+    restart: always
+    volumes:
+      - .:/app
+      - /app/Usermanagement/node_modules
+
   nginx:
     build:
       dockerfile: DockerFile
@@ -86,3 +98,4 @@ services:
       - analyse
       - payment
       - notification
+      - user
