@@ -1,0 +1,13 @@
+FROM node
+
+WORKDIR app/UserMangement
+
+COPY package.json .
+
+RUN npm install
+
+COPY . .
+
+EXPOSE  
+
+CMD [ "npm", "start" ]
