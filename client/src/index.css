@@ -8,8 +8,8 @@
 * {
   font-family: "Source Sans Pro", sans-serif;
 }
+
 html,
-body,
 #root,
 .app,
 .content {
@@ -20,7 +20,7 @@ body,
 
 .app {
   display: flex;
-  position: fixed;
+  /* position: fixed; */
 }
 
 .content {

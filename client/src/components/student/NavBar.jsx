@@ -18,8 +18,16 @@ import InputBase from "@mui/material/InputBase";
 
 //import Images
 import Logo from "../../assets/logo.png";
+import { Link } from "react-router-dom";
 
-const pages = ["Courses", "Offers", "Contact", "About"];
+// const pages = ["Courses", "Offers", "Contact", "About"];
+const pages = [
+  { name: "Home", link: "/" },
+  { name: "Courses", link: "/courses" },
+  { name: "Offers", link: "/offers" },
+  { name: "Contact", link: "/contact" },
+  { name: "About", link: "/about" },
+];
 const settings = ["Profile", "Account", "Dashboard", "Logout"];
 
 function NavBar() {
@@ -65,8 +73,8 @@ function NavBar() {
     },
   }));
 
-  const LogoImage = styled("img")(({ theme }) => ({
-    height: "20px",
+  const LogoImage = styled("img")(() => ({
+    height: "30px",
     display: "block",
     marginRight: "1rem",
     marginBottom: "0.25rem",
@@ -90,7 +98,7 @@ function NavBar() {
   };
 
   return (
-    <AppBar position="static">
+    <AppBar position="fixed">
       <Container maxWidth="xl">
         <Toolbar disableGutters>
           {/* <AdbIcon sx={{ display: { xs: "none", md: "flex" }, mr: 1 }} /> */}
@@ -101,7 +109,10 @@ function NavBar() {
             // className="alignCenter mr-5"
           />
 
-          <Box sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }}>
+          <Box
+            sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }}
+            className="mt-5"
+          >
             <IconButton
               size="large"
               aria-label="account of current user"
@@ -130,17 +141,25 @@ function NavBar() {
                 display: { xs: "block", md: "none" },
               }}
             >
-              {pages.map((page) => (
+              {/* {pages.map((page) => (
                 <MenuItem key={page} onClick={handleCloseNavMenu}>
                   <Typography textAlign="center">{page}</Typography>
                 </MenuItem>
+              ))} */}
+
+              {pages.map((page) => (
+                <Link to={page.link} key={page.name}>
+                  <MenuItem onClick={handleCloseNavMenu}>
+                    <Typography textAlign="center">{page.name}</Typography>
+                  </MenuItem>
+                </Link>
               ))}
             </Menu>
           </Box>
           {/* <AdbIcon sx={{ display: { xs: "flex", md: "none" }, mr: 1 }} />
            */}
           <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
-            {pages.map((page) => (
+            {/* {pages.map((page) => (
               <Button
                 key={page}
                 onClick={handleCloseNavMenu}
@@ -148,6 +167,16 @@ function NavBar() {
               >
                 {page}
               </Button>
+            ))} */}
+            {pages.map((page) => (
+              <Link to={page.link} key={page.name}>
+                <Button
+                  onClick={handleCloseNavMenu}
+                  sx={{ my: 2, color: "white", display: "block" }}
+                >
+                  {page.name}
+                </Button>
+              </Link>
             ))}
           </Box>
           <Search>
