@@ -5,6 +5,7 @@ const cors = require("cors");
 
 //import routes
 const courseRoutes = require("./routes/courseRoutes");
+const { RPCObserver } = require("./utils/message passing/rabbit_mq");
 
 // MongoDB connection
 require("./config/db");
@@ -23,6 +24,8 @@ port = process.env.PORT || 8004;
 app.listen(port, () => {
   console.log(`course service is running on port ${port}`);
 });
+
+RPCObserver(process.env.COURSE_QUEUE_NAME);
 
 app.get("/course/test", (req, res) => {
   res.send("Hello, World!");
