@@ -1,6 +1,6 @@
 FROM node
 
-WORKDIR app/UserMangement
+WORKDIR app/Usermanagement
 
 COPY package.json .
 
