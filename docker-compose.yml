@@ -85,6 +85,18 @@ services:
       - .:/app
       - /app/Usermanagement/node_modules
 
+  course:
+    build:
+      dockerfile: DockerFile
+      context: ./courseService
+    container_name: course
+    ports:
+      - "8004:8004"
+    restart: always
+    volumes:
+      - .:/app
+      - /app/courseService/node_modules
+
   nginx:
     build:
       dockerfile: DockerFile
@@ -99,3 +111,4 @@ services:
       - payment
       - notification
       - user
+      - course

@@ -17,13 +17,13 @@ app.use(cors());
 app.use(bodyParser.json());
 
 // Use the course routes
-app.use('/courses', courseRoutes);
+app.use('/course', courseRoutes);
 
-port = process.env.PORT || 8007;
+port = process.env.PORT || 8004;
 app.listen(port, () => {
-  console.log(`Course management service is running on port ${port}`);
+  console.log(`course service is running on port ${port}`);
 });
 
-app.get("/", (req, res) => {
+app.get("/course/test", (req, res) => {
   res.send("Hello, World!");
 });
