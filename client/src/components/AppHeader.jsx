@@ -8,13 +8,10 @@ const { Sider, Header, Content } = Layout;
 export default function AppHeader() {
   return (
     <Header
-      className="flex items-center text-white justify-between"
+      className="flex items-center text-white justify-between pl-5"
       style={{ backgroundColor: "#141b2d" }}
     >
       <h1 className="text-lg">Instructor panal</h1>
-      <IconButton>
-        <LightModeOutlinedIcon className="text-white" />
-      </IconButton>
     </Header>
   );
 }

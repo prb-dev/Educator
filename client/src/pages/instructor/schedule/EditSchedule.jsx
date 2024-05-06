@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import FormControl from "@mui/material/FormControl";
 import AddCircleOutlineOutlinedIcon from "@mui/icons-material/AddCircleOutlineOutlined";
-import SelectEL from "../../../components/form elements/SelectEL";
 import Paper from "@mui/material/Paper";
 import Grid from "@mui/material/Grid";
 import PaperContent from "../../../components/PaperContent";
@@ -20,55 +19,56 @@ import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import moment from "moment";
 import DoneOutlinedIcon from "@mui/icons-material/DoneOutlined";
+import { FormHelperText, InputLabel, MenuItem, Select } from "@mui/material";
 
-export default function EditSchedule() {
+export default function AddSchedule() {
   const Item = styled(Paper)(() => ({
-    backgroundColor: "rgb(20, 27, 45)",
+    backgroundColor: "transparent",
     display: "flex",
     flexDirection: "column",
     alignItems: "center",
     boxShadow: "none",
     overflow: "hidden",
-    padding: 10,
-    color: "white",
+    borderRadius: 10,
   }));
 
-  // fetch("http://localhost:80/schedule/id")
-  //   .then((res) => res.json())
-  //   .then((data) => setSchedule(data));
-
   const [name_of_day, setName_of_day] = useState();
-  const [course, setCourse] = useState();
+  const [course, setCourse] = useState("");
   const [days, setDays] = useState([
     {
-      name_of_day: "monday",
+      name_of_day: "Monday",
       sessions: [],
     },
     {
-      name_of_day: "tuesday",
+      name_of_day: "Tuesday",
       sessions: [],
     },
     {
-      name_of_day: "wednesday",
+      name_of_day: "Wednesday",
       sessions: [],
     },
     {
-      name_of_day: "thursday",
+      name_of_day: "Thursday",
       sessions: [],
     },
     {
-      name_of_day: "friday",
+      name_of_day: "Friday",
       sessions: [],
     },
     {
-      name_of_day: "saturday",
+      name_of_day: "Saturday",
       sessions: [],
     },
     {
-      name_of_day: "sunday",
+      name_of_day: "Sunday",
       sessions: [],
     },
   ]);
+
+  const handleCourseChange = (event) => {
+    console.log(event.target.value);
+    setCourse(event.target.value);
+  };
 
   const [open, setOpen] = useState(false);
   const [schedule, setSchedule] = useState({
@@ -90,7 +90,6 @@ export default function EditSchedule() {
     transform: "translate(-50%, -50%)",
     width: 400,
     bgcolor: "background.paper",
-    border: "2px solid #000",
     borderRadius: 5,
     boxShadow: 24,
     p: 4,
@@ -99,6 +98,10 @@ export default function EditSchedule() {
   useEffect(() => {
     setSchedule((s) => ({ ...s, days }));
   }, [days]);
+
+  useEffect(() => {
+    setSchedule((s) => ({ ...s, course }));
+  }, [course]);
 
   const addSession = (e) => {
     e.preventDefault();
@@ -152,49 +155,55 @@ export default function EditSchedule() {
     //   .then((res) => res.json())
     //   .then((data) => console.log(data))
     //   .catch((e) => console.log(e));
+    console.log(schedule);
   };
 
   return (
-    <main className="content text-white flex flex-col">
+    <main className="w-full h-[100vh] bg-gradient-to-r from-slate-200 to-white text-slate-700 flex flex-col p-5 overflow-y-scroll">
       <h1 className="text-2xl m-5 min-w-fit">
         Edit Schedules <CalendarMonthOutlinedIcon />
       </h1>
       <div className="flex justify-between items-center">
-        <FormControl
-          sx={{
-            ".MuiInputLabel-root, .MuiSelect-outlined": {
-              color: "white",
-            },
-            "&, .MuiSvgIcon-root, .css-14s5rfu-MuiFormLabel-root-MuiInputLabel-root":
-              { color: "white" },
-          }}
-        >
-          <SelectEL label="Course" helper="Selcet a course" minWidth={120} />
+        <FormControl>
+          <InputLabel id="course-label">Course</InputLabel>
+          <Select
+            labelId="course-label"
+            id="course-select"
+            sx={{
+              minWidth: 120,
+            }}
+            value={course}
+            onChange={handleCourseChange}
+            autoWidth
+            label="Course"
+          >
+            <MenuItem value="{10}">Twenty</MenuItem>
+            <MenuItem value="{21}">Twenty one</MenuItem>
+            <MenuItem value="{22}">Twenty one and a half</MenuItem>
+          </Select>
+          <FormHelperText>Select a course</FormHelperText>
         </FormControl>
         <Button
-          sx={{
-            color: "white",
-            borderColor: "white",
-          }}
           variant="outlined"
-          endIcon={<DoneOutlinedIcon />}
+          startIcon={<DoneOutlinedIcon />}
           onClick={createSchedule}
         >
-          Update
+          Done
         </Button>
       </div>
+
       <div className="mt-10">
         <Grid container spacing={10}>
           {days.map((day, i) => (
             <Grid key={i} item sm={3} md={6}>
-              <h1 className="text-lg font-semibold mb-5">
-                {day.name_of_day}
-                <IconButton onClick={() => handleOpen(day.name_of_day)}>
-                  <AddCircleOutlineOutlinedIcon className="text-white" />
-                </IconButton>
-              </h1>
+              <Item className="p-5 border border-slate-500">
+                <h1 className="text-lg font-semibold mb-5 self-start text-slate-700">
+                  {day.name_of_day}
+                  <IconButton onClick={() => handleOpen(day.name_of_day)}>
+                    <AddCircleOutlineOutlinedIcon className="text-slate-700" />
+                  </IconButton>
+                </h1>
 
-              <Item>
                 {day.sessions.map((ses, j) => (
                   <PaperContent
                     key={j}
@@ -250,13 +259,8 @@ export default function EditSchedule() {
 
               <Button
                 sx={{
-                  color: "black",
-                  borderColor: "black",
                   width: 5,
                   alignSelf: "end",
-                  ":hover": {
-                    borderColor: "black",
-                  },
                 }}
                 variant="outlined"
                 type="submit"

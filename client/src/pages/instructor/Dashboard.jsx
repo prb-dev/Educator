@@ -15,33 +15,27 @@ export default function Dashboard() {
     .then((data) => setUserCount(data));
 
   return (
-    <main
-      className="content flex flex-wrap"
-      style={{ backgroundColor: "#001529" }}
-    >
+    <main className="w-full h-[100vh] flex flex-wrap justify-between bg-gradient-to-r from-slate-200 to-white pt-10 overflow-y-scroll">
       <AdminCard
         title="Total Students"
         desc={userCount}
-        icon={<PersonAddOutlinedIcon style={{ color: "#4cceac" }} />}
+        icon={<PersonAddOutlinedIcon className="text-green-600" />}
       />
       <AdminCard
         title="Total Revenue"
         desc="1500"
-        icon={<AttachMoneyOutlinedIcon style={{ color: "#4cceac" }} />}
+        icon={<AttachMoneyOutlinedIcon className="text-green-600" />}
       />
       <AdminCard
         title="Total Courses"
         desc="4"
-        icon={<SchoolOutlinedIcon style={{ color: "#4cceac" }} />}
+        icon={<SchoolOutlinedIcon className="text-green-600" />}
       />
       <AdminCard
         title="Test title"
         desc="Test descc"
-        icon={<PersonAddOutlinedIcon style={{ color: "#4cceac" }} />}
+        icon={<PersonAddOutlinedIcon className="text-green-600" />}
       />
-      <Linegraph />
-      <Piechart />
-      <Barchart />
     </main>
   );
 }
