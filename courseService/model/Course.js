@@ -5,10 +5,12 @@ const questionSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  options: [{
-    type: String,
-    required: true,
-  }],
+  options: [
+    {
+      type: String,
+      required: true,
+    },
+  ],
   correctAnswerIndex: {
     type: Number,
     required: true,
@@ -25,13 +27,19 @@ const courseSchema = new mongoose.Schema({
     required: true,
     unique: true,
   },
-  scheduledTime: {
-    type: Date,
-    required: true,
+  schedule: {
+    type: mongoose.Schema.Types.ObjectId,
   },
-  lecturer: {
-    type: String,
-    required: true,
+  steps: {
+    lectureCount: {
+      type: Number,
+    },
+    quizCount: {
+      type: Number,
+    },
+  },
+  instructor: {
+    type: mongoose.Schema.Types.ObjectId,
   },
   price: {
     type: Number,

@@ -1,9 +1,13 @@
 const Course = require("../model/Course");
 
+const CourseService = require("../services/course.service.js");
+
+const service = new CourseService();
+
 // Controller functions for CRUD operations
 exports.getAllCourses = async (req, res) => {
   try {
-    const courses = await Course.find();
+    const courses = await service.getAllCourses();
     res.json(courses);
   } catch (err) {
     res.status(500).json({ message: err.message });
@@ -12,7 +16,7 @@ exports.getAllCourses = async (req, res) => {
 
 exports.getCourseById = async (req, res) => {
   try {
-    const course = await Course.findById(req.params.id);
+    const course = await service.getCourseById(req.params.id);
     res.json(course);
   } catch (err) {
     res.status(500).json({ message: err.message });
@@ -20,9 +24,8 @@ exports.getCourseById = async (req, res) => {
 };
 
 exports.createCourse = async (req, res) => {
-  const course = new Course(req.body);
   try {
-    const newCourse = await course.save();
+    const newCourse = await service.createCourse(req.body);
     res.status(201).json(newCourse);
   } catch (err) {
     res.status(400).json({ message: err.message });
@@ -31,7 +34,7 @@ exports.createCourse = async (req, res) => {
 
 exports.updateCourse = async (req, res) => {
   try {
-    await Course.findByIdAndUpdate(req.params.id, req.body);
+    await service.updateCourse(req.params.id, req.body);
     res.json({ message: "Course updated successfully" });
   } catch (err) {
     res.status(500).json({ message: err.message });
@@ -40,7 +43,7 @@ exports.updateCourse = async (req, res) => {
 
 exports.deleteCourse = async (req, res) => {
   try {
-    await Course.findByIdAndDelete(req.params.id);
+    await service.deleteCourse(req.params.id);
     res.json({ message: "Course deleted successfully" });
   } catch (err) {
     res.status(500).json({ message: err.message });
@@ -49,31 +52,7 @@ exports.deleteCourse = async (req, res) => {
 
 exports.answerQuiz = async (req, res) => {
   try {
-    const courseId = req.params.id;
-    const course = await Course.findById(courseId);
-
-    // Retrieve questions and answers from request body
-    const { answers } = req.body;
-
-    if (!answers || !Array.isArray(answers)) {
-      return res.status(400).json({ message: "Invalid answers format" });
-    }
-
-    let score = 0;
-
-    // Loop through each answer and compare with correct answer
-    for (let i = 0; i < answers.length; i++) {
-      const questionIndex = answers[i].questionIndex;
-      const selectedAnswerIndex = answers[i].selectedAnswerIndex;
-
-      if (
-        course.questions[questionIndex] &&
-        course.questions[questionIndex].correctAnswerIndex ===
-          selectedAnswerIndex
-      ) {
-        score++;
-      }
-    }
+    const score = await service.answerQuiz(req.params.id, req.body);
 
     res.json({ score });
   } catch (err) {
@@ -83,19 +62,7 @@ exports.answerQuiz = async (req, res) => {
 
 exports.uploadLectureNotes = async (req, res) => {
   try {
-    const courseId = req.params.id;
-    const course = await Course.findById(courseId);
-
-    // Upload file to Cloudinary
-    const result = await cloudinary.uploader.upload(req.file.buffer, {
-      resource_type: "raw",
-      folder: "lecture_notes", // You can customize the folder name
-      public_id: `${courseId}_lecture_notes`, // Public ID of the file
-    });
-
-    // Save lecture notes URL to the course
-    course.lectureNotesUrl = result.secure_url;
-    await course.save();
+    const result = await service.uploadLectureNotes(req.params.id, req.file.buffer);
 
     res.json({ lectureNotesUrl: result.secure_url });
   } catch (err) {

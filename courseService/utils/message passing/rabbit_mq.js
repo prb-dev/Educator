@@ -1,9 +1,9 @@
 const amqplib = require("amqplib");
 const { v4: uuidv4 } = require("uuid");
-// const EmailService = require("../../services/service.js");
+const CourseService = require("../../services/course.service.js");
 
 let connection = null;
-// const service = new EmailService();
+const service = new CourseService();
 
 exports.getChannel = async () => {
   connection = await amqplib.connect(process.env.RABBITMQ_URI);
@@ -24,7 +24,7 @@ exports.RPCObserver = async (QUEUE_NAME) => {
     async (msg) => {
       if (msg.content) {
         const payload = JSON.parse(msg.content.toString());
-        // const response = await service.eventHandler(payload);
+        const response = await service.eventHandler(payload);
 
         channel.sendToQueue(
           msg.properties.replyTo,
