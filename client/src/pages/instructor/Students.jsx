@@ -114,7 +114,7 @@ export default function Students() {
       renderCell: () => {
         return (
           <IconButton>
-            <VisibilityOutlinedIcon className="text-white" />
+            <VisibilityOutlinedIcon />
           </IconButton>
         );
       },
@@ -122,11 +122,8 @@ export default function Students() {
   ];
 
   return (
-    <main
-      className="content text-white p-5"
-      style={{ backgroundColor: "#001529" }}
-    >
-      <h1 className="text-white text-2xl m-5 mb-6">
+    <main className="w-full h-[100vh] bg-gradient-to-r from-slate-200 to-white p-5 overflow-y-scroll">
+      <h1 className="text-slate-700 text-2xl m-5 mb-6">
         Monitor learner progress <ShowChartOutlinedIcon />
       </h1>
       <div className="cursor-pointer">
@@ -136,9 +133,10 @@ export default function Students() {
           sx={{
             margin: 5,
             "&, [class^=MuiDataGrid], .MuiTablePagination-root, .MuiButtonBase-root, .MuiSvgIcon-root":
-              { border: "none", color: "white" },
+              { border: "none" },
             ".MuiDataGrid-columnHeaders": {
-              backgroundColor: "#1677ff",
+              backgroundColor: "rgb(15 23 42)",
+              color: "rgb(226 232 240)",
             },
           }}
         />

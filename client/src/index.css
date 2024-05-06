@@ -10,42 +10,7 @@
 }
 html,
 body,
-#root,
-.app,
-.content {
+#root {
   height: 100%;
   width: 100%;
-  background-color: rgb(20, 27, 45);
-}
-
-.app {
-  display: flex;
-  position: fixed;
-}
-
-.content {
-  overflow-y: scroll;
-  background-color: #001529;
-  padding: 20px;
-  border-top-left-radius: 20px;
-}
-
-::-webkit-scrollbar {
-  width: 10px;
-}
-
-/* Track */
-::-webkit-scrollbar-track {
-  background: #001529;
-}
-
-/* Handle */
-::-webkit-scrollbar-thumb {
-  border-radius: 100vh;
-  background: #002140;
-}
-
-/* Handle on hover */
-::-webkit-scrollbar-thumb:hover {
-  background: #555;
 }
