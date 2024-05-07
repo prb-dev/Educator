@@ -100,6 +100,14 @@ class EnrollmentService {
       requestPayload
     );
 
+    requestPayload = {
+      event: "ENROLL_SUCCESS",
+      receiverEmail: updatedUser.email,
+      courseName: cid,
+    };
+
+    RPCRequest(process.env.NOTIFICATION_QUEUE_NAME, requestPayload)
+
     return updatedUser;
   }
 

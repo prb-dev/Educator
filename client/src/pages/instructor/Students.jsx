@@ -1,6 +1,6 @@
 import React from "react";
 import { DataGrid } from "@mui/x-data-grid";
-import { IconButton } from "@mui/material";
+import { Box, IconButton } from "@mui/material";
 import VisibilityOutlinedIcon from "@mui/icons-material/VisibilityOutlined";
 import ShowChartOutlinedIcon from "@mui/icons-material/ShowChartOutlined";
 
@@ -70,14 +70,6 @@ export default function Students() {
       phone: "(222)444-5555",
       access: "user",
     },
-    {
-      id: 9,
-      name: "Harvey Roxie",
-      email: "harveyroxie@gmail.com",
-      age: 65,
-      phone: "(444)555-6239",
-      access: "admin",
-    },
   ];
 
   const columns = [
@@ -114,7 +106,7 @@ export default function Students() {
       renderCell: () => {
         return (
           <IconButton>
-            <VisibilityOutlinedIcon className="text-white" />
+            <VisibilityOutlinedIcon />
           </IconButton>
         );
       },
@@ -122,26 +114,34 @@ export default function Students() {
   ];
 
   return (
-    <main
-      className="content text-white p-5"
-      style={{ backgroundColor: "#001529" }}
-    >
-      <h1 className="text-white text-2xl m-5 mb-6">
+    <main className="w-full h-[100vh] bg-gradient-to-r from-slate-200 to-white p-5 overflow-y-scroll">
+      <h1 className="text-slate-700 text-2xl m-5 mb-6">
         Monitor learner progress <ShowChartOutlinedIcon />
       </h1>
       <div className="cursor-pointer">
-        <DataGrid
-          rows={data}
-          columns={columns}
-          sx={{
-            margin: 5,
-            "&, [class^=MuiDataGrid], .MuiTablePagination-root, .MuiButtonBase-root, .MuiSvgIcon-root":
-              { border: "none", color: "white" },
-            ".MuiDataGrid-columnHeaders": {
-              backgroundColor: "#1677ff",
-            },
-          }}
-        />
+        <Box sx={{ height: "100%", width: "100%", overflow: "hidden" }}>
+          <DataGrid
+            sx={{
+              "&, [class^=MuiDataGrid], .MuiTablePagination-root, .MuiButtonBase-root, .MuiSvgIcon-root":
+                { border: "none" },
+              ".MuiDataGrid-columnHeaders": {
+                backgroundColor: "rgb(15 23 42)",
+                color: "rgb(226 232 240)",
+              },
+            }}
+            rows={data}
+            columns={columns}
+            initialState={{
+              pagination: {
+                paginationModel: {
+                  pageSize: 10,
+                },
+              },
+            }}
+            pageSizeOptions={[10]}
+            disableRowSelectionOnClick
+          />
+        </Box>
       </div>
     </main>
   );
