@@ -2,7 +2,7 @@
 
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
-const User = require('../models/User');
+ 
 
 // Sign up
 exports.signUp = async (req, res) => {
@@ -50,7 +50,20 @@ exports.countUsersInCourse = async (req, res) => {
 };
 
 
+exports.getUserByCID = async (req, res) => {
+  try {
+      const courseId = req.params.courseId;
+      const users = await User.find({ 'courses.name': courseId });
+      if (users.length === 0) {
+          return res.status(404).json({ message: 'Users not found for the specified course' });
+      }
+      res.status(200).json({ users });
+  } catch (error) {
+      res.status(500).json({ message: 'Error getting users', error: error.message });
+  }
+};
 
+ 
 
 exports.updateUserByID = async (req, res) => {
   try {
