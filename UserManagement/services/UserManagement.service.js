@@ -1,48 +1,38 @@
 const axios = require('axios');
+const User = require("../models/User");
 
-class UserMangementService {
-  constructor(baseUrl) {
-    this.baseUrl = baseUrl;
-  }
-
-   
-
-  async updateUser(userId, userData) {
+class UserManagementService {
+  async updateUserByID(userId, userData) {
     try {
-      const response = await axios.put(`${this.baseUrl}/users/${userId}`, userData);
-      return response.data;
+      const updatedUser = await User.findByIdAndUpdate(userId, userData, {
+        new: true,
+      });
+      return updatedUser;
     } catch (error) {
-      throw new Error(`Error updating user: ${error.message}`);
+      throw new Error(`Error updating user by ID: ${error.message}`);
     }
   }
 
-  async getUserById(userId) {
+  async getUserByID(userId) {
     try {
-      const response = await axios.get(`${this.baseUrl}/users/${userId}`);
-      return response.data;
+      const user = await User.findById(userId);
+      if (!user) {
+        throw new Error('User not found');
+      }
+      return user;
     } catch (error) {
-      throw new Error(`Error getting user: ${error.message}`);
+      throw new Error(`Error getting user by ID: ${error.message}`);
     }
   }
 
-   
   async countUsersInCourse(courseID) {
     try {
-      const response = await axios.get(`${this.baseUrl}/users/count-in-course/${courseID}`);
-      return response.data.count;
+      const count = await User.countDocuments({ 'courses.name': courseID });
+      return count;
     } catch (error) {
       throw new Error(`Error counting users in course: ${error.message}`);
     }
   }
-
-  async getAllUsers() {
-    try {
-      const response = await axios.get(`${this.baseUrl}/users`);
-      return response.data;
-    } catch (error) {
-      throw new Error(`Error getting all users: ${error.message}`);
-    }
-  }
 }
 
-module.exports = UserMangementService;
+module.exports = UserManagementService;
