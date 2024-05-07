@@ -1,3 +1,4 @@
+import { RPCRequest } from "../utils/message passing/rabbit_mq.js";
 import Schedule from "../models/schedule.model.js";
 
 class ScheduleService {
@@ -5,6 +6,14 @@ class ScheduleService {
     const { course, days } = schedule;
     const newSchedule = new Schedule({ course, days });
     await newSchedule.save();
+
+    let requestPayload = {
+      event: "SAVE_SCHEDULE",
+      cid: course,
+      sid: newSchedule._id,
+    };
+
+    RPCRequest(process.env.COURSE_QUEUE_NAME, requestPayload);
 
     return newSchedule;
   }
