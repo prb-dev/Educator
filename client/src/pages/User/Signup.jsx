@@ -21,8 +21,8 @@ function Signup() {
       console.log(response.data); 
     } catch (error) {
       console.error('Error signing up:', error.message);
-    }
-  };
+    };
+}
   return (
     <div className=' mt-40 h-[1000px]'>
 
