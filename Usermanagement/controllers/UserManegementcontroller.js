@@ -42,7 +42,7 @@ exports.logIn = async (req, res) => {
 exports.countUsersInCourse = async (req, res) => {
   try {
     const courseId = req.params.courseId;
-    const count = await User.countDocuments({ 'courses.name': courseId });
+    const count = await User.countDocuments({ 'courses.course': courseId });
     res.status(200).json({ count });
   } catch (error) {
     res.status(500).json({ message: 'Error counting users in course', error: error.message });
