@@ -18,6 +18,14 @@ class UserManagementService {
     
  
   }
+
+  async getUserByCid(user){
+    const user = await User.findOne({cid: user.course._id});
+    return user;
+
+  }
+
+
   async countUsersInCourse(courseID) {
  
       const count = await User.countDocuments({ 'courses.course': courseID });

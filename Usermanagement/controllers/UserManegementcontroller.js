@@ -50,7 +50,19 @@ exports.countUsersInCourse = async (req, res) => {
 };
 
 
-
+exports.getUserByCID = async (req, res) => {
+  try {
+      const courseId = req.params.courseId;
+      const user = await User.findOne({ 'courses.name': courseId })
+      if (!user) {
+          return res.status(404).json({ message: 'User not found' });
+      }
+      res.status(200).json({ user });
+  } catch (error) {
+      res.status(500).json({ message: 'Error getting user', error: error.message });
+  }
+};
+ 
 
 exports.updateUserByID = async (req, res) => {
   try {
