@@ -2,14 +2,14 @@
 
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
-const User = require("../models/User");
+const User = require('../models/User');
 
 // Sign up
 exports.signUp = async (req, res) => {
     try {
-        const { username, password,Email, role } = req.body;
+        const { username  , password,Email, role } = req.body;
         const hashedPassword = await bcrypt.hash(password, 10);
-        const user = await User.create({ username, password: hashedPassword, Email, role });
+        const user = await User.create({ username  , password: hashedPassword, Email, role });
         
         res.status(201).json({ message: 'User created successfully', user });
       } catch (error) {
@@ -29,11 +29,64 @@ exports.logIn = async (req, res) => {
         if (!isPasswordValid) {
           return res.status(401).json({ message: 'Invalid username or password' });
         }
-        const token = jwt.sign({ username: user.username , role: user.role, Email: user.Email , UserID: user.UserID  
+        const token = jwt.sign({ username: user.username ,   role: user.role, Email: user.Email , UserID: user.UserID  
             }, process.env.JWT_SECRET);
         res.status(200).json({ message: 'Logged in successfully', token });
       } catch (error) {
         res.status(500).json({ message: 'Error logging in', error: error.message });
+  }
+};
+
+ 
+
+exports.countUsersInCourse = async (req, res) => {
+  try {
+    const courseId = req.params.courseId;
+    const count = await User.countDocuments({ 'courses.course': courseId });
+    res.status(200).json({ count });
+  } catch (error) {
+    res.status(500).json({ message: 'Error counting users in course', error: error.message });
+  }
+};
+
+
+
+
+exports.updateUserByID = async (req, res) => {
+  try {
+    const userId = req.params.userId;
+    const updateFields = req.body;
+
+    const allowedFields = ['username', 'courses', 'password', 'Email', 'role'];
+    const filteredUpdateFields = Object.keys(updateFields)
+      .filter(key => allowedFields.includes(key))
+      .reduce((obj, key) => {
+        obj[key] = updateFields[key];
+        return obj;
+      }, {});
+
+    const updatedUser = await User.findByIdAndUpdate(userId, filteredUpdateFields, { new: true });
+    if (!updatedUser) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    res.status(200).json({ user: updatedUser });
+  } catch (error) {
+    res.status(500).json({ message: 'Error updating user', error: error.message });
+  }
+};
+
+
+exports.getUserByID = async (req, res) => {
+  try {
+      const userId = req.params.userId;
+      const user = await User.findById(userId);
+      if (!user) {
+          return res.status(404).json({ message: 'User not found' });
+      }
+      res.status(200).json({ user });
+  } catch (error) {
+      res.status(500).json({ message: 'Error getting user', error: error.message });
   }
 };
  
