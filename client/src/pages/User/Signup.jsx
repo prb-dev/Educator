@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
- 
+import axios from 'axios';
+
 
 function Signup() {
   // State hooks for form inputs
@@ -11,7 +12,7 @@ function Signup() {
   const handleSubmit = async (event) => {
     event.preventDefault();
     try {
-      const response = await axios.post('/api/signup', {
+      const response = await axios.post('/api/UserManagement/signup', {
         username,
         password,
         Email: email,
@@ -23,32 +24,32 @@ function Signup() {
     }
   };
   return (
-    <div className=' mt-40'>
+    <div className=' mt-40 h-[1000px]'>
 
-      <h1 className="text-5xl mb-10 text-center text-gray-100">Signup</h1>
+      <h1 className="text-5xl mb-10 text-center ">Signup</h1>
       <form onSubmit={handleSubmit} className="text-center">
         <input
           type="text"
           placeholder="Username"
           value={username}
           onChange={(e) => setUsername(e.target.value)}
-          className="block mx-auto w-1/3 py-2 px-4 rounded-md mb-4 bg-transparent border border-white text-white"
+          className="block mx-auto w-1/3 py-2 px-4 rounded-md mb-4 bg-transparent border  text-black"
         />
         <input
           type="password"
           placeholder="Password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
-          className="block mx-auto w-1/3 py-2 px-4 rounded-md mb-4 bg-transparent border border-white text-white"
+          className="block mx-auto w-1/3 py-2 px-4 rounded-md mb-4 bg-transparent border   text-black"
         />
         <input
           type="email"
           placeholder="Email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
-          className="block mx-auto w-1/3 py-2 px-4 rounded-md mb-4 bg-transparent border border-white text-white"
+          className="block mx-auto w-1/3 py-2 px-4 rounded-md mb-4 bg-transparent border text-black"
         />
-         <div className="block mx-auto w-1/3 py-2 px-4 rounded-md mb-4 bg-transparent border border-white text-white">
+         <div className="block mx-auto w-1/3 py-2 px-4 rounded-md mb-4 bg-transparent border border-white text">
           <label className="mr-4">
             <input
               type="radio"

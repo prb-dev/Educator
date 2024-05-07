@@ -19,9 +19,9 @@ class UserManagementService {
  
   }
 
-  async getUserByCid(user){
-    const user = await User.findOne({cid: user.course._id});
-    return user;
+  async getUserByCid(users){
+    const users = await User.find({ 'courses.course': courseId });
+    return users;
 
   }
 
