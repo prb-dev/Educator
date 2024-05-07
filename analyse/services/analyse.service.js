@@ -1,4 +1,4 @@
-import { RPCRequest } from "../../enrollment/utils/message passing/rabbit_mq.js";
+import { RPCRequest } from "../utils/message passing/rabbit_mq.js";
 
 class AnalyseService {
   async studentCourseProgress(uid, cid) {
