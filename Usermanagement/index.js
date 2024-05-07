@@ -24,7 +24,7 @@ app.listen(8008, () => {
 app.use(express.json());
 app.use(cors());
 
-app.use("/UserManagement", UserManagementRouter);
+app.use("/api/UserManagement", UserManagementRouter);
 
 app.use((error, req, res, next) => {
   const statusCode = error.statusCode || 500;
