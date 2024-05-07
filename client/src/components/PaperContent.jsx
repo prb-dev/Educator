@@ -4,7 +4,7 @@ import IconButton from "@mui/material/IconButton";
 
 export default function PaperContent({ startAt, finishAt, lecture, deleteFn }) {
   return (
-    <main className="flex flex-col m-5 p-3 text-white w-full h-full bg-slate-800 rounded-md relative">
+    <main className="flex flex-col m-5 p-3 text-slate-700 w-full h-full bg-slate-700/5 rounded-md relative">
       <p>
         {startAt} - {finishAt}
       </p>
@@ -18,7 +18,7 @@ export default function PaperContent({ startAt, finishAt, lecture, deleteFn }) {
         }}
         onClick={deleteFn}
       >
-        <DeleteOutlineOutlinedIcon className="text-white" />
+        <DeleteOutlineOutlinedIcon className="text-slate-700" />
       </IconButton>
     </main>
   );

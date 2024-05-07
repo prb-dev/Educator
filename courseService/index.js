@@ -4,7 +4,8 @@ const bodyParser = require("body-parser");
 const cors = require("cors");
 
 //import routes
-const paymentRoutes = require("./routes/PaymentRoute");
+const courseRoutes = require("./routes/courseRoutes");
+const { RPCObserver } = require("./utils/message passing/rabbit_mq");
 
 // MongoDB connection
 require("./config/db");
@@ -16,13 +17,16 @@ app.use(cors());
 // app.use(express.json());
 app.use(bodyParser.json());
 
-// Use the payment routes
-app.use("/payment", paymentRoutes);
+// Use the course routes
+app.use('/course', courseRoutes);
 
-port = process.env.PORT || 8006;
+port = process.env.PORT || 8004;
 app.listen(port, () => {
-  console.log(`payment service is running on port ${port}`);
+  console.log(`course service is running on port ${port}`);
 });
-app.get("/payment", (req, res) => {
+
+RPCObserver(process.env.COURSE_QUEUE_NAME);
+
+app.get("/course/test", (req, res) => {
   res.send("Hello, World!");
 });

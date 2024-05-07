@@ -23,10 +23,9 @@ function App() {
     <BrowserRouter>
       {instructor && (
         <Layout className="app">
-          <AppHeader />
           <Layout>
             <Sidebar />
-            <Layout style={{ backgroundColor: "rgb(20, 27, 45)" }}>
+            <Layout>
               <Routes>
                 <Route path="/" element={<Dashboard />} />
                 <Route path="/students" element={<Students />} />

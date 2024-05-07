@@ -61,6 +61,42 @@ services:
       - .:/app
       - /app/paymentService/node_modules
 
+  notification:
+    build:
+      dockerfile: DockerFile
+      context: ./notificationService
+    container_name: notification
+    ports:
+      - "8007:8007"
+    restart: always
+    volumes:
+      - .:/app
+      - /app/notificationService/node_modules
+
+  user:
+    build:
+      dockerfile: DockerFile
+      context: ./Usermanagement
+    container_name: user
+    ports:
+      - "8008:8008"
+    restart: always
+    volumes:
+      - .:/app
+      - /app/Usermanagement/node_modules
+
+  course:
+    build:
+      dockerfile: DockerFile
+      context: ./courseService
+    container_name: course
+    ports:
+      - "8004:8004"
+    restart: always
+    volumes:
+      - .:/app
+      - /app/courseService/node_modules
+
   nginx:
     build:
       dockerfile: DockerFile
@@ -70,3 +106,9 @@ services:
     depends_on:
       - schedule
       - test
+      - enrollment
+      - analyse
+      - payment
+      - notification
+      - user
+      - course

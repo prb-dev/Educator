@@ -47,28 +47,28 @@ export default function Sidebar() {
   ];
 
   return (
-    <main style={{ backgroundColor: "#141b2d" }}>
-      <br />
+    <main className="bg-gradient-to-l from-slate-200 to-white">
       <br />
       <br />
       <br />
       <br />
       <Sider
-        className="text-white"
         collapsible
         collapsedWidth={70}
         breakpoint="sm"
-        style={{ backgroundColor: "#141b2d" }}
+        style={{
+          background: "transparent"
+        }}
       >
         <Menu
           style={{
-            width: "100%",
             borderRight: 0,
-            backgroundColor: "#141b2d",
+            backgroundColor: "transparent",
           }}
           defaultSelectedKeys={["Dashboard"]}
           items={items}
-          theme="dark"
+          theme="light"
+          mode="inline"
         />
       </Sider>
     </main>
