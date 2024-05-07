@@ -1,6 +1,6 @@
 import React from "react";
 import { DataGrid } from "@mui/x-data-grid";
-import { IconButton } from "@mui/material";
+import { Box, IconButton } from "@mui/material";
 import VisibilityOutlinedIcon from "@mui/icons-material/VisibilityOutlined";
 import ShowChartOutlinedIcon from "@mui/icons-material/ShowChartOutlined";
 
@@ -70,14 +70,6 @@ export default function Students() {
       phone: "(222)444-5555",
       access: "user",
     },
-    {
-      id: 9,
-      name: "Harvey Roxie",
-      email: "harveyroxie@gmail.com",
-      age: 65,
-      phone: "(444)555-6239",
-      access: "admin",
-    },
   ];
 
   const columns = [
@@ -127,19 +119,29 @@ export default function Students() {
         Monitor learner progress <ShowChartOutlinedIcon />
       </h1>
       <div className="cursor-pointer">
-        <DataGrid
-          rows={data}
-          columns={columns}
-          sx={{
-            margin: 5,
-            "&, [class^=MuiDataGrid], .MuiTablePagination-root, .MuiButtonBase-root, .MuiSvgIcon-root":
-              { border: "none" },
-            ".MuiDataGrid-columnHeaders": {
-              backgroundColor: "rgb(15 23 42)",
-              color: "rgb(226 232 240)",
-            },
-          }}
-        />
+        <Box sx={{ height: "100%", width: "100%", overflow: "hidden" }}>
+          <DataGrid
+            sx={{
+              "&, [class^=MuiDataGrid], .MuiTablePagination-root, .MuiButtonBase-root, .MuiSvgIcon-root":
+                { border: "none" },
+              ".MuiDataGrid-columnHeaders": {
+                backgroundColor: "rgb(15 23 42)",
+                color: "rgb(226 232 240)",
+              },
+            }}
+            rows={data}
+            columns={columns}
+            initialState={{
+              pagination: {
+                paginationModel: {
+                  pageSize: 10,
+                },
+              },
+            }}
+            pageSizeOptions={[10]}
+            disableRowSelectionOnClick
+          />
+        </Box>
       </div>
     </main>
   );
