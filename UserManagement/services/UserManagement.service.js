@@ -1,45 +1,48 @@
-import { RPCRequest } from "../utils/message passing/rabbit_mq.js";
-import { customError } from "../utils/error.js";
+const axios = require('axios');
 
-class UserManagementSERVICE {
-  async getUserByID(userID) {
+class UserMangementService {
+  constructor(baseUrl) {
+    this.baseUrl = baseUrl;
+  }
+
+   
+
+  async updateUser(userId, userData) {
     try {
-      const requestPayload = {
-        event: "GET_USER",
-        id: userID,
-      };
-      const user = await RPCRequest(process.env.USER_QUEUE_NAME, requestPayload);
-      return user;
+      const response = await axios.put(`${this.baseUrl}/users/${userId}`, userData);
+      return response.data;
     } catch (error) {
-      throw error; // Rethrow the error for handling at higher levels
+      throw new Error(`Error updating user: ${error.message}`);
     }
   }
 
-  async updateUserByID(userID) {
+  async getUserById(userId) {
     try {
-      const requestPayload = {
-        event: "UPDATE_USER",
-        userID,
-      };
-      const updatedUser = await RPCRequest(process.env.USER_QUEUE_NAME, requestPayload);
-      return updatedUser;
+      const response = await axios.get(`${this.baseUrl}/users/${userId}`);
+      return response.data;
     } catch (error) {
-      throw error; // Rethrow the error for handling at higher levels
+      throw new Error(`Error getting user: ${error.message}`);
     }
   }
 
-  async getUserCount(cid) {
+   
+  async countUsersInCourse(courseID) {
     try {
-      const requestPayload = {
-        event: "GET_USER_COUNT",
-        cid,
-      };
-      const userCount = await RPCRequest(process.env.USER_QUEUE_NAME, requestPayload);
-      return userCount;
+      const response = await axios.get(`${this.baseUrl}/users/count-in-course/${courseID}`);
+      return response.data.count;
     } catch (error) {
-      throw error; // Rethrow the error for handling at higher levels
+      throw new Error(`Error counting users in course: ${error.message}`);
+    }
+  }
+
+  async getAllUsers() {
+    try {
+      const response = await axios.get(`${this.baseUrl}/users`);
+      return response.data;
+    } catch (error) {
+      throw new Error(`Error getting all users: ${error.message}`);
     }
   }
 }
 
-export default UserManagementSERVICE ;
+module.exports = UserMangementService;

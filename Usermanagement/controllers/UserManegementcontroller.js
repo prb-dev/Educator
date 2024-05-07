@@ -37,19 +37,45 @@ exports.logIn = async (req, res) => {
   }
 };
 
-exports.updateUserByID = async (req, res) => {
+ 
+
+exports.countUsersInCourse = async (req, res) => {
   try {
-      const userId = req.params.userId;
-      const updateFields = req.body;
-      const updatedUser = await User.findByIdAndUpdate(username  , password, Email, role );
-      if (!updatedUser) {
-          return res.status(404).json({ message: 'User not found' });
-      }
-      res.status(200).json({ user: updatedUser });
+    const courseId = req.params.courseId;
+    const count = await User.countDocuments({ 'courses.name': courseId });
+    res.status(200).json({ count });
   } catch (error) {
-      res.status(500).json({ message: 'Error updating user', error: error.message });
+    res.status(500).json({ message: 'Error counting users in course', error: error.message });
   }
 };
+
+
+
+
+exports.updateUserByID = async (req, res) => {
+  try {
+    const userId = req.params.userId;
+    const updateFields = req.body;
+
+    const allowedFields = ['username', 'courses', 'password', 'Email', 'role'];
+    const filteredUpdateFields = Object.keys(updateFields)
+      .filter(key => allowedFields.includes(key))
+      .reduce((obj, key) => {
+        obj[key] = updateFields[key];
+        return obj;
+      }, {});
+
+    const updatedUser = await User.findByIdAndUpdate(userId, filteredUpdateFields, { new: true });
+    if (!updatedUser) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    res.status(200).json({ user: updatedUser });
+  } catch (error) {
+    res.status(500).json({ message: 'Error updating user', error: error.message });
+  }
+};
+
 
 exports.getUserByID = async (req, res) => {
   try {
