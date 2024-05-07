@@ -1,7 +1,4 @@
 import React, { useState } from "react";
-import Barchart from "../../components/Barchart";
-import Piechart from "../../components/Piechart";
-import Linegraph from "../../components/Linegraph";
 import AdminCard from "../../components/AdminCard";
 import PersonAddOutlinedIcon from "@mui/icons-material/PersonAddOutlined";
 import AttachMoneyOutlinedIcon from "@mui/icons-material/AttachMoneyOutlined";
