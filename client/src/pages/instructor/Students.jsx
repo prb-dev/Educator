@@ -1,10 +1,10 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { DataGrid } from "@mui/x-data-grid";
 import { Backdrop, Box, Button, Fade, IconButton, Modal } from "@mui/material";
 import MoreVertOutlinedIcon from "@mui/icons-material/MoreVertOutlined";
 import VisibilityOutlinedIcon from "@mui/icons-material/VisibilityOutlined";
 import ShowChartOutlinedIcon from "@mui/icons-material/ShowChartOutlined";
-import { Popover, Progress } from "antd";
+import { Popover, Progress, Spin } from "antd";
 import { useLocation } from "react-router-dom";
 
 export default function Students() {
@@ -12,10 +12,49 @@ export default function Students() {
   const location = useLocation();
   const params = new URLSearchParams(location.search);
   const cname = params.get("course");
+  const cid = params.get("cid");
+  const [students, setStudents] = useState([]);
+  const [lecProg, setLecProg] = useState(0);
+  const [quizProg, setQuizProg] = useState(0);
+  const [overallProg, setOverallProg] = useState(0);
+  const [loading, setLoading] = useState(false);
 
-  const handleClose = () => setOpen(false);
+  useEffect(() => {
+    fetch(`http://localhost:8008/user/getAllstudents/${cid}`)
+      .then((res) => res.json())
+      .then((data) => {
+        data.users.forEach((user, i) => {
+          user.id = i + 1;
+          setStudents((s) => [...s, user]);
+        });
+      })
+      .catch((err) => console.log(err));
+  }, []);
 
-  const handleOpen = () => setOpen(true);
+  const handleClose = () => {
+    setOpen(false);
+    setLecProg(0);
+    setQuizProg(0);
+    setOverallProg(0);
+  };
+
+  const handleOpen = (uid) => {
+    setLoading(true);
+    setOpen(true);
+
+    fetch(`http://localhost:8003/analyse//${uid}/${cid}`)
+      .then((res) => res.json())
+      .then((data) => {
+        setLecProg(Math.ceil(data.lectureProgress * 100));
+        setQuizProg(Math.ceil(data.quizProgress * 100));
+        setOverallProg(Math.ceil(data.overallProgress * 100));
+        setLoading(false);
+      })
+      .catch((err) => {
+        console.log(err);
+        setLoading(false);
+      });
+  };
 
   const style = {
     position: "absolute",
@@ -29,85 +68,18 @@ export default function Students() {
     p: 4,
   };
 
-  const data = [
-    {
-      id: 1,
-      name: "Jon Snow",
-      email: "jonsnow@gmail.com",
-      age: 35,
-      phone: "(665)121-5454",
-      access: "admin",
-    },
-    {
-      id: 2,
-      name: "Cersei Lannister",
-      email: "cerseilannister@gmail.com",
-      age: 42,
-      phone: "(421)314-2288",
-      access: "manager",
-    },
-    {
-      id: 3,
-      name: "Jaime Lannister",
-      email: "jaimelannister@gmail.com",
-      age: 45,
-      phone: "(422)982-6739",
-      access: "user",
-    },
-    {
-      id: 4,
-      name: "Anya Stark",
-      email: "anyastark@gmail.com",
-      age: 16,
-      phone: "(921)425-6742",
-      access: "admin",
-    },
-    {
-      id: 5,
-      name: "Daenerys Targaryen",
-      email: "daenerystargaryen@gmail.com",
-      age: 31,
-      phone: "(421)445-1189",
-      access: "user",
-    },
-    {
-      id: 6,
-      name: "Ever Melisandre",
-      email: "evermelisandre@gmail.com",
-      age: 150,
-      phone: "(232)545-6483",
-      access: "manager",
-    },
-    {
-      id: 7,
-      name: "Ferrara Clifford",
-      email: "ferraraclifford@gmail.com",
-      age: 44,
-      phone: "(543)124-0123",
-      access: "user",
-    },
-    {
-      id: 8,
-      name: "Rossini Frances",
-      email: "rossinifrances@gmail.com",
-      age: 36,
-      phone: "(222)444-5555",
-      access: "user",
-    },
-  ];
-
   const columns = [
     {
       field: "id",
       headerName: "#",
     },
     {
-      field: "name",
+      field: "username",
       headerName: "Name",
       flex: 1,
     },
     {
-      field: "email",
+      field: "Email",
       headerName: "Email",
       flex: 1,
     },
@@ -117,16 +89,16 @@ export default function Students() {
       flex: 1,
     },
     {
-      field: "access",
+      field: "",
       headerName: "Action",
-      renderCell: () => {
+      renderCell: (params) => {
         return (
           <Popover
             trigger="click"
             content={
               <Button
                 variant="text"
-                onClick={handleOpen}
+                onClick={() => handleOpen(params.row._id)}
                 startIcon={<VisibilityOutlinedIcon />}
               >
                 View Progess
@@ -159,8 +131,9 @@ export default function Students() {
                 backgroundColor: "rgb(15 23 42)",
                 color: "rgb(226 232 240)",
               },
+              minHeight: "500px",
             }}
-            rows={data}
+            rows={students}
             columns={columns}
             initialState={{
               pagination: {
@@ -190,23 +163,25 @@ export default function Students() {
       >
         <Fade in={open}>
           <Box sx={style}>
-            <h1 className="text-lg text-slate-700">Student Progess</h1>
+            <Spin spinning={loading}>
+              <h1 className="text-lg text-slate-700">Student Progess</h1>
 
-            <section className="flex justify-between mt-5">
-              <div className="grid place-items-center gap-5">
-                <p className="text-slate-500">Lecture progress </p>
-                <Progress type="circle" percent={50} />
-              </div>
+              <section className="flex justify-between mt-5">
+                <div className="grid place-items-center gap-5">
+                  <p className="text-slate-500">Lecture progress </p>
+                  <Progress type="circle" percent={lecProg} />
+                </div>
 
-              <div className="grid place-items-center gap-5">
-                <p className="text-slate-500">Quiz progress </p>
-                <Progress type="circle" percent={100} />
-              </div>
-            </section>
-            <section className="mt-10">
-              <p className="text-slate-500">Overall progress </p>
-              <Progress type="line" percent={100} />
-            </section>
+                <div className="grid place-items-center gap-5">
+                  <p className="text-slate-500">Quiz progress </p>
+                  <Progress type="circle" percent={quizProg} />
+                </div>
+              </section>
+              <section className="mt-10">
+                <p className="text-slate-500">Overall progress </p>
+                <Progress type="line" percent={overallProg} />
+              </section>
+            </Spin>
           </Box>
         </Fade>
       </Modal>

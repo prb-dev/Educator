@@ -1,15 +1,14 @@
 import amqplib from "amqplib";
-import Service from "../../services/service.js";
+// import Service from "../../services/analyse.service.js";
 import { v4 as uuidv4 } from "uuid";
 
 let connection = null;
-const service = new Service();
+// const service = new Service();
 
 const getChannel = async () => {
-  
+  if (!connection) {
     connection = await amqplib.connect(process.env.RABBITMQ_URI);
-  
-
+  }
   return await connection.createChannel();
 };
 
@@ -26,7 +25,7 @@ export const RPCObserver = async (QUEUE_NAME) => {
     async (msg) => {
       if (msg.content) {
         const payload = JSON.parse(msg.content.toString());
-        const response = await service.eventHandler(payload);
+        // const response = await service.eventHandler(payload);
 
         channel.sendToQueue(
           msg.properties.replyTo,
