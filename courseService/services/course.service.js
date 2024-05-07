@@ -76,6 +76,13 @@ class CourseService {
     return courses;
   }
 
+  async getCoursesByInstructor(iid) {
+    const courses = await Course.find({
+      instructor: iid,
+    });
+    return courses;
+  }
+
   async eventHandler(payload) {
     try {
       switch (payload.event) {
@@ -83,6 +90,8 @@ class CourseService {
           return this.getCourses(payload.cids);
         case "GET_COURSE":
           return this.getCourseById(payload.cid);
+        case "GET_COURSES_BY_INSTRUCTOR":
+          return this.getCoursesByInstructor(payload.iid);
         default:
           break;
       }

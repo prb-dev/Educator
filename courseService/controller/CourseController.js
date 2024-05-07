@@ -62,7 +62,10 @@ exports.answerQuiz = async (req, res) => {
 
 exports.uploadLectureNotes = async (req, res) => {
   try {
-    const result = await service.uploadLectureNotes(req.params.id, req.file.buffer);
+    const result = await service.uploadLectureNotes(
+      req.params.id,
+      req.file.buffer
+    );
 
     res.json({ lectureNotesUrl: result.secure_url });
   } catch (err) {
@@ -105,6 +108,15 @@ exports.uploadLectureVideos = async (req, res) => {
 
     res.json({ lectureVideosUrl: result.secure_url });
   } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+};
+
+exports.getCoursesByInstructor = async (req, res) => {
+  try {
+    const courses = await service.getCoursesByInstructor(req.params.iid);
+    res.json(courses);
+  } catch (error) {
     res.status(500).json({ message: err.message });
   }
 };
