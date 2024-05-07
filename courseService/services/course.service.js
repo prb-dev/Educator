@@ -83,6 +83,20 @@ class CourseService {
     return courses;
   }
 
+  async saveScheduleId(cid, sid) {
+    try {
+      await Course.findByIdAndUpdate(cid, {
+        $set: {
+          schedule: sid,
+        },
+      });
+
+      return "success";
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
   async eventHandler(payload) {
     try {
       switch (payload.event) {
@@ -92,6 +106,8 @@ class CourseService {
           return this.getCourseById(payload.cid);
         case "GET_COURSES_BY_INSTRUCTOR":
           return this.getCoursesByInstructor(payload.iid);
+        case "SAVE_SCHEDULE":
+          return this.saveScheduleId(payload.cid, payload.sid);
         default:
           break;
       }
