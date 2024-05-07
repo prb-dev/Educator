@@ -1,9 +1,7 @@
 import amqplib from "amqplib";
-import ScheduleService from "../../services/schedule.service.js";
 import { v4 as uuidv4 } from "uuid";
 
 let connection = null;
-const service = new ScheduleService();
 
 export const getChannel = async () => {
   connection = await amqplib.connect(process.env.RABBITMQ_URI);
@@ -11,7 +9,7 @@ export const getChannel = async () => {
   return await connection.createChannel();
 };
 
-export const RPCObserver = async (QUEUE_NAME) => {
+export const RPCObserver = async (QUEUE_NAME, service) => {
   const channel = await getChannel();
 
   await channel.assertQueue(QUEUE_NAME, {

@@ -4,6 +4,7 @@ import dotenv from "dotenv";
 import scheduleRouter from "./routes/schedule.route.js";
 import { RPCObserver } from "./utils/message passing/rabbit_mq.js";
 import cors from "cors";
+import ScheduleService from "./services/schedule.service.js";
 
 dotenv.config();
 
@@ -22,7 +23,8 @@ app.listen(8000, () => {
   console.log("schedule service is running on port 8000");
 });
 
-RPCObserver(process.env.SCHEDULE_QUEUE_NAME);
+const service = new ScheduleService();
+RPCObserver(process.env.SCHEDULE_QUEUE_NAME, service);
 
 app.use(express.json());
 app.use(cors());
