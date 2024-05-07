@@ -16,12 +16,11 @@ import PaymentCancel from "./pages/student/PaymentCancel.jsx";
 import SuccessPayment from "./pages/student/SuccessPayment.jsx";
 
 function App() {
-  const instructor = false;
-  const student = true;
+  const instructor = true;
 
   return (
     <BrowserRouter>
-      {instructor && (
+      {instructor ? (
         <Layout className="app">
           <Layout>
             <Sidebar />
@@ -36,8 +35,7 @@ function App() {
             </Layout>
           </Layout>
         </Layout>
-      )}
-      {student && (
+      ) : (
         <Layout className="app">
           <NavBar />
           <Layout>
