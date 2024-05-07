@@ -233,7 +233,7 @@ export default function AddSchedule() {
       >
         <Fade in={open}>
           <Box sx={style}>
-            <form onSubmit={addSession} className="flex flex-col">
+            <form onSubmit={addSession} className="flex flex-col text-slate-700">
               <h1>Create a session</h1>
               <LocalizationProvider dateAdapter={AdapterDayjs}>
                 <DemoContainer components={["MultiInputTimeRangeField"]}>
