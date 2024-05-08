@@ -25,7 +25,7 @@ export default function AddSchedule() {
   const [courses, setCourses] = useState([]);
 
   useEffect(() => {
-    fetch("http://localhost:8004/course/instructor/661b92d6108f66979562bb54")
+    fetch("http://localhost:80/course/instructor/663b48d75d3f69cd1ec16b9c")
       .then((res) => res.json())
       .then((data) => {
         data.forEach((d) => {
@@ -176,7 +176,7 @@ export default function AddSchedule() {
   };
 
   const createSchedule = () => {
-    fetch("http://localhost:8000/schedule/", {
+    fetch("http://localhost:80/schedule/", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

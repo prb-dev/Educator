@@ -25,7 +25,7 @@ export default function EditSchedule() {
   const [courses, setCourses] = useState([]);
 
   useEffect(() => {
-    fetch("http://localhost:8004/course/instructor/661b92d6108f66979562bb54")
+    fetch("http://localhost:80/course/instructor/663b48d75d3f69cd1ec16b9c")
       .then((res) => res.json())
       .then((data) => {
         data.forEach((d) => {
@@ -115,7 +115,7 @@ export default function EditSchedule() {
 
   useEffect(() => {
     if (course)
-      fetch(`http://localhost:8000/schedule/${course}`)
+      fetch(`http://localhost:80/schedule/${course}`)
         .then((res) => res.json())
         .then((data) => {
           setSchedule(data);
@@ -185,7 +185,7 @@ export default function EditSchedule() {
   };
 
   const upateSchedule = () => {
-    fetch(`http://localhost:8000/schedule/${course}`, {
+    fetch(`http://localhost:80/schedule/${course}`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
