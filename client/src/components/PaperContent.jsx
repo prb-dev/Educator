@@ -2,7 +2,18 @@ import React from "react";
 import DeleteOutlineOutlinedIcon from "@mui/icons-material/DeleteOutlineOutlined";
 import IconButton from "@mui/material/IconButton";
 
-export default function PaperContent({ startAt, finishAt, lecture, deleteFn }) {
+export default function PaperContent({
+  startAt,
+  finishAt,
+  lecture,
+  deleteFn,
+  fromEdit,
+}) {
+  if (fromEdit) {
+    startAt = new Date(startAt);
+    finishAt = new Date(finishAt);
+  }
+
   const s = startAt.toLocaleTimeString("en-US", {
     hour: "2-digit",
     minute: "2-digit",

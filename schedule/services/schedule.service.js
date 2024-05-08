@@ -1,5 +1,6 @@
 import { RPCRequest } from "../utils/message passing/rabbit_mq.js";
 import Schedule from "../models/schedule.model.js";
+import { customError } from "../utils/error.js";
 
 class ScheduleService {
   async addSchedule(schedule) {
@@ -18,8 +19,14 @@ class ScheduleService {
     return newSchedule;
   }
 
-  async deleteSchedule(scid) {
+  async deleteSchedule(scid, cid) {
     await Schedule.findByIdAndDelete(scid);
+    let requestPayload = {
+      event: "DELETE_SCHEDULE",
+      cid,
+    };
+
+    RPCRequest(process.env.COURSE_QUEUE_NAME, requestPayload);
     return { message: "Schedule deleted" };
   }
 
@@ -117,6 +124,44 @@ class ScheduleService {
   async getSchedules() {
     const schedules = await Schedule.find();
     return schedules;
+  }
+
+  async getSchedule(cid) {
+    const schedule = await Schedule.findOne({
+      course: cid,
+    });
+    return schedule;
+  }
+
+  async updateSchedule(schedule) {
+    for (let i = 0; i < schedule.days.length; i++) {
+      for (let j = 0; j < schedule.days[i].sessions.length; j++) {
+        const sessionArr = schedule.days[i].sessions;
+        if (sessionArr.length > 1) {
+          sessionArr.sort((a, b) => a.startAt - b.startAt);
+
+          for (let k = 0; k < sessionArr.length; k++) {
+            console.log(sessionArr[k]);
+            if (sessionArr[k].finishAt > sessionArr[k + 1].startAt) {
+              throw customError(
+                400,
+                `${schedule.days[i].name_of_day} sessions are overlapping.`
+              );
+              break;
+            }
+          }
+        }
+      }
+    }
+
+    const updatedSchedule = await Schedule.findByIdAndUpdate(
+      schedule._id,
+      schedule,
+      {
+        new: true,
+      }
+    );
+    return updatedSchedule;
   }
 
   async eventHandler(payload) {

@@ -19,25 +19,25 @@ export default function Dashboard() {
       <AdminCard
         title="Total Students"
         desc={userCount}
-        icon={<PersonAddOutlinedIcon className="text-green-600" />}
+        icon={<PersonAddOutlinedIcon className="text-green-800" />}
       />
       <AdminCard
         title="Total Revenue"
         desc="1500"
-        icon={<AttachMoneyOutlinedIcon className="text-green-600" />}
+        icon={<AttachMoneyOutlinedIcon className="text-green-800" />}
       />
       <AdminCard
         title="Total Courses"
         desc="4"
-        icon={<SchoolOutlinedIcon className="text-green-600" />}
+        icon={<SchoolOutlinedIcon className="text-green-800" />}
       />
       <AdminCard
         title="Test title"
         desc="Test descc"
-        icon={<PersonAddOutlinedIcon className="text-green-600" />}
+        icon={<PersonAddOutlinedIcon className="text-green-800" />}
       />
 
-      <div className="flex gap-20 cursor-pointer m-5 border border-slate-800 bg-slate-800/5 rounded-lg p-5">
+      <div className="flex gap-20 cursor-pointer m-5 shadow-lg shadow-slate-200 rounded-lg p-5">
         <Doughnutchart />
         <Linechart />
       </div>

@@ -13,7 +13,7 @@ class EnrollmentService {
     const cids = [];
 
     user.courses.forEach((c) => {
-      cids.push(c.course);
+      if (!c.completed) cids.push(c.course);
     });
 
     cids.forEach((id) => {
@@ -56,9 +56,18 @@ class EnrollmentService {
           if (innerSchedule.course !== cid) {
             innerSchedule.days.forEach((innerDay) => {
               innerDay.sessions.forEach((innerSession) => {
+                const outerStartAt = outerSession.startAt.split("T")[1];
+                const outerFinishAt = outerSession.finishAt.split("T")[1];
+                const innerStartAt = innerSession.startAt.split("T")[1];
+                const innerFinishAt = innerSession.finishAt.split("T")[1];
+
                 if (
-                  outerSession.finishAt > innerSession.startAt &&
-                  outerSession.startAt < innerSession.finishAt
+                  (outerStartAt <= innerStartAt &&
+                    outerFinishAt >= innerStartAt) ||
+                  (outerStartAt <= innerFinishAt &&
+                    outerFinishAt >= innerFinishAt) ||
+                  (outerStartAt >= innerStartAt &&
+                    outerFinishAt <= innerFinishAt)
                 ) {
                   overlapCid = innerSchedule.course;
                 }
@@ -88,6 +97,7 @@ class EnrollmentService {
       course: cid,
       completedLectureCount: 0,
       completedQuizCount: 0,
+      enrolledDate: new Date(),
     });
 
     requestPayload = {
@@ -106,7 +116,7 @@ class EnrollmentService {
       courseName: cid,
     };
 
-    RPCRequest(process.env.NOTIFICATION_QUEUE_NAME, requestPayload)
+    RPCRequest(process.env.NOTIFICATION_QUEUE_NAME, requestPayload);
 
     return updatedUser;
   }

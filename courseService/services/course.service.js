@@ -97,6 +97,20 @@ class CourseService {
     }
   }
 
+  async deleteScheduleId(cid) {
+    try {
+      await Course.findByIdAndUpdate(cid, {
+        $set: {
+          schedule: null,
+        },
+      });
+
+      return "success";
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
   async eventHandler(payload) {
     try {
       switch (payload.event) {
@@ -108,6 +122,8 @@ class CourseService {
           return this.getCoursesByInstructor(payload.iid);
         case "SAVE_SCHEDULE":
           return this.saveScheduleId(payload.cid, payload.sid);
+        case "DELETE_SCHEDULE":
+          return this.deleteScheduleId(payload.cid);
         default:
           break;
       }

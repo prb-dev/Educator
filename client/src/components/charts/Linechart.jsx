@@ -18,11 +18,11 @@ export default function Linegraph() {
   };
   return (
     <div className="w-fit h-fit">
-      <h1 className="text-slate-700 text-lg">Revenue</h1>
+      <h1 className="text-slate-600 text-lg">Revenue</h1>
 
       <Line
-        width={700}
-        height={400}
+        width={400}
+        height={300}
         data={{
           labels: revenueData.map((data) => data.label),
           datasets: [
@@ -44,6 +44,7 @@ export default function Linegraph() {
               border: {
                 dash: [6],
               },
+              display: false,
             },
             y: {
               border: {

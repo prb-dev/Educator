@@ -5,10 +5,10 @@ import { Bar, Doughnut, Line } from "react-chartjs-2";
 export default function Doughnutchart() {
   return (
     <div>
-      <h1 className="text-slate-700 text-lg">Popularity</h1>
+      <h1 className="text-slate-600 text-lg">Popularity</h1>
       <Doughnut
-        width={200}
-        height={100}
+        width={150}
+        height={400}
         data={{
           labels: ["mon", "tue", "wed"],
           datasets: [
@@ -16,8 +16,6 @@ export default function Doughnutchart() {
               label: "Count",
               data: [3, 6, 9],
               borderWidth: 1,
-              barThickness: 20,
-              borderRadius: 5,
             },
           ],
         }}

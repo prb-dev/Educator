@@ -20,6 +20,7 @@ export default function Students() {
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
+    setStudents([]);
     fetch(`http://localhost:8008/user/getAllstudents/${cid}`)
       .then((res) => res.json())
       .then((data) => {
@@ -29,7 +30,7 @@ export default function Students() {
         });
       })
       .catch((err) => console.log(err));
-  }, []);
+  }, [cname]);
 
   const handleClose = () => {
     setOpen(false);
