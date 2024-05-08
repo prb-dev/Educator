@@ -15,11 +15,11 @@ export const studentCourseProgress = async (req, res, next) => {
   }
 };
 
-export const getTotalStudents = async (req, res, next) => {
+export const getDashboardData = async (req, res, next) => {
   try {
-    const count = await service.getTotalStudents(req.params.cid);
+    const data = await service.getDashboardData(req.params.iid);
 
-    res.status(200).json(count);
+    res.status(200).json(data);
   } catch (error) {
     next(error);
   }

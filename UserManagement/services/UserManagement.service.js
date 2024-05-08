@@ -39,6 +39,8 @@ class UserManagementService {
           return this.updateUserByID(payload.user);
         case "GET_STUDENT_COUNT":
           return this.countUsersInCourse(payload.cid);
+        case "GET_STUDENTS":
+          return this.getStudentsByCid(payload.cid);
         default:
           break;
       }

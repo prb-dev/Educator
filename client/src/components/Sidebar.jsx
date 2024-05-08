@@ -14,7 +14,7 @@ export default function Sidebar() {
   const [courses, setCourses] = useState([]);
 
   useEffect(() => {
-    fetch("http://localhost:8004/course/instructor/661b92d6108f66979562bb54")
+    fetch("http://localhost:8004/course/instructor/663b48d75d3f69cd1ec16b9c")
       .then((res) => res.json())
       .then((data) => {
         setCourses(data);
