@@ -38,7 +38,7 @@ export default function Sidebar() {
       <Link to={`/students?course=${course.name}&cid=${course._id}`}>
         {course.name}
       </Link>,
-      course
+      course._id
     )
   );
 
@@ -68,6 +68,7 @@ export default function Sidebar() {
     <main className="bg-gradient-to-l from-slate-200 to-white">
       <br />
       <br />
+      <h1 className="text-lg ml-5 text-slate-700">Intructor Panel</h1>
       <br />
       <br />
       <Sider
