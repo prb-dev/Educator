@@ -16,6 +16,7 @@ import SingleCourse from "./pages/student/SingleCourse.jsx";
 import AllCourses from "./pages/student/AllCourses.jsx";
 import PaymentCancel from "./pages/student/PaymentCancel.jsx";
 import SuccessPayment from "./pages/student/SuccessPayment.jsx";
+import DashboardS from "./pages/student/Dashboard.jsx";
 
 function App() {
   const instructor = true;
@@ -29,6 +30,7 @@ function App() {
             <Layout>
               <Routes>
                 <Route path="/" element={<Dashboard />} />
+                <Route path="/StudentDashboard" element={<DashboardS />} />
                 <Route path="/students" element={<Students />} />
                 <Route path="/schedules/add" element={<AddSchedule />} />
                 <Route path="/schedules/edit" element={<EditSchedule />} />
