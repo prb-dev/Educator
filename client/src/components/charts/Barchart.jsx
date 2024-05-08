@@ -4,10 +4,12 @@ import { Bar } from "react-chartjs-2";
 
 export default function Barchart() {
   return (
-    <div className="w-[80%] h-fit grid place-content-center cursor-pointer m-5 border border-slate-800 bg-slate-800/5 rounded-lg p-5">
-      <h1 className="text-slate-700 text-lg">Student Enrollments</h1>
-      
+    <div className="grid place-content-center cursor-pointer m-5 shadow-lg shadow-slate-200 rounded-lg p-5">
+      <h1 className="text-slate-600 text-lg">Student Enrollments</h1>
+
       <Bar
+        width={1000}
+        height={400}
         data={{
           labels: [
             "Jan",
@@ -27,23 +29,23 @@ export default function Barchart() {
             {
               label: "Count",
               data: [3, 6, 9],
-              borderWidth: 1,
-              barThickness: 20,
-              borderRadius: 5,
+              borderWidth: 0,
+              barThickness: 15,
+              borderRadius: 10,
             },
             {
               label: "Count",
               data: [3, 6, 9],
-              borderWidth: 1,
-              barThickness: 20,
-              borderRadius: 5,
+              borderWidth: 0,
+              barThickness: 15,
+              borderRadius: 10,
             },
             {
               label: "Count",
               data: [3, 6, 9],
-              borderWidth: 1,
-              barThickness: 20,
-              borderRadius: 5,
+              borderWidth: 0,
+              barThickness: 15,
+              borderRadius: 10,
             },
           ],
         }}
@@ -53,6 +55,7 @@ export default function Barchart() {
               border: {
                 dash: [6],
               },
+              display: false,
             },
             y: {
               border: {
