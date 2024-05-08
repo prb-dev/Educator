@@ -16,6 +16,9 @@ import SingleCourse from "./pages/student/SingleCourse.jsx";
 import AllCourses from "./pages/student/AllCourses.jsx";
 import PaymentCancel from "./pages/student/PaymentCancel.jsx";
 import SuccessPayment from "./pages/student/SuccessPayment.jsx";
+import ViewCourses from "./pages/instructor/Courses/ViewCourses.jsx";
+import AddCourse from "./pages/instructor/Courses/AddCourse.jsx";
+import EditCourse from "./pages/instructor/Courses/EditCourse.jsx";
 import DashboardS from "./pages/student/Dashboard.jsx";
 
 function App() {
@@ -37,6 +40,9 @@ function App() {
                 <Route path="/Login" element={<Login />} />
                 <Route path="/Signup" element={<Signup />} />
                 <Route path="/schedules/delete" element={<DeleteSchedule />} />
+                <Route path="/courses/view" element={<ViewCourses />} />
+                <Route path="/courses/add" element={<AddCourse />} />
+                <Route path="/courses/edit" element={<EditCourse />} />
               </Routes>
             </Layout>
           </Layout>
