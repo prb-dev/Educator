@@ -21,7 +21,22 @@ import moment from "moment";
 import DoneOutlinedIcon from "@mui/icons-material/DoneOutlined";
 import { FormHelperText, InputLabel, MenuItem, Select } from "@mui/material";
 
-export default function AddSchedule() {
+export default function EditSchedule() {
+  const [courses, setCourses] = useState([]);
+
+  useEffect(() => {
+    fetch("http://localhost:80/course/instructor/663b48d75d3f69cd1ec16b9c")
+      .then((res) => res.json())
+      .then((data) => {
+        data.forEach((d) => {
+          if (d.schedule) {
+            setCourses((prevCourses) => [...prevCourses, d]);
+          }
+        });
+      })
+      .catch((err) => console.log(err));
+  }, []);
+
   const Item = styled(Paper)(() => ({
     backgroundColor: "transparent",
     display: "flex",
@@ -66,7 +81,6 @@ export default function AddSchedule() {
   ]);
 
   const handleCourseChange = (event) => {
-    console.log(event.target.value);
     setCourse(event.target.value);
   };
 
@@ -100,8 +114,18 @@ export default function AddSchedule() {
   }, [days]);
 
   useEffect(() => {
-    setSchedule((s) => ({ ...s, course }));
+    if (course)
+      fetch(`http://localhost:80/schedule/${course}`)
+        .then((res) => res.json())
+        .then((data) => {
+          setSchedule(data);
+        })
+        .catch((err) => console.log(err));
   }, [course]);
+
+  useEffect(() => {
+    setDays(schedule.days);
+  }, [schedule]);
 
   const addSession = (e) => {
     e.preventDefault();
@@ -109,6 +133,22 @@ export default function AddSchedule() {
     let s = parsedTime.format("HH:mm:ss");
     parsedTime = moment(e.target.elements["finishAt"].value, "hh:mm A");
     let f = parsedTime.format("HH:mm:ss");
+
+    let [hours, minutes, seconds] = s.split(":").map(Number);
+    const startAt = new Date();
+
+    // Set hours, minutes, and seconds based on the time string
+    startAt.setHours(hours);
+    startAt.setMinutes(minutes);
+    startAt.setSeconds(seconds);
+
+    [hours, minutes, seconds] = f.split(":").map(Number);
+    const finishAt = new Date();
+
+    // Set hours, minutes, and seconds based on the time string
+    finishAt.setHours(hours);
+    finishAt.setMinutes(minutes);
+    finishAt.setSeconds(seconds);
 
     setDays((prevDays) =>
       prevDays.map((day) =>
@@ -119,8 +159,8 @@ export default function AddSchedule() {
                 ...day.sessions,
                 {
                   lecture: e.target.elements["lecture"].value,
-                  startAt: s,
-                  finishAt: f,
+                  startAt: startAt,
+                  finishAt: finishAt,
                 },
               ],
             }
@@ -144,18 +184,17 @@ export default function AddSchedule() {
     );
   };
 
-  const createSchedule = () => {
-    // fetch("http://localhost:80/schedule/", {
-    //   method: "POST",
-    //   headers: {
-    //     "Content-Type": "application/json",
-    //   },
-    //   body: JSON.stringify({ schedule }),
-    // })
-    //   .then((res) => res.json())
-    //   .then((data) => console.log(data))
-    //   .catch((e) => console.log(e));
-    console.log(schedule);
+  const upateSchedule = () => {
+    fetch(`http://localhost:80/schedule/${course}`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ schedule: schedule }),
+    })
+      .then((res) => res.json())
+      .then((data) => console.log(data))
+      .catch((err) => console.log(err));
   };
 
   return (
@@ -177,16 +216,24 @@ export default function AddSchedule() {
             autoWidth
             label="Course"
           >
-            <MenuItem value="{10}">Twenty</MenuItem>
-            <MenuItem value="{21}">Twenty one</MenuItem>
-            <MenuItem value="{22}">Twenty one and a half</MenuItem>
+            {courses.length != 0 ? (
+              courses.map((c) => (
+                <MenuItem key={c._id} value={c._id}>
+                  {c.name}
+                </MenuItem>
+              ))
+            ) : (
+              <MenuItem value={null} disabled={true}>
+                No courses have schedules
+              </MenuItem>
+            )}
           </Select>
           <FormHelperText>Select a course</FormHelperText>
         </FormControl>
         <Button
           variant="outlined"
           startIcon={<DoneOutlinedIcon />}
-          onClick={createSchedule}
+          onClick={upateSchedule}
         >
           Done
         </Button>
@@ -211,6 +258,7 @@ export default function AddSchedule() {
                     finishAt={ses.finishAt}
                     lecture={ses.lecture}
                     deleteFn={() => deleteSession(i, j)}
+                    fromEdit={true}
                   />
                 ))}
               </Item>
@@ -233,7 +281,10 @@ export default function AddSchedule() {
       >
         <Fade in={open}>
           <Box sx={style}>
-            <form onSubmit={addSession} className="flex flex-col">
+            <form
+              onSubmit={addSession}
+              className="flex flex-col text-slate-700"
+            >
               <h1>Create a session</h1>
               <LocalizationProvider dateAdapter={AdapterDayjs}>
                 <DemoContainer components={["MultiInputTimeRangeField"]}>

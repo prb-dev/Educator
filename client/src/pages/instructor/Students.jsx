@@ -1,76 +1,73 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { DataGrid } from "@mui/x-data-grid";
-import { Box, IconButton } from "@mui/material";
+import { Backdrop, Box, Button, Fade, IconButton, Modal } from "@mui/material";
+import MoreVertOutlinedIcon from "@mui/icons-material/MoreVertOutlined";
 import VisibilityOutlinedIcon from "@mui/icons-material/VisibilityOutlined";
 import ShowChartOutlinedIcon from "@mui/icons-material/ShowChartOutlined";
+import { Popover, Progress, Spin, Empty } from "antd";
+import { useLocation } from "react-router-dom";
 
 export default function Students() {
-  const data = [
-    {
-      id: 1,
-      name: "Jon Snow",
-      email: "jonsnow@gmail.com",
-      age: 35,
-      phone: "(665)121-5454",
-      access: "admin",
-    },
-    {
-      id: 2,
-      name: "Cersei Lannister",
-      email: "cerseilannister@gmail.com",
-      age: 42,
-      phone: "(421)314-2288",
-      access: "manager",
-    },
-    {
-      id: 3,
-      name: "Jaime Lannister",
-      email: "jaimelannister@gmail.com",
-      age: 45,
-      phone: "(422)982-6739",
-      access: "user",
-    },
-    {
-      id: 4,
-      name: "Anya Stark",
-      email: "anyastark@gmail.com",
-      age: 16,
-      phone: "(921)425-6742",
-      access: "admin",
-    },
-    {
-      id: 5,
-      name: "Daenerys Targaryen",
-      email: "daenerystargaryen@gmail.com",
-      age: 31,
-      phone: "(421)445-1189",
-      access: "user",
-    },
-    {
-      id: 6,
-      name: "Ever Melisandre",
-      email: "evermelisandre@gmail.com",
-      age: 150,
-      phone: "(232)545-6483",
-      access: "manager",
-    },
-    {
-      id: 7,
-      name: "Ferrara Clifford",
-      email: "ferraraclifford@gmail.com",
-      age: 44,
-      phone: "(543)124-0123",
-      access: "user",
-    },
-    {
-      id: 8,
-      name: "Rossini Frances",
-      email: "rossinifrances@gmail.com",
-      age: 36,
-      phone: "(222)444-5555",
-      access: "user",
-    },
-  ];
+  const [open, setOpen] = useState(false);
+  const location = useLocation();
+  const params = new URLSearchParams(location.search);
+  const cname = params.get("course");
+  const cid = params.get("cid");
+  const [students, setStudents] = useState([]);
+  const [lecProg, setLecProg] = useState(0);
+  const [quizProg, setQuizProg] = useState(0);
+  const [overallProg, setOverallProg] = useState(0);
+  const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    setStudents([]);
+    fetch(`http://localhost:8008/user/getAllstudents/${cid}`)
+      .then((res) => res.json())
+      .then((data) => {
+        data.users.forEach((user, i) => {
+          user.id = i + 1;
+          setStudents((s) => [...s, user]);
+        });
+      })
+      .catch((err) => console.log(err));
+  }, [cname]);
+
+  const handleClose = () => {
+    setOpen(false);
+    setLecProg(0);
+    setQuizProg(0);
+    setOverallProg(0);
+  };
+
+  const handleOpen = (uid) => {
+    setLoading(true);
+    setOpen(true);
+
+    fetch(`http://localhost:8003/analyse//${uid}/${cid}`)
+      .then((res) => res.json())
+      .then((data) => {
+        setLecProg(Math.ceil(data.lectureProgress * 100));
+        setQuizProg(Math.ceil(data.quizProgress * 100));
+        setOverallProg(Math.ceil(data.overallProgress * 100));
+        setLoading(false);
+      })
+      .catch((err) => {
+        console.log(err);
+        setLoading(false);
+      });
+  };
+
+  const style = {
+    position: "absolute",
+    top: "50%",
+    left: "50%",
+    transform: "translate(-50%, -50%)",
+    width: 400,
+    bgcolor: "background.paper",
+    borderRadius: 5,
+    boxShadow: 24,
+    p: 4,
+  };
 
   const columns = [
     {
@@ -78,12 +75,12 @@ export default function Students() {
       headerName: "#",
     },
     {
-      field: "name",
+      field: "username",
       headerName: "Name",
       flex: 1,
     },
     {
-      field: "email",
+      field: "Email",
       headerName: "Email",
       flex: 1,
     },
@@ -93,21 +90,26 @@ export default function Students() {
       flex: 1,
     },
     {
-      field: "age",
-      headerName: "Age",
-      flex: 1,
-      headerAlign: "left",
-      align: "left",
-      type: "number",
-    },
-    {
-      field: "access",
+      field: "",
       headerName: "Action",
-      renderCell: () => {
+      renderCell: (params) => {
         return (
-          <IconButton>
-            <VisibilityOutlinedIcon />
-          </IconButton>
+          <Popover
+            trigger="click"
+            content={
+              <Button
+                variant="text"
+                onClick={() => handleOpen(params.row._id)}
+                startIcon={<VisibilityOutlinedIcon />}
+              >
+                View Progess
+              </Button>
+            }
+          >
+            <IconButton>
+              <MoreVertOutlinedIcon />
+            </IconButton>
+          </Popover>
         );
       },
     },
@@ -118,31 +120,78 @@ export default function Students() {
       <h1 className="text-slate-700 text-2xl m-5 mb-6">
         Monitor learner progress <ShowChartOutlinedIcon />
       </h1>
+
+      <h2 className="text-slate-700 text-xl m-5 mb-6">{cname}</h2>
       <div className="cursor-pointer">
         <Box sx={{ height: "100%", width: "100%", overflow: "hidden" }}>
-          <DataGrid
-            sx={{
-              "&, [class^=MuiDataGrid], .MuiTablePagination-root, .MuiButtonBase-root, .MuiSvgIcon-root":
-                { border: "none" },
-              ".MuiDataGrid-columnHeaders": {
-                backgroundColor: "rgb(15 23 42)",
-                color: "rgb(226 232 240)",
-              },
-            }}
-            rows={data}
-            columns={columns}
-            initialState={{
-              pagination: {
-                paginationModel: {
-                  pageSize: 10,
+          {students.length != 0 ? (
+            <DataGrid
+              sx={{
+                "&, [class^=MuiDataGrid], .MuiTablePagination-root, .MuiButtonBase-root, .MuiSvgIcon-root":
+                  { border: "none" },
+                ".MuiDataGrid-columnHeaders": {
+                  backgroundColor: "rgb(15 23 42)",
+                  color: "rgb(226 232 240)",
                 },
-              },
-            }}
-            pageSizeOptions={[10]}
-            disableRowSelectionOnClick
-          />
+                minHeight: "500px",
+              }}
+              rows={students}
+              columns={columns}
+              initialState={{
+                pagination: {
+                  paginationModel: {
+                    pageSize: 10,
+                  },
+                },
+              }}
+              pageSizeOptions={[10]}
+              disableRowSelectionOnClick
+            />
+          ) : (
+            <Empty
+              description={<h3 className="text-slate-500">No students</h3>}
+            />
+          )}
         </Box>
       </div>
+
+      <Modal
+        aria-labelledby="transition-modal-title"
+        aria-describedby="transition-modal-description"
+        open={open}
+        onClose={() => handleClose()}
+        closeAfterTransition
+        slots={{ backdrop: Backdrop }}
+        slotProps={{
+          backdrop: {
+            timeout: 500,
+          },
+        }}
+      >
+        <Fade in={open}>
+          <Box sx={style}>
+            <Spin spinning={loading}>
+              <h1 className="text-lg text-slate-700">Student Progess</h1>
+
+              <section className="flex justify-between mt-5">
+                <div className="grid place-items-center gap-5">
+                  <p className="text-slate-500">Lecture progress </p>
+                  <Progress type="circle" percent={lecProg} />
+                </div>
+
+                <div className="grid place-items-center gap-5">
+                  <p className="text-slate-500">Quiz progress </p>
+                  <Progress type="circle" percent={quizProg} />
+                </div>
+              </section>
+              <section className="mt-10">
+                <p className="text-slate-500">Overall progress </p>
+                <Progress type="line" percent={overallProg} />
+              </section>
+            </Spin>
+          </Box>
+        </Fade>
+      </Modal>
     </main>
   );
 }

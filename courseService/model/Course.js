@@ -27,6 +27,9 @@ const courseSchema = new mongoose.Schema({
     required: true,
     unique: true,
   },
+  image: {
+    type: String,
+  },
   schedule: {
     type: mongoose.Schema.Types.ObjectId,
   },

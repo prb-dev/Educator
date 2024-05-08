@@ -8,6 +8,8 @@ import Students from "./pages/instructor/Students.jsx";
 import AddSchedule from "./pages/instructor/schedule/AddSchedule.jsx";
 import DeleteSchedule from "./pages/instructor/schedule/DeleteSchedule.jsx";
 import EditSchedule from "./pages/instructor/schedule/EditSchedule.jsx";
+import Login from "./pages/User/Login.jsx";
+import Signup from "./pages/User/Signup.jsx";
 import Home from "./pages/student/Home.jsx";
 import NavBar from "./components/student/NavBar.jsx";
 import SingleCourse from "./pages/student/SingleCourse.jsx";
@@ -17,6 +19,7 @@ import SuccessPayment from "./pages/student/SuccessPayment.jsx";
 import ViewCourses from "./pages/instructor/Courses/ViewCourses.jsx";
 import AddCourse from "./pages/instructor/Courses/AddCourse.jsx";
 import EditCourse from "./pages/instructor/Courses/EditCourse.jsx";
+import DashboardS from "./pages/student/Dashboard.jsx";
 
 function App() {
   const instructor = true;
@@ -30,9 +33,12 @@ function App() {
             <Layout>
               <Routes>
                 <Route path="/" element={<Dashboard />} />
+                <Route path="/StudentDashboard" element={<DashboardS />} />
                 <Route path="/students" element={<Students />} />
                 <Route path="/schedules/add" element={<AddSchedule />} />
                 <Route path="/schedules/edit" element={<EditSchedule />} />
+                <Route path="/Login" element={<Login />} />
+                <Route path="/Signup" element={<Signup />} />
                 <Route path="/schedules/delete" element={<DeleteSchedule />} />
                 <Route path="/courses/view" element={<ViewCourses />} />
                 <Route path="/courses/add" element={<AddCourse />} />

@@ -76,6 +76,41 @@ class CourseService {
     return courses;
   }
 
+  async getCoursesByInstructor(iid) {
+    const courses = await Course.find({
+      instructor: iid,
+    });
+    return courses;
+  }
+
+  async saveScheduleId(cid, sid) {
+    try {
+      await Course.findByIdAndUpdate(cid, {
+        $set: {
+          schedule: sid,
+        },
+      });
+
+      return "success";
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  async deleteScheduleId(cid) {
+    try {
+      await Course.findByIdAndUpdate(cid, {
+        $set: {
+          schedule: null,
+        },
+      });
+
+      return "success";
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
   async eventHandler(payload) {
     try {
       switch (payload.event) {
@@ -83,6 +118,12 @@ class CourseService {
           return this.getCourses(payload.cids);
         case "GET_COURSE":
           return this.getCourseById(payload.cid);
+        case "GET_COURSES_BY_INSTRUCTOR":
+          return this.getCoursesByInstructor(payload.iid);
+        case "SAVE_SCHEDULE":
+          return this.saveScheduleId(payload.cid, payload.sid);
+        case "DELETE_SCHEDULE":
+          return this.deleteScheduleId(payload.cid);
         default:
           break;
       }

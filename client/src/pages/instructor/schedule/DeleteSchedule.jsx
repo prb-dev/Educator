@@ -1,16 +1,51 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import FormControl from "@mui/material/FormControl";
 import CalendarMonthOutlinedIcon from "@mui/icons-material/CalendarMonthOutlined";
-import { Button, FormHelperText, InputLabel, MenuItem, Select } from "@mui/material";
+import {
+  Button,
+  FormHelperText,
+  InputLabel,
+  MenuItem,
+  Select,
+} from "@mui/material";
 import DeleteOutlineOutlinedIcon from "@mui/icons-material/DeleteOutlineOutlined";
 
 export default function DeleteSchedule() {
+  const [courses, setCourses] = useState([]);
+
+  useEffect(() => {
+    fetch("http://localhost:80/course/instructor/663b48d75d3f69cd1ec16b9c")
+      .then((res) => res.json())
+      .then((data) => {
+        data.forEach((d) => {
+          if (d.schedule) {
+            setCourses((prevCourses) => [...prevCourses, d]);
+          }
+        });
+      })
+      .catch((err) => console.log(err));
+  }, []);
+
   const [course, setCourse] = useState("");
 
   const handleCourseChange = (event) => {
-    console.log(event.target.value);
     setCourse(event.target.value);
   };
+
+  const deleteSchedule = () => {
+    fetch(`http://localhost:80/schedule/${course.schedule}/${course._id}`, {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        console.log(data);
+      })
+      .catch((err) => console.log(err));
+  };
+
   return (
     <main className="w-full h-[100vh] bg-gradient-to-r from-slate-200 to-white overflow-y-scroll p-5 text-slate-700 flex flex-col">
       <h1 className="text-2xl m-5 min-w-fit">
@@ -30,13 +65,25 @@ export default function DeleteSchedule() {
             autoWidth
             label="Course"
           >
-            <MenuItem value="{10}">Twenty</MenuItem>
-            <MenuItem value="{21}">Twenty one</MenuItem>
-            <MenuItem value="{22}">Twenty one and a half</MenuItem>
+            {courses.length != 0 ? (
+              courses.map((c) => (
+                <MenuItem key={c._id} value={c}>
+                  {c.name}
+                </MenuItem>
+              ))
+            ) : (
+              <MenuItem value={null} disabled={true}>
+                No courses
+              </MenuItem>
+            )}
           </Select>
           <FormHelperText>Select a course</FormHelperText>
         </FormControl>
-        <Button variant="outlined" startIcon={<DeleteOutlineOutlinedIcon />}>
+        <Button
+          onClick={deleteSchedule}
+          variant="outlined"
+          startIcon={<DeleteOutlineOutlinedIcon />}
+        >
           Delete
         </Button>
       </div>
