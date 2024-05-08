@@ -26,6 +26,26 @@ exports.signUp = async (req, res) => {
   }
 };
 
+
+//get courses of users
+
+exports.getCoursesOfUser =  async (req, res) => {
+  try{
+    const user = await User.findById(req.params.id);
+    const courses = await Course.find({user: req.params.id});
+
+    res.status(200).json({
+      success: true,
+      courses,
+    });
+  }catch(error) {
+    res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+}
+
 // Log in
 exports.logIn = async (req, res) => {
   try {
