@@ -4,7 +4,7 @@ import { Backdrop, Box, Button, Fade, IconButton, Modal } from "@mui/material";
 import MoreVertOutlinedIcon from "@mui/icons-material/MoreVertOutlined";
 import VisibilityOutlinedIcon from "@mui/icons-material/VisibilityOutlined";
 import ShowChartOutlinedIcon from "@mui/icons-material/ShowChartOutlined";
-import { Popover, Progress, Spin } from "antd";
+import { Popover, Progress, Spin, Empty } from "antd";
 import { useLocation } from "react-router-dom";
 
 export default function Students() {
@@ -124,28 +124,34 @@ export default function Students() {
       <h2 className="text-slate-700 text-xl m-5 mb-6">{cname}</h2>
       <div className="cursor-pointer">
         <Box sx={{ height: "100%", width: "100%", overflow: "hidden" }}>
-          <DataGrid
-            sx={{
-              "&, [class^=MuiDataGrid], .MuiTablePagination-root, .MuiButtonBase-root, .MuiSvgIcon-root":
-                { border: "none" },
-              ".MuiDataGrid-columnHeaders": {
-                backgroundColor: "rgb(15 23 42)",
-                color: "rgb(226 232 240)",
-              },
-              minHeight: "500px",
-            }}
-            rows={students}
-            columns={columns}
-            initialState={{
-              pagination: {
-                paginationModel: {
-                  pageSize: 10,
+          {students.length != 0 ? (
+            <DataGrid
+              sx={{
+                "&, [class^=MuiDataGrid], .MuiTablePagination-root, .MuiButtonBase-root, .MuiSvgIcon-root":
+                  { border: "none" },
+                ".MuiDataGrid-columnHeaders": {
+                  backgroundColor: "rgb(15 23 42)",
+                  color: "rgb(226 232 240)",
                 },
-              },
-            }}
-            pageSizeOptions={[10]}
-            disableRowSelectionOnClick
-          />
+                minHeight: "500px",
+              }}
+              rows={students}
+              columns={columns}
+              initialState={{
+                pagination: {
+                  paginationModel: {
+                    pageSize: 10,
+                  },
+                },
+              }}
+              pageSizeOptions={[10]}
+              disableRowSelectionOnClick
+            />
+          ) : (
+            <Empty
+              description={<h3 className="text-slate-500">No students</h3>}
+            />
+          )}
         </Box>
       </div>
 
