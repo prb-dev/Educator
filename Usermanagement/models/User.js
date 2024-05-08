@@ -16,6 +16,13 @@ const userSchema = new mongoose.Schema({
         type: Number,
         default: 0,
       },
+      enrolledDate: {
+        type: Date,
+      },
+      completed: {
+        type: Boolean,
+        default: false,
+      },
     },
   ],
   password: { type: String, required: true },
