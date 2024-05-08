@@ -1,5 +1,6 @@
 import { Carousel } from "antd";
-import skillImg from "../../assets/skills-min-scaled.png";
+// import skillImg from "../../assets/skills-min-scaled.png";
+import sliderData from "../../data/sliderData";
 
 const contentStyle = {
   height: "300px",
@@ -38,52 +39,27 @@ const sliderText = {
 const sliderText2 = {
   fontSize: "20px",
 };
-const Slider = () => (
-  <Carousel autoplay>
+
+export default function Slider() {
+  return (
     <div>
-      <div style={contentStyle}>
-        <div className="flex justify-between">
-          <div style={textContainer}>
-            <div style={sliderText}>Gain Need Skills</div>
-            <div style={sliderText2}>Find New course</div>
-          </div>
-          <img style={sliderImg} src={skillImg} alt="skill Image" />
-        </div>
-      </div>
+      <>
+        <Carousel autoplay>
+          {sliderData.map((slide) => (
+            <div key={slide.id}>
+              <div style={contentStyle}>
+                <div className="flex justify-between">
+                  <div style={textContainer}>
+                    <div style={sliderText}>{slide.title}</div>
+                    <div style={sliderText2}>{slide.description}</div>
+                  </div>
+                  <img style={sliderImg} src={slide.image} alt="skill Image" />
+                </div>
+              </div>
+            </div>
+          ))}
+        </Carousel>
+      </>
     </div>
-    <div>
-      <div style={contentStyle}>
-        <div className="flex justify-between">
-          <div style={textContainer}>
-            <div style={sliderText}>Gain Need Skills</div>
-            <div style={sliderText2}>Find New course</div>
-          </div>
-          <img style={sliderImg} src={skillImg} alt="skill Image" />
-        </div>
-      </div>
-    </div>
-    <div>
-      <div style={contentStyle}>
-        <div className="flex justify-between">
-          <div style={textContainer}>
-            <div style={sliderText}>Gain Need Skills</div>
-            <div style={sliderText2}>Find New course</div>
-          </div>
-          <img style={sliderImg} src={skillImg} alt="skill Image" />
-        </div>
-      </div>
-    </div>
-    <div>
-      <div style={contentStyle}>
-        <div className="flex justify-between">
-          <div style={textContainer}>
-            <div style={sliderText}>Gain Need Skills</div>
-            <div style={sliderText2}>Find New course</div>
-          </div>
-          <img style={sliderImg} src={skillImg} alt="skill Image" />
-        </div>
-      </div>
-    </div>
-  </Carousel>
-);
-export default Slider;
+  );
+}

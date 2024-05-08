@@ -62,6 +62,18 @@ export default function Sidebar() {
         <DeleteOutlineOutlinedIcon />
       ),
     ]),
+    getItem("Courses", "Courses", <CalendarMonthOutlinedIcon />, [
+      getItem(
+        <Link to="/courses/view">View</Link>,
+        "View",
+        <AddCircleOutlineOutlinedIcon />
+      ),
+      getItem(
+        <Link to="/courses/add">Add</Link>,
+        "Add",
+        <AddCircleOutlineOutlinedIcon />
+      ),
+    ]),
   ];
 
   return (

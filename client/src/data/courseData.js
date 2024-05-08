@@ -6,6 +6,25 @@ const courseData = [
     duration: "8 weeks",
     price: "199 ",
     level: "Beginner",
+    noOfLectures: 12,
+    noOfQuizzes: 4,
+    quizQuestion: [
+      {
+        question: "What is the output of 2 + 2?",
+        options: ["3", "4", "5", "6"],
+        answer: "4",
+      },
+      {
+        question: "What is the output of 3 * 3?",
+        options: ["6", "9", "12", "15"],
+        answer: "9",
+      },
+      {
+        question: "What is the output of 10 / 2?",
+        options: ["3", "4", "5", "6"],
+        answer: "5",
+      },
+    ],
     description: "Learn the basics of programming using JavaScript.",
     img: "https://media.geeksforgeeks.org/wp-content/cdn-uploads/20200214165928/Web-Development-Course-Thumbnail.jpg",
   },
@@ -15,6 +34,25 @@ const courseData = [
     instructor: "Jane Smith",
     duration: "12 weeks",
     price: "199",
+    noOfLectures: 12,
+    noOfQuizzes: 4,
+    quizQuestion: [
+      {
+        question: "What is the output of 2 + 2?",
+        options: ["3", "4", "5", "6"],
+        answer: "4",
+      },
+      {
+        question: "What is the output of 3 * 3?",
+        options: ["6", "9", "12", "15"],
+        answer: "9",
+      },
+      {
+        question: "What is the output of 10 / 2?",
+        options: ["3", "4", "5", "6"],
+        answer: "5",
+      },
+    ],
     level: "Intermediate",
     description:
       "Master the essentials of web development with HTML, CSS, and JavaScript.",
@@ -27,6 +65,25 @@ const courseData = [
     duration: "10 weeks",
     price: "199 ",
     level: "Advanced",
+    noOfLectures: 12,
+    noOfQuizzes: 4,
+    quizQuestion: [
+      {
+        question: "What is the output of 2 + 2?",
+        options: ["3", "4", "5", "6"],
+        answer: "4",
+      },
+      {
+        question: "What is the output of 3 * 3?",
+        options: ["6", "9", "12", "15"],
+        answer: "9",
+      },
+      {
+        question: "What is the output of 10 / 2?",
+        options: ["3", "4", "5", "6"],
+        answer: "5",
+      },
+    ],
     description:
       "Explore advanced data structures and algorithms for efficient programming.",
     img: "https://media.geeksforgeeks.org/wp-content/cdn-uploads/20200214165928/Web-Development-Course-Thumbnail.jpg",
@@ -39,6 +96,25 @@ const courseData = [
     duration: "8 weeks",
     price: "199 ",
     level: "Intermediate",
+    noOfLectures: 12,
+    noOfQuizzes: 4,
+    quizQuestion: [
+      {
+        question: "What is the output of 2 + 2?",
+        options: ["3", "4", "5", "6"],
+        answer: "4",
+      },
+      {
+        question: "What is the output of 3 * 3?",
+        options: ["6", "9", "12", "15"],
+        answer: "9",
+      },
+      {
+        question: "What is the output of 10 / 2?",
+        options: ["3", "4", "5", "6"],
+        answer: "5",
+      },
+    ],
     description:
       "Learn how to develop mobile applications for iOS and Android using React Native.",
     img: "https://media.geeksforgeeks.org/wp-content/cdn-uploads/20200214165928/Web-Development-Course-Thumbnail.jpg",
