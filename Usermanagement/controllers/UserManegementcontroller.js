@@ -3,6 +3,7 @@
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const Service = require("../services/UserManagement.service.js");
+const User = require("../models/User.js");
 
 const service = new Service();
 

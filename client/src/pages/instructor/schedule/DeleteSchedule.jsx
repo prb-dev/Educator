@@ -14,7 +14,7 @@ export default function DeleteSchedule() {
   const [courses, setCourses] = useState([]);
 
   useEffect(() => {
-    fetch("http://localhost:8004/course/instructor/661b92d6108f66979562bb54")
+    fetch("http://localhost:80/course/instructor/663b48d75d3f69cd1ec16b9c")
       .then((res) => res.json())
       .then((data) => {
         data.forEach((d) => {
@@ -33,7 +33,7 @@ export default function DeleteSchedule() {
   };
 
   const deleteSchedule = () => {
-    fetch(`http://localhost:8000/schedule/${course.schedule}/${course._id}`, {
+    fetch(`http://localhost:80/schedule/${course.schedule}/${course._id}`, {
       method: "DELETE",
       headers: {
         "Content-Type": "application/json",

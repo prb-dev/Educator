@@ -19,7 +19,7 @@ export default function Dashboard() {
 
   useEffect(() => {
     setLoading(true);
-    fetch("http://localhost:8003/analyse/dashboard/663b48d75d3f69cd1ec16b9c")
+    fetch("http://localhost:80/analyse/dashboard/663b48d75d3f69cd1ec16b9c")
       .then((res) => res.json())
       .then((data) => {
         setTotalStudents(data.totalStudents);
