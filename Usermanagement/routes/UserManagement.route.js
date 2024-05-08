@@ -1,13 +1,23 @@
- 
-const express = require('express');
+const express = require("express");
 
 const router = express.Router();
-const { signUp, getCoursesOfUser, deleteUser, getAllUsers, logIn, protectedRoute } = require('../controllers/UserManegementcontroller');
 
-router.post('/signup', signUp);
+const {
+  signUp,
+  deleteUser,
+  getAllUsers,
+  logIn,
+  protectedRoute,
+  getStudentsByCid,
+    getCoursesOfUser
+} = require("../controllers/UserManegementcontroller");
+
+router.post("/signup", signUp);
+router.post("/login", logIn);
 router.get('/getCoursesByID', getCoursesOfUser);
-router.post('/login', logIn);
-router.get('/getAllUsers', getAllUsers);
-router.delete('/deleteUser/:userId', deleteUser);
-router.get('/protected', protectedRoute);
+router.get("/getAllUsers", getAllUsers);
+router.get("/getAllstudents/:cid", getStudentsByCid);
+router.delete("/deleteUser/:userId", deleteUser);
+router.get("/protected", protectedRoute);
+
 module.exports = router;

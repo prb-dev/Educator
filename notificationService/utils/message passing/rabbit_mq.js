@@ -6,8 +6,9 @@ let connection = null;
 const service = new EmailService();
 
 exports.getChannel = async () => {
-  connection = await amqplib.connect(process.env.RABBITMQ_URI);
-
+  if (!connection) {
+    connection = await amqplib.connect(process.env.RABBITMQ_URI);
+  }
   return await connection.createChannel();
 };
 

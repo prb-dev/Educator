@@ -3,6 +3,7 @@ const mongoose = require('mongoose');
 const dotenv = require('dotenv');
 const cors = require('cors');
 const UserManagementRouter = require('./routes/UserManagement.route');
+const { RPCObserver } = require('./utils/message passing/rabbit_mq.js');
 
 dotenv.config();
 
@@ -21,10 +22,12 @@ app.listen(8008, () => {
   console.log("usermanagement service is running on port 8008");
 });
 
+RPCObserver(process.env.USER_QUEUE_NAME);
+
 app.use(express.json());
 app.use(cors());
 
-app.use("/api/UserManagement", UserManagementRouter);
+app.use("/user", UserManagementRouter);
 
 app.use((error, req, res, next) => {
   const statusCode = error.statusCode || 500;

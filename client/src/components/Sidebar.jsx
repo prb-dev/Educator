@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Layout, Menu } from "antd";
 import HomeOutlinedIcon from "@mui/icons-material/HomeOutlined";
 import PersonOutlineOutlinedIcon from "@mui/icons-material/PersonOutlineOutlined";
@@ -11,6 +11,17 @@ import { Link } from "react-router-dom";
 const { Sider, Header, Content } = Layout;
 
 export default function Sidebar() {
+  const [courses, setCourses] = useState([]);
+
+  useEffect(() => {
+    fetch("http://localhost:8004/course/instructor/663b48d75d3f69cd1ec16b9c")
+      .then((res) => res.json())
+      .then((data) => {
+        setCourses(data);
+      })
+      .catch((err) => console.log(err));
+  }, []);
+
   function getItem(label, key, icon, children, type, disabled) {
     return {
       key,
@@ -22,11 +33,18 @@ export default function Sidebar() {
     };
   }
 
+  const courseLinks = courses.map((course) =>
+    getItem(
+      <Link to={`/students?course=${course.name}&cid=${course._id}`}>
+        {course.name}
+      </Link>,
+      course._id
+    )
+  );
+
   const items = [
     getItem(<Link to="/">Dashboard</Link>, "Dashboard", <HomeOutlinedIcon />),
-    getItem("Students", "Students", <PersonOutlineOutlinedIcon />, [
-      getItem(<Link to="/students">Course1</Link>, "Course1"),
-    ]),
+    getItem("Students", "Students", <PersonOutlineOutlinedIcon />, courseLinks),
     getItem("Schedules", "Schedules", <CalendarMonthOutlinedIcon />, [
       getItem(
         <Link to="/schedules/add">Add</Link>,
@@ -50,6 +68,7 @@ export default function Sidebar() {
     <main className="bg-gradient-to-l from-slate-200 to-white">
       <br />
       <br />
+      <h1 className="text-lg ml-5 text-slate-700">Intructor Panel</h1>
       <br />
       <br />
       <Sider
@@ -57,7 +76,7 @@ export default function Sidebar() {
         collapsedWidth={70}
         breakpoint="sm"
         style={{
-          background: "transparent"
+          background: "transparent",
         }}
       >
         <Menu

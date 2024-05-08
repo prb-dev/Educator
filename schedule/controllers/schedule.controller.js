@@ -15,9 +15,23 @@ export const addSchedule = async (req, res, next) => {
 
 export const deleteSchedule = async (req, res, next) => {
   try {
-    const message = await service.deleteSchedule(req.params.scid);
+    const message = await service.deleteSchedule(
+      req.params.scid,
+      req.params.cid
+    );
 
     res.status(200).json(message);
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const updateSchedule = async (req, res, next) => {
+  try {
+    const { schedule } = req.body;
+    const updatedSchedule = await service.updateSchedule(schedule);
+
+    res.status(200).json(updatedSchedule);
   } catch (error) {
     next(error);
   }
@@ -78,6 +92,8 @@ export const deleteSession = async (req, res, next) => {
 
 export const getSchedule = async (req, res, next) => {
   try {
+    const schedule = await service.getSchedule(req.params.cid);
+    res.status(200).json(schedule);
   } catch (error) {
     next(error);
   }

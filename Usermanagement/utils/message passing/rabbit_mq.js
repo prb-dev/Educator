@@ -1,17 +1,19 @@
-import amqplib from "amqplib";
-import { v4 as uuidv4 } from "uuid";
+const amqplib = require("amqplib");
+const { v4: uuidv4 } = require("uuid");
+const Service = require("../../services/UserManagement.service.js");
 
 let connection = null;
+const service = new Service();
 
-export const getChannel = async () => {
+exports.getChannel = async () => {
   if (!connection) {
     connection = await amqplib.connect(process.env.RABBITMQ_URI);
   }
   return await connection.createChannel();
 };
 
-export const RPCObserver = async (QUEUE_NAME, service) => {
-  const channel = await getChannel();
+exports.RPCObserver = async (QUEUE_NAME) => {
+  const channel = await this.getChannel();
 
   await channel.assertQueue(QUEUE_NAME, {
     durable: false,
@@ -43,7 +45,7 @@ export const RPCObserver = async (QUEUE_NAME, service) => {
 };
 
 const requestData = async (QUEUE_NAME, payload, uuid) => {
-  const channel = await getChannel();
+  const channel = await this.getChannel();
 
   const q = await channel.assertQueue("", {
     exclusive: true,
@@ -71,8 +73,7 @@ const requestData = async (QUEUE_NAME, payload, uuid) => {
   });
 };
 
-export const RPCRequest = async (QUEUE_NAME, payload) => {
+exports.RPCRequest = async (QUEUE_NAME, payload) => {
   const uuid = uuidv4();
-
   return await requestData(QUEUE_NAME, payload, uuid);
 };
