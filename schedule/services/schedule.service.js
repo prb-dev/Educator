@@ -4,6 +4,8 @@ import { customError } from "../utils/error.js";
 
 class ScheduleService {
   async addSchedule(schedule) {
+    this.conflictCheck(schedule);
+    
     const { course, days } = schedule;
     const newSchedule = new Schedule({ course, days });
     await newSchedule.save();
@@ -134,25 +136,7 @@ class ScheduleService {
   }
 
   async updateSchedule(schedule) {
-    for (let i = 0; i < schedule.days.length; i++) {
-      for (let j = 0; j < schedule.days[i].sessions.length; j++) {
-        const sessionArr = schedule.days[i].sessions;
-        if (sessionArr.length > 1) {
-          sessionArr.sort((a, b) => a.startAt - b.startAt);
-
-          for (let k = 0; k < sessionArr.length; k++) {
-            console.log(sessionArr[k]);
-            if (sessionArr[k].finishAt > sessionArr[k + 1].startAt) {
-              throw customError(
-                400,
-                `${schedule.days[i].name_of_day} sessions are overlapping.`
-              );
-              break;
-            }
-          }
-        }
-      }
-    }
+    this.conflictCheck(schedule);
 
     const updatedSchedule = await Schedule.findByIdAndUpdate(
       schedule._id,
@@ -163,6 +147,30 @@ class ScheduleService {
     );
     return updatedSchedule;
   }
+
+  conflictCheck = (schedule) => {
+    let conflictDay;
+
+    for (let i = 0; i < schedule.days.length; i++) {
+      for (let j = 0; j < schedule.days[i].sessions.length; j++) {
+        const sessionArr = schedule.days[i].sessions;
+        if (sessionArr.length > 1) {
+          sessionArr.sort((a, b) => new Date(a.startAt) - new Date(b.startAt));
+
+          for (let k = 0; k < sessionArr.length - 1; k++) {
+            if (sessionArr[k].finishAt > sessionArr[k + 1].startAt) {
+              conflictDay = schedule.days[i].name_of_day;
+              break;
+            }
+          }
+        }
+      }
+    }
+
+    if (conflictDay) {
+      throw customError(400, `${conflictDay} sessions are overlapping`);
+    }
+  };
 
   async eventHandler(payload) {
     try {
