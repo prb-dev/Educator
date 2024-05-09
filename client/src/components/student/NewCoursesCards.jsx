@@ -11,7 +11,7 @@ const title = {
 export default function NewCoursesCards() {
   return (
     <div>
-      <div style={title}>New Courses</div>
+      <div style={title} className="text-slate-700">New Courses</div>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         {courseData.map((course) => (
           <CourseCard key={course.id} course={course} />

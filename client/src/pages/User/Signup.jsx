@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import { Button } from '@mui/material';
 
 
 function Signup() {
@@ -24,7 +25,7 @@ function Signup() {
     };
 }
   return (
-    <div className=' mt-40 h-[1000px]'>
+    <div className=' mt-40 h-[1000px] text-slate-700'>
 
       <h1 className="text-5xl mb-10 text-center ">Signup</h1>
       <form onSubmit={handleSubmit} className="text-center">
@@ -84,9 +85,9 @@ function Signup() {
             Admin
           </label>
         </div>
-        <button type="submit" className="py-2 px-4 bg-white text-black rounded-md">
+        <Button variant='outlined' type="submit" className="py-2 px-4 bg-white text-black rounded-md">
           Sign Up
-        </button>
+        </Button>
       </form>
     </div>
   );
