@@ -9,11 +9,15 @@ import {
   Select,
 } from "@mui/material";
 import DeleteOutlineOutlinedIcon from "@mui/icons-material/DeleteOutlineOutlined";
+import { Spin, message } from "antd";
 
 export default function DeleteSchedule() {
   const [courses, setCourses] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [messageApi, contextHolder] = message.useMessage();
 
   useEffect(() => {
+    setLoading(true);
     fetch("http://localhost:80/course/instructor/663b48d75d3f69cd1ec16b9c")
       .then((res) => res.json())
       .then((data) => {
@@ -22,8 +26,12 @@ export default function DeleteSchedule() {
             setCourses((prevCourses) => [...prevCourses, d]);
           }
         });
+        setLoading(false);
       })
-      .catch((err) => console.log(err));
+      .catch((err) => {
+        setLoading(false);
+        console.log(err);
+      });
   }, []);
 
   const [course, setCourse] = useState("");
@@ -33,6 +41,7 @@ export default function DeleteSchedule() {
   };
 
   const deleteSchedule = () => {
+    setLoading(true);
     fetch(`http://localhost:80/schedule/${course.schedule}/${course._id}`, {
       method: "DELETE",
       headers: {
@@ -41,52 +50,70 @@ export default function DeleteSchedule() {
     })
       .then((res) => res.json())
       .then((data) => {
-        console.log(data);
+        setLoading(false);
+        if (data.errorMessage)
+          messageApi.open({
+            type: "error",
+            content: "Failes to delete the schedule",
+          });
+        else
+          messageApi.open({
+            type: "success",
+            content: data.message,
+          });
       })
-      .catch((err) => console.log(err));
+      .catch((err) => {
+        console.log(err);
+        setLoading(false);
+      });
   };
 
   return (
-    <main className="w-full h-[100vh] bg-gradient-to-r from-slate-200 to-white overflow-y-scroll p-5 text-slate-700 flex flex-col">
-      <h1 className="text-2xl m-5 min-w-fit">
-        Delete Schedules <CalendarMonthOutlinedIcon />
-      </h1>
-      <div className="flex justify-between items-center">
-        <FormControl>
-          <InputLabel id="course-label">Course</InputLabel>
-          <Select
-            labelId="course-label"
-            id="course-select"
-            sx={{
-              minWidth: 120,
-            }}
-            value={course}
-            onChange={handleCourseChange}
-            autoWidth
-            label="Course"
-          >
-            {courses.length != 0 ? (
-              courses.map((c) => (
-                <MenuItem key={c._id} value={c}>
-                  {c.name}
-                </MenuItem>
-              ))
-            ) : (
-              <MenuItem value={null} disabled={true}>
-                No courses
-              </MenuItem>
-            )}
-          </Select>
-          <FormHelperText>Select a course</FormHelperText>
-        </FormControl>
-        <Button
-          onClick={deleteSchedule}
-          variant="outlined"
-          startIcon={<DeleteOutlineOutlinedIcon />}
-        >
-          Delete
-        </Button>
-      </div>
-    </main>
+    <>
+      {contextHolder}
+      <Spin spinning={loading}>
+        <main className="w-full h-[100vh] bg-gradient-to-r from-slate-200 to-white overflow-y-scroll p-5 text-slate-700 flex flex-col">
+          <h1 className="text-2xl m-5 min-w-fit">
+            Delete Schedules <CalendarMonthOutlinedIcon />
+          </h1>
+          <div className="flex justify-between items-center">
+            <FormControl>
+              <InputLabel id="course-label">Course</InputLabel>
+              <Select
+                labelId="course-label"
+                id="course-select"
+                sx={{
+                  minWidth: 120,
+                }}
+                value={course}
+                onChange={handleCourseChange}
+                autoWidth
+                label="Course"
+              >
+                {courses.length != 0 ? (
+                  courses.map((c) => (
+                    <MenuItem key={c._id} value={c}>
+                      {c.name}
+                    </MenuItem>
+                  ))
+                ) : (
+                  <MenuItem value={null} disabled={true}>
+                    No courses
+                  </MenuItem>
+                )}
+              </Select>
+              <FormHelperText>Select a course</FormHelperText>
+            </FormControl>
+            <Button
+              onClick={deleteSchedule}
+              variant="outlined"
+              startIcon={<DeleteOutlineOutlinedIcon />}
+            >
+              Delete
+            </Button>
+          </div>
+        </main>
+      </Spin>
+    </>
   );
 }

@@ -55,9 +55,9 @@ export default function Barchart({ data }) {
     dataSet.push({
       label: value.course.name,
       data: monthCounts,
-      borderWidth: 0,
+      borderWidth: 2,
       barThickness: 20,
-      borderRadius: 10,
+      borderRadius: 5,
     });
   });
 
