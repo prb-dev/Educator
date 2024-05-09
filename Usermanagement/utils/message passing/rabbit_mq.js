@@ -1,6 +1,6 @@
 const amqplib = require("amqplib");
 const { v4: uuidv4 } = require("uuid");
-const Service = require("../../services/UserManagement.service.js");
+const Service = require("../../services/UserManagement.service");
 
 let connection = null;
 const service = new Service();

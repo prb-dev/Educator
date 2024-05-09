@@ -1,6 +1,7 @@
 // controllers/authController.js
 
 const bcrypt = require("bcryptjs");
+const User = require("../models/User.js")
 const jwt = require("jsonwebtoken");
 const Service = require("../services/UserManagement.service.js");
 
@@ -29,22 +30,31 @@ exports.signUp = async (req, res) => {
 
 //get courses of users
 
-exports.getCoursesOfUser =  async (req, res) => {
-  try{
+exports.getCoursesOfUser = async (req, res) => {
+  try {
     const user = await User.findById(req.params.id);
-    const courses = await Course.find({user: req.params.id});
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: 'User not found',
+      });
+    }
+ 
+    const courseIds = user.courses;
+ 
+    const courses = await Course.find({ _id: { $in: courseIds } });
 
     res.status(200).json({
       success: true,
       courses,
     });
-  }catch(error) {
+  } catch (error) {
     res.status(500).json({
       success: false,
       message: error.message,
     });
   }
-}
+};
 
 // Log in
 exports.logIn = async (req, res) => {
