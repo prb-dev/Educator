@@ -10,15 +10,17 @@ import {
 } from "@mui/material";
 import DeleteOutlineOutlinedIcon from "@mui/icons-material/DeleteOutlineOutlined";
 import { Spin, message } from "antd";
+import { useSelector } from "react-redux";
 
 export default function DeleteSchedule() {
   const [courses, setCourses] = useState([]);
   const [loading, setLoading] = useState(false);
   const [messageApi, contextHolder] = message.useMessage();
+  const { user } = useSelector((state) => state.user);
 
   useEffect(() => {
     setLoading(true);
-    fetch("http://localhost:80/course/instructor/663b48d75d3f69cd1ec16b9c")
+    fetch(`http://localhost:80/course/instructor/${user.user._id}`)
       .then((res) => res.json())
       .then((data) => {
         data.forEach((d) => {
