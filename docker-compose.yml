@@ -85,6 +85,18 @@ services:
       - .:/app
       - /app/courseService/node_modules
 
+  client:
+    build:
+      dockerfile: DockerFile
+      context: ./client
+    container_name: client
+    ports:
+      - "8081:8081"
+    restart: always
+    volumes:
+      - .:/app
+      - /app/client/node_modules
+
   nginx:
     build:
       dockerfile: DockerFile
