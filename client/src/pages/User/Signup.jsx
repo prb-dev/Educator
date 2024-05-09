@@ -12,7 +12,7 @@ function Signup() {
   const handleSubmit = async (event) => {
     event.preventDefault();
     try {
-      const response = await axios.post('/api/UserManagement/signup', {
+      const response = await axios.post('http://localhost:8004/api/UserManagement/signup', {
         username,
         password,
         Email: email,

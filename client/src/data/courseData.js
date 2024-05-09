@@ -1,6 +1,6 @@
 const courseData = [
   {
-    id: 1,
+    id: "6638d9fe38cf110878e2bf4c",
     name: "Introduction to Programming",
     instructor: "John Doe",
     duration: "8 weeks",
@@ -29,7 +29,7 @@ const courseData = [
     img: "https://media.geeksforgeeks.org/wp-content/cdn-uploads/20200214165928/Web-Development-Course-Thumbnail.jpg",
   },
   {
-    id: 2,
+    id: "6638d9fe38cf110878e3bf4c",
     name: "Web Development Fundamentals",
     instructor: "Jane Smith",
     duration: "12 weeks",
@@ -59,7 +59,7 @@ const courseData = [
     img: "https://media.geeksforgeeks.org/wp-content/cdn-uploads/20200214165928/Web-Development-Course-Thumbnail.jpg",
   },
   {
-    id: 3,
+    id: "6638d9fe38cf111878e2bf4c",
     name: "Advanced Data Structures",
     instructor: "David Johnson",
     duration: "10 weeks",
@@ -90,7 +90,7 @@ const courseData = [
   },
 
   {
-    id: 4,
+    id: "6638d9fe48cf110878e2bf4c",
     name: "Mobile App Development",
     instructor: "Sarah Williams",
     duration: "8 weeks",
@@ -120,7 +120,7 @@ const courseData = [
     img: "https://media.geeksforgeeks.org/wp-content/cdn-uploads/20200214165928/Web-Development-Course-Thumbnail.jpg",
   },
   {
-    id: 5,
+    id: "6638d9fe38cf110878e2bf4d",
     name: "Machine Learning Basics",
     instructor: "Michael Brown",
     duration: "6 weeks",

@@ -1,32 +1,18 @@
  
 import Progress from "../../components/charts/Progress";
+import FetchEnrolledCourse from "../../components/student/FetchEnrolledCourse";
 import React, { useState, useEffect } from "react";
-
+import StudentDetails from "../../components/student/StudentDetails"
 export default function DashboardS({ studentName }) {
   const currentDate = new Date().toLocaleDateString();
   const [selectedCourse, setSelectedCourse] = useState(null);
   const [enrolledCourses, setEnrolledCourses] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    fetchEnrolledCourses();
-  }, []);
-  const fetchEnrolledCourses = async () => {
-    try {
-      // Fetch enrolled courses from the backend API
-      const response = await axios.get(`/api/courses/user/${localStorage.getItem('userId')}`);
-      setEnrolledCourses(response.data.courses);
-      setLoading(false);
-    } catch (error) {
-      console.error('Error fetching enrolled courses:', error);
-      setLoading(false); // Update loading state even in case of error
-    }
-  };
+ 
+    
 
-
-
-
-
+ 
   const handleCourseClick = (course) => {
     setSelectedCourse(course);
   };
@@ -36,13 +22,7 @@ export default function DashboardS({ studentName }) {
   };
 
    
-  // Mock data for today's time table
-  const timeTable = [
-    { time: "09:00 AM", event: "Meeting with team" },
-    { time: "11:00 AM", event: "Client presentation" },
-    { time: "01:00 PM", event: "Lunch break" },
-    { time: "03:00 PM", event: "Project discussion" },
-  ];
+ 
 
   return (
     <div className="min-h-screen bg-gray-100 py-6 px-4 sm:px-6 lg:px-8">
@@ -60,25 +40,7 @@ export default function DashboardS({ studentName }) {
       <div className="flex mt-10">
         <div className="mt-10 pt-10 pd-10 shadow-xl shadow-yl h-96 rounded-lg flex-row w-96">
           <h1 className="text-center text-3xl mt-10">Enrolled courses</h1>
-          {loading ? (
-            <p>Loading...</p>
-          ) : enrolledCourses.length === 0 ? (
-            <p>No enrolled courses found.</p>
-          ) : (
-            <div className="">
-              <ul className="mt-6 border border-gray-400 ml-6 mr-6">
-                {enrolledCourses.map((course, index) => (
-                  <li
-                    key={index}
-                    className="text-lg cursor-pointer"
-                    onClick={() => handleCourseClick(course)}
-                  >
-                    {course.courseName}
-                  </li>
-                ))}
-              </ul>
-            </div>
-          )}
+          <FetchEnrolledCourse/>
         </div>
         <div className="mt-10 pt-10 pd-10 ml-20 shadow-xl shadow-yl rounded-lg flex-row w-96">
           {!selectedCourse && <Progress />}
@@ -96,28 +58,11 @@ export default function DashboardS({ studentName }) {
         </div>
         <div className="mt-10 pt-10 pd-10 ml-20 shadow-xl shadow-yl rounded-lg flex-row w-96">
           <div>
-            <h1 className="text-center text-3xl mb-4">Today's Time Table</h1>
-            <table className="w-full border-collapse border border-gray-400">
-              <thead>
-                <tr className="bg-gray-200">
-                  <th className="p-2">Time</th>
-                  <th className="p-2">Event</th>
-                </tr>
-              </thead>
-              <tbody>
-                {timeTable.map((item, index) => (
-                  <tr key={index}>
-                    <td className="p-2">{item.time}</td>
-                    <td className="p-2">{item.event}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+             
+         <StudentDetails></StudentDetails>
           </div>
           <div className="mt-4">
-            <h1 className="text-center text-3xl mb-4">Editable Note Book</h1>
-            {/* Add editable note book component here */}
-            {/* Example: <EditableNoteBook /> */}
+            
           </div>
         </div>
       </div>

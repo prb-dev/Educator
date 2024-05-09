@@ -7,12 +7,24 @@ function Login() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    console.log('Username:', username);
-    console.log('Password:', password);
+  const handleSubmit = async () => {
+    try {
+      const response = await axios.post('http://localhost:8004/api/UserManagement/login', {
+        username,
+        password
+      });
 
-  };
+
+      const token = response.data.token;
+
+      // Save token to local storage
+      localStorage.setItem('token', token);
+
+      console.log(response.data); 
+    } catch (error) {
+      console.error('Error Login:', error.message);
+    };
+  }
 
   return (
     <div className='h-[1000px] '>

@@ -14,6 +14,10 @@ exports.getAllCourses = async (req, res) => {
   }
 };
 
+ 
+
+
+
 exports.getCourseById = async (req, res) => {
   try {
     const course = await service.getCourseById(req.params.id);
