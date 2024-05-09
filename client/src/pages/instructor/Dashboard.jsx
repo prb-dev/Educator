@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import AdminCard from "../../components/AdminCard";
 import PersonAddOutlinedIcon from "@mui/icons-material/PersonAddOutlined";
+import PersonOutlineOutlinedIcon from '@mui/icons-material/PersonOutlineOutlined';
 import AttachMoneyOutlinedIcon from "@mui/icons-material/AttachMoneyOutlined";
 import SchoolOutlinedIcon from "@mui/icons-material/SchoolOutlined";
 import Barchart from "../../components/charts/Barchart";
@@ -42,7 +43,7 @@ export default function Dashboard() {
         <AdminCard
           title="Total Students"
           desc={totalStudents}
-          icon={<PersonAddOutlinedIcon className="text-sky-600" />}
+          icon={<PersonOutlineOutlinedIcon className="text-sky-600" />}
         />
         <AdminCard
           title="Total Revenue"
