@@ -8,6 +8,27 @@ class UserManagementService {
     return updatedUser;
   }
 
+
+  async getCoursesOfUser(id) {
+    try {
+      if (!id) {
+        throw new Error('User ID is required');
+      }
+      const user = await User.findOne({ _id: id });
+      if (!user) {
+        throw new Error('User not found');
+      }
+      
+      const courses = user.courses.map(course => course.course);
+      
+      return courses;
+    } catch (error) {
+      throw new Error(`Error fetching courses of user: ${error.message}`);
+    }
+  }
+  
+
+
   async getUserByID(id) {
     const user = await User.findById(id);
     return user;
