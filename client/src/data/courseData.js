@@ -1,6 +1,6 @@
 const courseData = [
   {
-    id: "6638d9fe38cf110878e2bf4c",
+    id: "663adf35ee77ee9751af50b1",
     name: "Introduction to Programming",
     instructor: "John Doe",
     duration: "8 weeks",

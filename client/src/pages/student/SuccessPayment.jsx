@@ -16,11 +16,24 @@ export default function SuccessPayment() {
   const createNewPaymentInDb = async (paymentData) => {
     console.log(paymentData);
     console.log("Creating new payment in db");
+
     if (!paymentData) {
       console.log("No payment data found");
       return;
     } else {
       try {
+        fetch(
+          `http://localhost:80/enrollment/${paymentData.user._id}/${paymentData.course._id}`,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
+        ).catch((err) => {
+          console.log(err);
+        });
+
         const response = await axios.post(
           "http://localhost:8006/payment/new",
           paymentData
@@ -84,7 +97,7 @@ export default function SuccessPayment() {
     };
 
     createNewPaymentInDb(formattedPaymentData);
-    sendEmail(emailPayload);
+    //sendEmail(emailPayload);
   }, []);
   return (
     <>

@@ -19,9 +19,33 @@ export default function SingleCourse() {
   };
 
   const userData = {
-    _id: "661973fcb741ae54fc66b4dd",
+    _id: "663a4aac154ed5db1324a98c",
     name: "John Doe",
     email: "sandamalabhitha@gmail.com",
+  };
+
+  const enrollmentCheck = () => {
+    fetch(
+      `http://localhost:80/enrollment/validate/${userData._id}/${courseInfo._id}`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    )
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.errorMessage) {
+          console.log(data.errorMessage);
+          return;
+        } else {
+          handlePayment();
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   };
 
   const handlePayment = () => {
@@ -95,7 +119,7 @@ export default function SingleCourse() {
                   </span>
                 </p>
                 <button
-                  onClick={handlePayment}
+                  onClick={enrollmentCheck}
                   className="mt-10 block w-full rounded-md  bg-blue-700 px-3 py-2 text-center text-sm font-semibold text-white shadow-sm hover:bg-green-500 ring-blue focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue"
                 >
                   Get Enroll

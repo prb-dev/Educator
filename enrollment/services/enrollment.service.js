@@ -2,7 +2,29 @@ import { customError } from "../utils/error.js";
 import { RPCRequest } from "../utils/message passing/rabbit_mq.js";
 
 class EnrollmentService {
-  async enroll(uid, cid) {
+  async enroll(user, cid) {
+    let requestPayload = {
+      event: "UPDATE_USER",
+      user,
+    };
+
+    const updatedUser = await RPCRequest(
+      process.env.USER_QUEUE_NAME,
+      requestPayload
+    );
+
+    requestPayload = {
+      event: "ENROLL_SUCCESS",
+      receiverEmail: updatedUser.Email,
+      courseName: cid,
+    };
+
+    RPCRequest(process.env.NOTIFICATION_QUEUE_NAME, requestPayload);
+
+    return updatedUser;
+  }
+
+  enrollmentConflictCheck = async (uid, cid) => {
     let requestPayload = {
       event: "GET_USER",
       id: uid,
@@ -100,26 +122,8 @@ class EnrollmentService {
       enrolledDate: new Date(),
     });
 
-    requestPayload = {
-      event: "UPDATE_USER",
-      user,
-    };
-
-    const updatedUser = await RPCRequest(
-      process.env.USER_QUEUE_NAME,
-      requestPayload
-    );
-
-    requestPayload = {
-      event: "ENROLL_SUCCESS",
-      receiverEmail: updatedUser.email,
-      courseName: cid,
-    };
-
-    RPCRequest(process.env.NOTIFICATION_QUEUE_NAME, requestPayload);
-
-    return updatedUser;
-  }
+    return user;
+  };
 
   async unenroll(uid, cid) {
     let requestPayload = {
