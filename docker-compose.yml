@@ -13,18 +13,6 @@ services:
       - .:/app
       - /app/schedule/node_modules
 
-  test:
-    build:
-      dockerfile: DockerFile
-      context: ./test
-    container_name: test
-    ports:
-      - "8001:8001"
-    restart: always
-    volumes:
-      - .:/app
-      - /app/test/node_modules
-
   analyse:
     build:
       dockerfile: DockerFile
@@ -105,7 +93,6 @@ services:
       - "80:80"
     depends_on:
       - schedule
-      - test
       - enrollment
       - analyse
       - payment
