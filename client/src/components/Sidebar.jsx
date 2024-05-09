@@ -65,12 +65,12 @@ export default function Sidebar() {
     getItem("Courses", "Courses", <CalendarMonthOutlinedIcon />, [
       getItem(
         <Link to="/courses/view">View</Link>,
-        "View",
+        "cView",
         <AddCircleOutlineOutlinedIcon />
       ),
       getItem(
         <Link to="/courses/add">Add</Link>,
-        "Add",
+        "cAdd",
         <AddCircleOutlineOutlinedIcon />
       ),
     ]),
