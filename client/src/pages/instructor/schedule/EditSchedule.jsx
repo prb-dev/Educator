@@ -135,7 +135,7 @@ export default function EditSchedule() {
     let f = parsedTime.format("HH:mm:ss");
 
     let [hours, minutes, seconds] = s.split(":").map(Number);
-    const startAt = new Date();
+    let startAt = new Date();
 
     // Set hours, minutes, and seconds based on the time string
     startAt.setHours(hours);
@@ -143,12 +143,15 @@ export default function EditSchedule() {
     startAt.setSeconds(seconds);
 
     [hours, minutes, seconds] = f.split(":").map(Number);
-    const finishAt = new Date();
+    let finishAt = new Date();
 
     // Set hours, minutes, and seconds based on the time string
     finishAt.setHours(hours);
     finishAt.setMinutes(minutes);
     finishAt.setSeconds(seconds);
+
+    startAt = startAt.toISOString();
+    finishAt = finishAt.toISOString();
 
     setDays((prevDays) =>
       prevDays.map((day) =>
