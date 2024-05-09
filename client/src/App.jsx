@@ -22,7 +22,7 @@ import EditCourse from "./pages/instructor/Courses/EditCourse.jsx";
 import DashboardS from "./pages/student/Dashboard.jsx";
 
 function App() {
-  const instructor = true;
+  const instructor = false;
 
   return (
     <BrowserRouter>

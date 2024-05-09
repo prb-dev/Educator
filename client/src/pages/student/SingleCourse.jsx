@@ -1,5 +1,6 @@
 //get data form state
 import { useLocation } from "react-router-dom";
+import axios from "axios";
 
 const courseContainer = {
   height: "100vh",
@@ -9,6 +10,52 @@ export default function SingleCourse() {
   // const { courseID } = useParams();
   const location = useLocation();
   const courseData = location.state.course;
+
+  const courseInfo = {
+    _id: courseData.id,
+    price: courseData.price,
+    title: courseData.name,
+    description: courseData.description,
+  };
+
+  const userData = {
+    _id: "661973fcb741ae54fc66b4dd",
+    name: "John Doe",
+    email: "sandamalabhitha@gmail.com",
+  };
+
+  const handlePayment = () => {
+    console.log("Payment initiated");
+    const data = {
+      course: {
+        _id: courseInfo._id,
+        name: courseInfo.title,
+      },
+      user: {
+        _id: userData._id,
+        name: userData.name,
+        email: userData.email,
+      },
+      amount: courseData.price,
+      successEndPoint: "success-payment",
+      cancelEndPoint: "payment-cancel",
+    };
+
+    //store data in loacal storage
+    localStorage.setItem("paymentData", JSON.stringify(data));
+
+    try {
+      const response = axios.post("http://localhost:8006/payment/stripe", data);
+
+      response.then((res) => {
+        console.log(res);
+
+        window.location.href = res.data.url;
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   return (
     <div style={courseContainer}>
@@ -48,8 +95,8 @@ export default function SingleCourse() {
                   </span>
                 </p>
                 <button
-                  //   onClick={handlePayment}
-                  className="mt-10 block w-full rounded-md  bg-primary px-3 py-2 text-center text-sm font-semibold text-white shadow-sm hover:bg-accent ring-blue focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue"
+                  onClick={handlePayment}
+                  className="mt-10 block w-full rounded-md  bg-blue-700 px-3 py-2 text-center text-sm font-semibold text-white shadow-sm hover:bg-green-500 ring-blue focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue"
                 >
                   Get Enroll
                 </button>
