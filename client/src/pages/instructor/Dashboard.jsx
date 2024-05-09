@@ -8,6 +8,7 @@ import Barchart from "../../components/charts/Barchart";
 import Linechart from "../../components/charts/Linechart";
 import Doughnutchart from "../../components/charts/Doughnutchart";
 import { Spin } from "antd";
+import { useSelector } from "react-redux";
 
 export default function Dashboard() {
   const [totalStudents, setTotalStudents] = useState(0);
@@ -17,10 +18,11 @@ export default function Dashboard() {
   const [doughnutData, setDoughnutData] = useState({});
   const [lineData, setLineData] = useState({});
   const [barData, setBarData] = useState({});
+  const { user } = useSelector((state) => state.user);
 
   useEffect(() => {
     setLoading(true);
-    fetch("http://localhost:80/analyse/dashboard/663b48d75d3f69cd1ec16b9c")
+    fetch(`http://localhost:80/analyse/dashboard/${user.user._id}`)
       .then((res) => res.json())
       .then((data) => {
         setTotalStudents(data.totalStudents);
