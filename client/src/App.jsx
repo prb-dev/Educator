@@ -55,7 +55,7 @@ function App() {
             <NavBar />
             <Layout>
               {/* <Sidebar /> */}
-              <Layout style={{ backgroundColor: "rgb(20, 27, 45)" }}>
+              <Layout className="bg-gradient-to-r from-slate-200 to-white">
                 <Routes>
                   <Route path="/" element={<Home />} />
                   <Route

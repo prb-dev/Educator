@@ -6,6 +6,7 @@ import {
   signinSuccess,
   signinFail,
 } from "../../redux/user/userSlice.js";
+import { Button } from "@mui/material";
 
 function Login() {
   const [username, setUsername] = useState("");
@@ -42,7 +43,7 @@ function Login() {
   };
 
   return (
-    <div className="h-[1000px] ">
+    <div className="h-[1000px] text-slate-700">
       <h1 className="mt-40 text-4xl text-center">Login</h1>
       <form onSubmit={handleSubmit} className="mt-10 text-center">
         <input
@@ -58,15 +59,16 @@ function Login() {
           placeholder="Password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
-          className="py-2 px-4   w-1/4 bg-transparent border  text-white rounded-md mb-4"
+          className="py-2 px-4   w-1/4 bg-transparent border rounded-md mb-4"
         />
         <br></br>
-        <button
+        <Button
+          variant="outlined"
           type="submit"
           className="py-2 px-4 bg-white text-black rounded-md"
         >
           Log In
-        </button>
+        </Button>
       </form>
     </div>
   );
