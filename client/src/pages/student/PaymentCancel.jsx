@@ -75,8 +75,8 @@ export default function PaymentCancel() {
       event: "ENROLL_FAILED",
     };
 
-    unEnroll(formattedPaymentData);
-    sendEmail(emailPayload);
+    //unEnroll(formattedPaymentData);
+    //sendEmail(emailPayload);
   }, []);
   return (
     <>
@@ -102,7 +102,7 @@ export default function PaymentCancel() {
             src={paymentCancel}
             alt="Your Company"
           />
-          <h2 className="mt-10 text-center text-2xl font-bold leading-9 tracking-tight text-white">
+          <h2 className="mt-10 text-center text-2xl font-bold leading-9 tracking-tight text-slate-700">
             Your Payment was Canceled.
           </h2>
         </div>

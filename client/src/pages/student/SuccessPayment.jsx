@@ -123,7 +123,7 @@ export default function SuccessPayment() {
             src={paymentSuccess}
             alt="Your Company"
           />
-          <h2 className="mt-10 text-center text-2xl font-bold leading-9 tracking-tight text-white">
+          <h2 className="mt-10 text-center text-2xl font-bold leading-9 tracking-tight text-slate-700">
             Your Payment was Successful.
           </h2>
         </div>
