@@ -12,6 +12,7 @@ router.post("/", courseController.createCourse);
 router.put("/:id", courseController.updateCourse);
 router.delete("/:id", courseController.deleteCourse);
 router.post("/:id/answer", courseController.answerQuiz);
+router.post("/approve/:id", courseController.approve);
 router.post(
   "/:id/upload-lecture-notes",
   upload.single("file"),

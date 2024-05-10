@@ -55,6 +55,10 @@ const courseSchema = new mongoose.Schema({
     type: String,
   },
   questions: [questionSchema], // Array of questions
+  approved: {
+    type: Boolean,
+    default: false,
+  },
 });
 
 module.exports = mongoose.model("Course", courseSchema);
