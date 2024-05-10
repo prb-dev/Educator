@@ -14,10 +14,6 @@ exports.getAllCourses = async (req, res) => {
   }
 };
 
- 
-
-
-
 exports.getCourseById = async (req, res) => {
   try {
     const course = await service.getCourseById(req.params.id);
@@ -59,6 +55,20 @@ exports.answerQuiz = async (req, res) => {
     const score = await service.answerQuiz(req.params.id, req.body);
 
     res.json({ score });
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+};
+
+exports.approve = async (req, res) => {
+  try {
+    const score = await Course.findByIdAndUpdate(req.params.id, {
+      $set: {
+        approved: true,
+      },
+    });
+
+    res.json({ message: "Approved" });
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
