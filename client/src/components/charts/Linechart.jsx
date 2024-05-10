@@ -71,7 +71,7 @@ export default function Linegraph({ data }) {
       <h1 className="text-slate-600 text-lg">Revenue</h1>
 
       <Line
-        width={400}
+        width={600}
         height={300}
         data={{
           labels: [
