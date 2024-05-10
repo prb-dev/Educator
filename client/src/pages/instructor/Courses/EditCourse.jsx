@@ -18,7 +18,8 @@ export default function EditCourse() {
   const location = useLocation();
   const courseData = location.state.course;
   console.log(courseData);
-  console.log("quiz", courseData.questions);
+  console.log("course", courseData._id);
+  // console.log("quiz", courseData.questions);
   const { user } = useSelector((state) => state.user);
 
   const [activeStep, setActiveStep] = useState(0);
@@ -136,7 +137,10 @@ export default function EditCourse() {
   const handleAddCourse = async (data) => {
     console.log("Data", data);
     try {
-      const response = await axios.post("http://localhost:8004/course/", data);
+      const response = await axios.put(
+        `http://localhost:8004/course/${courseData._id}`,
+        data
+      );
       console.log(response);
       setCourseCreated(true);
       setCourse(response.data);
@@ -154,7 +158,7 @@ export default function EditCourse() {
       setPrice(0);
       SetSteps0To3Complete(false);
 
-      alert("Course Created Successfully");
+      alert("Course edited Successfully");
     } catch (error) {
       const response = error.response;
       alert(response.data.message);
