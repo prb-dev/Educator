@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+
 import { useNavigate } from 'react-router-dom';
 import { Button } from '@mui/material';
 
@@ -9,12 +10,11 @@ function Signup() {
   const [password, setPassword] = useState('');
   const [email, setEmail] = useState('');
   const [role, setRole] = useState('');
-  const [errorMessage, setErrorMessage] = useState('');
-
+ 
   const handleSubmit = async (event) => {
     event.preventDefault();
     try {
-      const response = await axios.post('http://localhost:8008/user/signup', {
+      const response = await axios.post('http://localhost:80/user/signup', {
         username,
         password,
         Email: email,
@@ -47,6 +47,7 @@ function Signup() {
     <div className='flex flex-col items-center justify-center h-screen bg-blue-50 text-blue-900'>
       <h1 className="text-5xl mb-10">Signup</h1>
       {errorMessage && <p className="text-red-500 mb-4">{errorMessage}</p>}
+
       <form onSubmit={handleSubmit} className="text-center">
         <input
           type="text"
