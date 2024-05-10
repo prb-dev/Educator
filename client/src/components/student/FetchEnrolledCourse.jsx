@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import { useSelector } from 'react-redux';
 
 const FetchEnrolledCourse = () => {
   const [courses, setCourses] = useState([]);
@@ -7,18 +8,13 @@ const FetchEnrolledCourse = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
+  const { user } = useSelector((state) => state.user);
+
   useEffect(() => {
     const fetchCourses = async () => {
       try {
-        // Retrieve user ID from JWT token in local storage
-        const userId = localStorage.getItem('userId');
-        if (!userId) {
-          throw new Error('User ID not found in local storage');
-        }
-
-        // Fetch course IDs associated with the user ID
-        const courseIdResponse = await axios.get(`/api/getCoursesOfUser/${userId}`);
-        const courseIds = courseIdResponse.data.courseIds;
+        // Fetch course IDs associated with the user
+        const courseIds = user.courses;
 
         // Fetch course details using course IDs
         const coursePromises = courseIds.map(async (courseId) => {
@@ -36,8 +32,10 @@ const FetchEnrolledCourse = () => {
       }
     };
 
-    fetchCourses();
-  }, []);
+    if (user && user.courses) {
+      fetchCourses();
+    }
+  }, [user]);
 
   const handleCourseClick = async (courseId) => {
     try {
@@ -58,15 +56,13 @@ const FetchEnrolledCourse = () => {
   if (courses.length === 0) return <div>No courses found</div>;
 
   return (
-    <div>
-      <h2>User Courses</h2>
-      <ul>
-        {courses.map((course) => (
-          <li key={course.id} onClick={() => handleCourseClick(course.id)}>
-            {course.name}
-          </li>
-        ))}
-      </ul>
+    <div className="grid grid-cols-3 gap-4">
+      {courses.map((course) => (
+        <div key={course.id} className="bg-white rounded-lg shadow-md p-4 cursor-pointer" onClick={() => handleCourseClick(course.id)}>
+          <h3 className="text-lg font-semibold">{course.name}</h3>
+          {/* You can add more details here if needed */}
+        </div>
+      ))}
 
       {/* Popup modal to display course details */}
       {selectedCourse && (

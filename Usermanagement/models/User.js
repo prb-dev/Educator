@@ -29,11 +29,12 @@ const userSchema = new mongoose.Schema({
   Email: { type: String, required: true, unique: true },
   role: {
     type: String,
-    enum: ["admin", "student", "lecturer"],
+ 
+    enum: ["admin", "student", ,"instructor", "lecturer"],
     required: true,
   },
 });
 
-const User = mongoose.model("User", userSchema);
+const user = mongoose.model("user", userSchema);
 
-module.exports = User;
+module.exports = user;
