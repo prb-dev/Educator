@@ -21,7 +21,7 @@ function Signup() {
     event.preventDefault();
     try {
  
-      const response = await axios.post('http://localhost:8008/user/signup', {
+       
  
       const response = await axios.post('http://localhost:80/user/signup', {
  
@@ -58,8 +58,9 @@ return <Redirect to="/student-dashboard" />; // Redirect if redirect is true
     }
   };
 
+  return(
  
-    <div className=' mt-40 h-[1000px]'>
+     
  
     <div className=' mt-40 h-[1000px] text-slate-700'>
 
