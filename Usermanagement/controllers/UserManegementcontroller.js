@@ -1,7 +1,7 @@
 // controllers/authController.js
 
 const bcrypt = require("bcryptjs");
-const User = require("../models/User.js")
+ 
 const jwt = require("jsonwebtoken");
 const Service = require("../services/UserManagement.service.js");
 
@@ -16,7 +16,7 @@ exports.signUp = async (req, res) => {
       username,
       password: hashedPassword,
       Email,
-      role,
+      role
     });
 
     res.status(201).json({ message: "User created successfully", user });

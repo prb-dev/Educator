@@ -1,15 +1,17 @@
 import React, { useState } from 'react';
 import axios from 'axios';
- 
+import { useNavigate } from 'react-router-dom';
+
 
 function Login() {
- 
+  
   const [username, setUsername] = useState('');
+  const navigate = useNavigate();
   const [password, setPassword] = useState('');
   
   const handleSubmit = async () => {
     try {
-      const response = await axios.post('http://localhost:8004/api/UserManagement/login', {
+      const response = await axios.post('http://localhost:8008/user/login', {
         username,
         password
       });
@@ -21,6 +23,7 @@ function Login() {
       localStorage.setItem('token', token);
 
       console.log(response.data); 
+      navigate('/StudentDashboard');
     } catch (error) {
       console.error('Error Login:', error.message);
     };
