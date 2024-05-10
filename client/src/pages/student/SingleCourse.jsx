@@ -1,13 +1,15 @@
 //get data form state
 import { useLocation } from "react-router-dom";
 import axios from "axios";
+import { useSelector } from "react-redux";
 
 const courseContainer = {
   height: "100vh",
 };
 
 export default function SingleCourse() {
-  // const { courseID } = useParams();
+  const { user } = useSelector((state) => state.user);
+
   const location = useLocation();
   const courseData = location.state.course;
 
@@ -19,10 +21,12 @@ export default function SingleCourse() {
   };
 
   const userData = {
-    _id: "663a4aac154ed5db1324a98c",
-    name: "John Doe",
-    email: "sandamalabhitha@gmail.com",
+    _id: user.user._id,
+    name: user.user.username,
+    email: user.user.email,
   };
+
+  console.log(userData);
 
   const enrollmentCheck = () => {
     fetch(
