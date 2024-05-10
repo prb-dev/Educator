@@ -6,13 +6,45 @@ const initialState = {
   loading: false,
 };
 
-const userSlice = createSlice({
+export const userSlice = createSlice({
   name: "user",
   initialState,
   reducers: {
-    test: () => {},
+    signinStart: (state) => {
+      state.loading = true;
+    },
+    signinSuccess: (state, action) => {
+      state.loading = false;
+      state.user = action.payload;
+      state.error = null;
+    },
+    signinFail: (state, action) => {
+      state.loading = false;
+      state.error = action.payload;
+    },
+    signoutStart: (state) => {
+      state.loading = true;
+    },
+    signoutSuccess: (state) => {
+      state.loading = false;
+      state.user = null;
+      state.error = null;
+    },
+    signoutFail: (state, action) => {
+      state.loading = false;
+      state.error = action.payload;
+    },
   },
 });
 
-export const { test } = userSlice.actions;
+// Action creators are generated for each case reducer function
+export const {
+  signinStart,
+  signinSuccess,
+  signinFail,
+  signoutStart,
+  signoutSuccess,
+  signoutFail,
+} = userSlice.actions;
+
 export default userSlice.reducer;

@@ -1,12 +1,14 @@
 import React, { useEffect, useState } from "react";
 import AdminCard from "../../components/AdminCard";
 import PersonAddOutlinedIcon from "@mui/icons-material/PersonAddOutlined";
+import PersonOutlineOutlinedIcon from '@mui/icons-material/PersonOutlineOutlined';
 import AttachMoneyOutlinedIcon from "@mui/icons-material/AttachMoneyOutlined";
 import SchoolOutlinedIcon from "@mui/icons-material/SchoolOutlined";
 import Barchart from "../../components/charts/Barchart";
 import Linechart from "../../components/charts/Linechart";
 import Doughnutchart from "../../components/charts/Doughnutchart";
 import { Spin } from "antd";
+import { useSelector } from "react-redux";
 
 export default function Dashboard() {
   const [totalStudents, setTotalStudents] = useState(0);
@@ -16,10 +18,11 @@ export default function Dashboard() {
   const [doughnutData, setDoughnutData] = useState({});
   const [lineData, setLineData] = useState({});
   const [barData, setBarData] = useState({});
+  const { user } = useSelector((state) => state.user);
 
   useEffect(() => {
     setLoading(true);
-    fetch("http://localhost:8003/analyse/dashboard/663b48d75d3f69cd1ec16b9c")
+    fetch(`http://localhost:80/analyse/dashboard/${user.user._id}`)
       .then((res) => res.json())
       .then((data) => {
         setTotalStudents(data.totalStudents);
@@ -42,7 +45,7 @@ export default function Dashboard() {
         <AdminCard
           title="Total Students"
           desc={totalStudents}
-          icon={<PersonAddOutlinedIcon className="text-sky-600" />}
+          icon={<PersonOutlineOutlinedIcon className="text-sky-600" />}
         />
         <AdminCard
           title="Total Revenue"

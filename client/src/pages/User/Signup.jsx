@@ -1,7 +1,10 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+ 
 import { useNavigate } from 'react-router-dom';
-
+ 
+import { Button } from '@mui/material';
+ 
 
 function Signup() {
   // State hooks for form inputs
@@ -17,7 +20,11 @@ function Signup() {
   const handleSubmit = async (event) => {
     event.preventDefault();
     try {
+ 
       const response = await axios.post('http://localhost:8008/user/signup', {
+ 
+      const response = await axios.post('http://localhost:80/user/signup', {
+ 
         username,
         password,
         Email: email,
@@ -51,8 +58,12 @@ return <Redirect to="/student-dashboard" />; // Redirect if redirect is true
     }
   };
 
-  return (
+ 
     <div className=' mt-40 h-[1000px]'>
+ 
+    <div className=' mt-40 h-[1000px] text-slate-700'>
+
+ 
       <h1 className="text-5xl mb-10 text-center ">Signup</h1>
       <form onSubmit={handleSubmit} className="text-center">
         {errorMessage && <p className="text-red-500 mb-4">{errorMessage}</p>}
@@ -112,9 +123,9 @@ return <Redirect to="/student-dashboard" />; // Redirect if redirect is true
             Admin
           </label>
         </div>
-        <button type="submit" className="py-2 px-4 bg-white text-black rounded-md">
+        <Button variant='outlined' type="submit" className="py-2 px-4 bg-white text-black rounded-md">
           Sign Up
-        </button>
+        </Button>
       </form>
     </div>
   );

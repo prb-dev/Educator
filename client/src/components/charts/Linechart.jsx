@@ -62,8 +62,7 @@ export default function Linegraph({ data }) {
       label: value.course.name,
       data: monthlyRevenues,
       borderWidth: 2,
-      pointStyle: "circle",
-      radius: 0,
+      radius: 1,
     });
   });
 
@@ -104,9 +103,6 @@ export default function Linegraph({ data }) {
             y: {
               border: {
                 dash: [6],
-              },
-              ticks: {
-                display: false,
               },
             },
           },

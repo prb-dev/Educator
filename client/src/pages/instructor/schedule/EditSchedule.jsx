@@ -20,12 +20,18 @@ import Button from "@mui/material/Button";
 import moment from "moment";
 import DoneOutlinedIcon from "@mui/icons-material/DoneOutlined";
 import { FormHelperText, InputLabel, MenuItem, Select } from "@mui/material";
+import { useSelector } from "react-redux";
+import { message, Spin } from "antd";
 
 export default function EditSchedule() {
   const [courses, setCourses] = useState([]);
+  const [messageApi, contextHolder] = message.useMessage();
+  const [loading, setLoading] = useState(false);
+  const { user } = useSelector((state) => state.user);
 
   useEffect(() => {
-    fetch("http://localhost:8004/course/instructor/661b92d6108f66979562bb54")
+    setLoading(true);
+    fetch(`http://localhost:80/course/instructor/${user.user._id}`)
       .then((res) => res.json())
       .then((data) => {
         data.forEach((d) => {
@@ -33,8 +39,12 @@ export default function EditSchedule() {
             setCourses((prevCourses) => [...prevCourses, d]);
           }
         });
+        setLoading(false);
       })
-      .catch((err) => console.log(err));
+      .catch((err) => {
+        console.log(err);
+        setLoading(false);
+      });
   }, []);
 
   const Item = styled(Paper)(() => ({
@@ -114,13 +124,18 @@ export default function EditSchedule() {
   }, [days]);
 
   useEffect(() => {
+    setLoading(true);
     if (course)
-      fetch(`http://localhost:8000/schedule/${course}`)
+      fetch(`http://localhost:80/schedule/${course}`)
         .then((res) => res.json())
         .then((data) => {
           setSchedule(data);
+          setLoading(false);
         })
-        .catch((err) => console.log(err));
+        .catch((err) => {
+          console.log(err);
+          setLoading(false);
+        });
   }, [course]);
 
   useEffect(() => {
@@ -135,7 +150,7 @@ export default function EditSchedule() {
     let f = parsedTime.format("HH:mm:ss");
 
     let [hours, minutes, seconds] = s.split(":").map(Number);
-    const startAt = new Date();
+    let startAt = new Date();
 
     // Set hours, minutes, and seconds based on the time string
     startAt.setHours(hours);
@@ -143,12 +158,15 @@ export default function EditSchedule() {
     startAt.setSeconds(seconds);
 
     [hours, minutes, seconds] = f.split(":").map(Number);
-    const finishAt = new Date();
+    let finishAt = new Date();
 
     // Set hours, minutes, and seconds based on the time string
     finishAt.setHours(hours);
     finishAt.setMinutes(minutes);
     finishAt.setSeconds(seconds);
+
+    startAt = startAt.toISOString();
+    finishAt = finishAt.toISOString();
 
     setDays((prevDays) =>
       prevDays.map((day) =>
@@ -185,7 +203,8 @@ export default function EditSchedule() {
   };
 
   const upateSchedule = () => {
-    fetch(`http://localhost:8000/schedule/${course}`, {
+    setLoading(true);
+    fetch(`http://localhost:80/schedule/${course}`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
@@ -193,135 +212,155 @@ export default function EditSchedule() {
       body: JSON.stringify({ schedule: schedule }),
     })
       .then((res) => res.json())
-      .then((data) => console.log(data))
-      .catch((err) => console.log(err));
+      .then((data) => {
+        setLoading(false);
+        if (data.errorMessage)
+          messageApi.open({
+            type: "error",
+            content: "Failed to update the schedule",
+          });
+        else
+          messageApi.open({
+            type: "success",
+            content: "Schedule updated successfully",
+          });
+      })
+      .catch((err) => {
+        console.log(err);
+        setLoading(false);
+      });
   };
 
   return (
-    <main className="w-full h-[100vh] bg-gradient-to-r from-slate-200 to-white text-slate-700 flex flex-col p-5 overflow-y-scroll">
-      <h1 className="text-2xl m-5 min-w-fit">
-        Edit Schedules <CalendarMonthOutlinedIcon />
-      </h1>
-      <div className="flex justify-between items-center">
-        <FormControl>
-          <InputLabel id="course-label">Course</InputLabel>
-          <Select
-            labelId="course-label"
-            id="course-select"
-            sx={{
-              minWidth: 120,
-            }}
-            value={course}
-            onChange={handleCourseChange}
-            autoWidth
-            label="Course"
-          >
-            {courses.length != 0 ? (
-              courses.map((c) => (
-                <MenuItem key={c._id} value={c._id}>
-                  {c.name}
-                </MenuItem>
-              ))
-            ) : (
-              <MenuItem value={null} disabled={true}>
-                No courses have schedules
-              </MenuItem>
-            )}
-          </Select>
-          <FormHelperText>Select a course</FormHelperText>
-        </FormControl>
-        <Button
-          variant="outlined"
-          startIcon={<DoneOutlinedIcon />}
-          onClick={upateSchedule}
-        >
-          Done
-        </Button>
-      </div>
-
-      <div className="mt-10">
-        <Grid container spacing={10}>
-          {days.map((day, i) => (
-            <Grid key={i} item sm={3} md={6}>
-              <Item className="p-5 border border-slate-500">
-                <h1 className="text-lg font-semibold mb-5 self-start text-slate-700">
-                  {day.name_of_day}
-                  <IconButton onClick={() => handleOpen(day.name_of_day)}>
-                    <AddCircleOutlineOutlinedIcon className="text-slate-700" />
-                  </IconButton>
-                </h1>
-
-                {day.sessions.map((ses, j) => (
-                  <PaperContent
-                    key={j}
-                    startAt={ses.startAt}
-                    finishAt={ses.finishAt}
-                    lecture={ses.lecture}
-                    deleteFn={() => deleteSession(i, j)}
-                    fromEdit={true}
-                  />
-                ))}
-              </Item>
-            </Grid>
-          ))}
-        </Grid>
-      </div>
-      <Modal
-        aria-labelledby="transition-modal-title"
-        aria-describedby="transition-modal-description"
-        open={open}
-        onClose={() => handleClose()}
-        closeAfterTransition
-        slots={{ backdrop: Backdrop }}
-        slotProps={{
-          backdrop: {
-            timeout: 500,
-          },
-        }}
-      >
-        <Fade in={open}>
-          <Box sx={style}>
-            <form
-              onSubmit={addSession}
-              className="flex flex-col text-slate-700"
-            >
-              <h1>Create a session</h1>
-              <LocalizationProvider dateAdapter={AdapterDayjs}>
-                <DemoContainer components={["MultiInputTimeRangeField"]}>
-                  <MultiInputTimeRangeField
-                    slotProps={{
-                      textField: ({ position }) => ({
-                        label: position === "start" ? "From" : "To",
-                        id: position === "start" ? "startAt" : "finishAt",
-                      }),
-                    }}
-                  />
-                </DemoContainer>
-              </LocalizationProvider>
-              <TextField
+    <>
+      {contextHolder}
+      <Spin spinning={loading}>
+        <main className="w-full h-[100vh] bg-gradient-to-r from-slate-200 to-white text-slate-700 flex flex-col p-5 overflow-y-scroll">
+          <h1 className="text-2xl m-5 min-w-fit">
+            Edit Schedules <CalendarMonthOutlinedIcon />
+          </h1>
+          <div className="flex justify-between items-center">
+            <FormControl>
+              <InputLabel id="course-label">Course</InputLabel>
+              <Select
+                labelId="course-label"
+                id="course-select"
                 sx={{
-                  marginTop: 2,
+                  minWidth: 120,
                 }}
-                id="lecture"
-                label="Lecture"
-                variant="outlined"
-                helperText="Type the lecture name"
-              />
-
-              <Button
-                sx={{
-                  width: 5,
-                  alignSelf: "end",
-                }}
-                variant="outlined"
-                type="submit"
+                value={course}
+                onChange={handleCourseChange}
+                autoWidth
+                label="Course"
               >
-                Done
-              </Button>
-            </form>
-          </Box>
-        </Fade>
-      </Modal>
-    </main>
+                {courses.length != 0 ? (
+                  courses.map((c) => (
+                    <MenuItem key={c._id} value={c._id}>
+                      {c.name}
+                    </MenuItem>
+                  ))
+                ) : (
+                  <MenuItem value={null} disabled={true}>
+                    No courses have schedules
+                  </MenuItem>
+                )}
+              </Select>
+              <FormHelperText>Select a course</FormHelperText>
+            </FormControl>
+            <Button
+              variant="outlined"
+              startIcon={<DoneOutlinedIcon />}
+              onClick={upateSchedule}
+            >
+              Done
+            </Button>
+          </div>
+
+          <div className="mt-10">
+            <Grid container spacing={10}>
+              {days.map((day, i) => (
+                <Grid key={i} item sm={3} md={6}>
+                  <Item className="p-5 border border-slate-500">
+                    <h1 className="text-lg font-semibold mb-5 self-start text-slate-700">
+                      {day.name_of_day}
+                      <IconButton onClick={() => handleOpen(day.name_of_day)}>
+                        <AddCircleOutlineOutlinedIcon className="text-slate-700" />
+                      </IconButton>
+                    </h1>
+
+                    {day.sessions.map((ses, j) => (
+                      <PaperContent
+                        key={j}
+                        startAt={ses.startAt}
+                        finishAt={ses.finishAt}
+                        lecture={ses.lecture}
+                        deleteFn={() => deleteSession(i, j)}
+                        fromEdit={true}
+                      />
+                    ))}
+                  </Item>
+                </Grid>
+              ))}
+            </Grid>
+          </div>
+          <Modal
+            aria-labelledby="transition-modal-title"
+            aria-describedby="transition-modal-description"
+            open={open}
+            onClose={() => handleClose()}
+            closeAfterTransition
+            slots={{ backdrop: Backdrop }}
+            slotProps={{
+              backdrop: {
+                timeout: 500,
+              },
+            }}
+          >
+            <Fade in={open}>
+              <Box sx={style}>
+                <form
+                  onSubmit={addSession}
+                  className="flex flex-col text-slate-700"
+                >
+                  <h1>Create a session</h1>
+                  <LocalizationProvider dateAdapter={AdapterDayjs}>
+                    <DemoContainer components={["MultiInputTimeRangeField"]}>
+                      <MultiInputTimeRangeField
+                        slotProps={{
+                          textField: ({ position }) => ({
+                            label: position === "start" ? "From" : "To",
+                            id: position === "start" ? "startAt" : "finishAt",
+                          }),
+                        }}
+                      />
+                    </DemoContainer>
+                  </LocalizationProvider>
+                  <TextField
+                    sx={{
+                      marginTop: 2,
+                    }}
+                    id="lecture"
+                    label="Lecture"
+                    variant="outlined"
+                    helperText="Type the lecture name"
+                  />
+
+                  <Button
+                    sx={{
+                      width: 5,
+                      alignSelf: "end",
+                    }}
+                    variant="outlined"
+                    type="submit"
+                  >
+                    Done
+                  </Button>
+                </form>
+              </Box>
+            </Fade>
+          </Modal>
+        </main>
+      </Spin>
+    </>
   );
 }
