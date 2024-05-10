@@ -1,19 +1,3 @@
- 
-import React, { useState } from 'react';
-import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
-
-
-function Login() {
-  
-  const [username, setUsername] = useState('');
-  const navigate = useNavigate();
-  const [password, setPassword] = useState('');
-  
-  const handleSubmit = async () => {
-    try {
-      const response = await axios.post('http://localhost:8008/user/login', {
- 
 import React, { useState } from "react";
 import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
@@ -36,7 +20,6 @@ function Login() {
       dispatch(signinStart());
 
       const response = await axios.post("http://localhost:80/user/login", {
- 
         username,
         password,
       });
@@ -53,12 +36,7 @@ function Login() {
       // Save token to local storage
       localStorage.setItem("token", token);
 
- 
-      console.log(response.data); 
-      navigate('/StudentDashboard');
- 
       console.log(response.data);
- 
     } catch (error) {
       console.error("Error Login:", error.message);
     }
