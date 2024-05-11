@@ -47,6 +47,7 @@ export default function AddCourse() {
   const [fileUpaodError, setFileUploadError] = useState(false);
   const [bannerUplaodError, setBannerUploadError] = useState(false);
   const [bannerUplaoding, setBannerUploading] = useState(false);
+  const [lectureVideoList, setLectureVideoList] = useState([]);
 
   const [error, setError] = useState(null);
 
@@ -111,7 +112,7 @@ export default function AddCourse() {
       noOfQuizzes &&
       quizQuestion &&
       lectureNoteUrl &&
-      lectureVideoUrl
+      lectureVideoList
     ) {
       SetSteps0To3Complete(true);
     }
@@ -139,6 +140,7 @@ export default function AddCourse() {
       setNoOfQuizzes(0);
       setLectureNoteUrl("");
       setLectureVideoUrl("");
+      setLectureVideoList([]);
       setQuizQuestion([]);
       setPrice(0);
       SetSteps0To3Complete(false);
@@ -146,6 +148,7 @@ export default function AddCourse() {
       alert("Course Created Successfully");
     } catch (error) {
       const response = error.response;
+      console.log(error);
       alert(response.data.message);
     }
   };
@@ -175,7 +178,7 @@ export default function AddCourse() {
       instructor: user.user._id,
       price: parseInt(price),
       lectureNotesUrl: lectureNoteUrl,
-      lectureVideosUrl: lectureVideoUrl,
+      lectureVideosUrl: lectureVideoList,
       questions: quizQuestion,
     };
 
@@ -191,6 +194,13 @@ export default function AddCourse() {
     try {
       const url = await uploadVideo(file);
       setLectureVideoUrl(url);
+      setLectureVideoList((prevLectureVideoList) => {
+        const updatedLectureVideoList = [...prevLectureVideoList];
+        updatedLectureVideoList.push(url);
+        return updatedLectureVideoList;
+      });
+
+      console.log("lectureVideoList", lectureVideoList);
     } catch (error) {
       setError(error.message);
     } finally {
@@ -204,6 +214,7 @@ export default function AddCourse() {
     try {
       const url = await uploadVideo(file);
       setLectureNoteUrl(url);
+      // add to the list
     } catch (error) {
       setFileUploadError(error.message);
     } finally {
@@ -642,6 +653,8 @@ export default function AddCourse() {
                       </div>
                     ) : null}
 
+                    {/* */}
+
                     <div className="mt-2 flex justify-center rounded-lg border border-dashed border-gray-900/25 px-6 py-10">
                       <div className="text-center">
                         <div className="mt-4 flex text-sm leading-6 text-gray-600">
@@ -678,11 +691,18 @@ export default function AddCourse() {
                       >
                         Lecture Video
                       </label>
-                      {lectureVideoUrl ? (
-                        <div className="w-100 h-7 bg-primary-50 text-wrap overflow-hidden p-2 rounded">
-                          Video Uploaded : {lectureVideoUrl}
-                        </div>
-                      ) : null}
+
+                      {lectureVideoList.length > 0
+                        ? lectureVideoList.map((video, i) => (
+                            <div
+                              key={i}
+                              className="w-100 h-7 bg-primary-50 text-wrap overflow-hidden p-2 rounded"
+                            >
+                              {i + 1} . Video Uploaded : {video}
+                            </div>
+                          ))
+                        : null}
+
                       <div className="mt-2 flex justify-center rounded-lg border border-dashed border-gray-900/25 px-6 py-10">
                         <div className="text-center">
                           <div className="mt-4 flex text-sm leading-6 text-gray-600">

@@ -37,10 +37,8 @@ export default function EditCourse() {
   const [lectureNoteUrl, setLectureNoteUrl] = useState(
     courseData.lectureNotesUrl
   );
-  const [lectureVideoUrl, setLectureVideoUrl] = useState(
-    courseData.lectureVideosUrl
-  );
-  const [questions, setQuestions] = useState(courseData.questions);
+  const [lectureVideoUrl, setLectureVideoUrl] = useState();
+  const [quizQuestion, setQuestions] = useState(courseData.questions);
   // const [courseVideo, setCourseVideo] = useState();
 
   const [question, setQuestion] = useState();
@@ -57,6 +55,9 @@ export default function EditCourse() {
   const [fileUpaodError, setFileUploadError] = useState(false);
   const [bannerUplaodError, setBannerUploadError] = useState(false);
   const [bannerUplaoding, setBannerUploading] = useState(false);
+  const [lectureVideoList, setLectureVideoList] = useState(
+    courseData.lectureVideosUrl
+  );
 
   const [error, setError] = useState(null);
 
@@ -119,7 +120,7 @@ export default function EditCourse() {
       noOfLectures &&
       price &&
       noOfQuizzes &&
-      questions &&
+      quizQuestion &&
       lectureNoteUrl &&
       lectureVideoUrl
     ) {
@@ -172,7 +173,7 @@ export default function EditCourse() {
     console.log("Lectures", {
       noOfLectures,
     });
-    console.log("Quizzes", { noOfQuizzes, questions });
+    console.log("Quizzes", { noOfQuizzes, quizQuestion });
     console.log("Pricing and Submit", { price });
 
     const data = {
@@ -188,22 +189,28 @@ export default function EditCourse() {
       instructor: user.user._id,
       price: parseInt(price),
       lectureNotesUrl: lectureNoteUrl,
-      lectureVideosUrl: lectureVideoUrl,
-      questions: questions,
+      lectureVideosUrl: lectureVideoList,
+      questions: quizQuestion,
     };
 
-    console.log("question", questions);
+    console.log("question", quizQuestion);
     // console.log(data);
     handleAddCourse(data);
     //alert
   };
-
   const handleVideoChange = async (e) => {
     const file = e.target.files[0];
     setUploading(true);
     try {
       const url = await uploadVideo(file);
       setLectureVideoUrl(url);
+      setLectureVideoList((prevLectureVideoList) => {
+        const updatedLectureVideoList = [...prevLectureVideoList];
+        updatedLectureVideoList.push(url);
+        return updatedLectureVideoList;
+      });
+
+      console.log("lectureVideoList", lectureVideoList);
     } catch (error) {
       setError(error.message);
     } finally {
@@ -440,7 +447,7 @@ export default function EditCourse() {
                 {courseCode &&
                 courseName &&
                 price &&
-                questions &&
+                quizQuestion &&
                 noOfLectures ? (
                   <Button onClick={handleNext}>Next</Button>
                 ) : (
@@ -513,7 +520,7 @@ export default function EditCourse() {
                       htmlFor="banner_image"
                       className="block text-sm font-medium leading-6 text-gray-900"
                     >
-                      {questions.length + 1}. Question
+                      {quizQuestion.length + 1}. Question
                     </label>
 
                     <div className="mt-2">
@@ -589,8 +596,8 @@ export default function EditCourse() {
               <h2 className="text-center font-semibold leading-7 text-gray-900 bg-primary-50 ">
                 Added Quizzes
               </h2>
-              {questions.length > 0 ? (
-                questions.map((quiz, i) => (
+              {quizQuestion.length > 0 ? (
+                quizQuestion.map((quiz, i) => (
                   <div key={i}>
                     <div className="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6 bg-primary-50 p-5 rounded-lg">
                       <div className="col-span-full">
@@ -693,11 +700,16 @@ export default function EditCourse() {
                       >
                         Lecture Video
                       </label>
-                      {lectureVideoUrl ? (
-                        <div className="w-100 h-7 bg-primary-50 text-wrap overflow-hidden p-2 rounded">
-                          Video Uploaded : {lectureVideoUrl}
-                        </div>
-                      ) : null}
+                      {lectureVideoList.length > 0
+                        ? lectureVideoList.map((video, i) => (
+                            <div
+                              key={i}
+                              className="w-100 h-7 bg-primary-50 text-wrap overflow-hidden p-2 rounded"
+                            >
+                              {i + 1} . Video Uploaded : {video}
+                            </div>
+                          ))
+                        : null}
                       <div className="mt-2 flex justify-center rounded-lg border border-dashed border-gray-900/25 px-6 py-10">
                         <div className="text-center">
                           <div className="mt-4 flex text-sm leading-6 text-gray-600">
