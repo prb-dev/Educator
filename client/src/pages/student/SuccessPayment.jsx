@@ -12,6 +12,7 @@ const ContainerDesign = {
 
 export default function SuccessPayment() {
   const sucessTost = () => toast.success("Enrollment Successful!");
+  // const { user } = useSelector((state) => state.user);
 
   const createNewPaymentInDb = async (paymentData) => {
     console.log(paymentData);
@@ -97,7 +98,7 @@ export default function SuccessPayment() {
     };
 
     createNewPaymentInDb(formattedPaymentData);
-    //sendEmail(emailPayload);
+    // sendEmail(emailPayload);
   }, []);
   return (
     <>

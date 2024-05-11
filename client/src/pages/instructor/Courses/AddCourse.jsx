@@ -1,4 +1,4 @@
-import { CardActions, Container } from "@mui/material";
+import { Alert, CardActions, Container } from "@mui/material";
 import LibraryAddOutlinedIcon from "@mui/icons-material/LibraryAddOutlined";
 import Box from "@mui/material/Box";
 import Stepper from "@mui/material/Stepper";
@@ -9,10 +9,15 @@ import Typography from "@mui/material/Typography";
 import React, { useEffect, useState } from "react";
 import { Card, Grid } from "antd";
 import Item from "antd/es/list/Item";
+import axios from "axios";
+import { useSelector } from "react-redux";
+import { uploadVideo } from "../../../firebaseUtilty";
 
-const steps = ["Course Details", "Lectures", " Quizzes", "Pricing and Submit"];
+const steps = ["Course Details", "Lectures & Quizzes", "Upload Material"];
 
 export default function AddCourse() {
+  const { user } = useSelector((state) => state.user);
+
   const [activeStep, setActiveStep] = useState(0);
   const [completed, setCompleted] = useState({});
   const [steps0To3Complete, SetSteps0To3Complete] = useState(false);
@@ -20,24 +25,30 @@ export default function AddCourse() {
   const [courseName, setCourseName] = useState("");
   const [courseCode, setCourseCode] = useState("");
   const [description, setDescription] = useState("");
-  const [bannerImage, setBannerImage] = useState(
-    "https://getblogo.com/wp-content/uploads/2020/06/1-8.jpg"
-  );
+  const [bannerImage, setBannerImage] = useState();
   const [noOfLectures, setNoOfLectures] = useState(0);
   const [noOfQuizzes, setNoOfQuizzes] = useState(0);
-  const [lectureNoteUrl, setLectureNoteUrl] = useState(
-    "https://getblogo.com/wp-content/uploads/2020/06/1-8.jpg"
-  );
-  const [lectureVideoUrl, setLectureVideoUrl] = useState(
-    "https://getblogo.com/wp-content/uploads/2020/06/1-8.jpg"
-  );
+  const [lectureNoteUrl, setLectureNoteUrl] = useState("");
+  const [lectureVideoUrl, setLectureVideoUrl] = useState("");
   const [quizQuestion, setQuizQuestion] = useState([]);
+  const [courseVideo, setCourseVideo] = useState();
 
   const [question, setQuestion] = useState();
   const [options, setOptions] = useState([]);
   const [answer, setAnswer] = useState();
 
   const [price, setPrice] = useState(0);
+
+  const [courseCreated, setCourseCreated] = useState(false);
+  const [course, setCourse] = useState({});
+  const [courseID, setCourseID] = useState("663dfe4b80ee48a36e8e806a");
+  const [uploading, setUploading] = useState(false);
+  const [fileUploading, setFileUploading] = useState(false);
+  const [fileUpaodError, setFileUploadError] = useState(false);
+  const [bannerUplaodError, setBannerUploadError] = useState(false);
+  const [bannerUplaoding, setBannerUploading] = useState(false);
+
+  const [error, setError] = useState(null);
 
   const totalSteps = () => {
     return steps.length;
@@ -76,7 +87,7 @@ export default function AddCourse() {
       updatedQuizQuestion.push({
         question: question,
         options: options,
-        correctAnswer: answer,
+        correctAnswerIndex: parseInt(answer),
       });
       setNoOfQuizzes(updatedQuizQuestion.length);
 
@@ -96,10 +107,11 @@ export default function AddCourse() {
       description &&
       bannerImage &&
       noOfLectures &&
-      lectureNoteUrl &&
-      lectureVideoUrl &&
+      price &&
       noOfQuizzes &&
-      quizQuestion
+      quizQuestion &&
+      lectureNoteUrl &&
+      lectureVideoUrl
     ) {
       SetSteps0To3Complete(true);
     }
@@ -109,25 +121,107 @@ export default function AddCourse() {
     checkStepZeroToThreeComplete();
   });
 
+  //handle async for add courses
+  const handleAddCourse = async (data) => {
+    console.log("Data", data);
+    try {
+      const response = await axios.post("http://localhost:8004/course/", data);
+      console.log(response);
+      setCourseCreated(true);
+      setCourse(response.data);
+      console.log("repsonse", response.data);
+      //CLEAR ALL THE FIELDS
+      setCourseName("");
+      setCourseCode("");
+      setDescription("");
+      setBannerImage("");
+      setNoOfLectures(0);
+      setNoOfQuizzes(0);
+      setLectureNoteUrl("");
+      setLectureVideoUrl("");
+      setQuizQuestion([]);
+      setPrice(0);
+      SetSteps0To3Complete(false);
+
+      alert("Course Created Successfully");
+    } catch (error) {
+      const response = error.response;
+      alert(response.data.message);
+    }
+  };
+
   const handleSubmit = () => {
     console.log("Course Details", {
       courseCode,
       courseName,
       description,
-      bannerImage,
     });
     console.log("Lectures", {
       noOfLectures,
-      lectureNoteUrl,
-      lectureVideoUrl,
     });
     console.log("Quizzes", { noOfQuizzes, quizQuestion });
     console.log("Pricing and Submit", { price });
 
+    const data = {
+      name: courseName,
+      code: courseCode,
+      image: bannerImage,
+      steps: {
+        lectureCount: parseInt(noOfLectures),
+        quizCount: parseInt(noOfQuizzes),
+      },
+
+      instructor: user.user._id,
+      price: parseInt(price),
+      lectureNotesUrl: lectureNoteUrl,
+      lectureVideosUrl: lectureVideoUrl,
+      questions: quizQuestion,
+    };
+
+    console.log("question", quizQuestion);
+    // console.log(data);
+    handleAddCourse(data);
     //alert
-    alert("Course Added Successfully");
   };
 
+  const handleVideoChange = async (e) => {
+    const file = e.target.files[0];
+    setUploading(true);
+    try {
+      const url = await uploadVideo(file);
+      setLectureVideoUrl(url);
+    } catch (error) {
+      setError(error.message);
+    } finally {
+      setUploading(false);
+    }
+  };
+
+  const handleFileChange = async (e) => {
+    const file = e.target.files[0];
+    setFileUploading(true);
+    try {
+      const url = await uploadVideo(file);
+      setLectureNoteUrl(url);
+    } catch (error) {
+      setFileUploadError(error.message);
+    } finally {
+      setFileUploading(false);
+    }
+  };
+
+  const uplaodImage = async (e) => {
+    const file = e.target.files[0];
+    setBannerUploading(true);
+    try {
+      const url = await uploadVideo(file);
+      setBannerImage(url);
+    } catch (error) {
+      setBannerUploadError(error.message);
+    } finally {
+      setBannerUploading(false);
+    }
+  };
   return (
     <main
       className="w-full h-[100vh] bg-gradient-to-r from-slate-200 to-white
@@ -175,7 +269,11 @@ export default function AddCourse() {
           {activeStep === 0 && (
             <div className="space-y-12">
               <CardActions className="justify-end">
-                {courseCode && courseName && description && bannerImage ? (
+                {courseCode &&
+                courseName &&
+                description &&
+                price &&
+                bannerImage ? (
                   <Button onClick={handleNext}>Next</Button>
                 ) : (
                   <div className="text-red-400">Please fill all the Fields</div>
@@ -248,6 +346,28 @@ export default function AddCourse() {
                       />
                     </div>
                   </div>
+                  <div className="sm:col-span-3">
+                    <label
+                      htmlFor="noOFlectures"
+                      className="block text-sm font-medium leading-6 text-gray-900"
+                    >
+                      Price (USD)
+                    </label>
+                    <div className="mt-2">
+                      <div className="flex rounded-md shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-indigo-600 sm:max-w-md">
+                        <input
+                          type="text"
+                          name="noOFlectures"
+                          id="noOFlectures"
+                          autoComplete="noOFlectures"
+                          className="block flex-1 border-0 bg-transparent py-1.5 pl-1 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6"
+                          placeholder="Price in USD"
+                          value={price}
+                          onChange={(e) => setPrice(e.target.value)}
+                        />
+                      </div>
+                    </div>
+                  </div>
 
                   <div className="col-span-full">
                     <label
@@ -256,6 +376,9 @@ export default function AddCourse() {
                     >
                       Banner Image
                     </label>
+                    {bannerImage ? (
+                      <img src={bannerImage} className="rounded w-24" />
+                    ) : null}
                     <div className="mt-2 flex justify-center rounded-lg border border-dashed border-gray-900/25 px-6 py-10">
                       <div className="text-center">
                         <div className="mt-4 flex text-sm leading-6 text-gray-600">
@@ -271,14 +394,20 @@ export default function AddCourse() {
                             className="relative cursor-pointer rounded-md bg-white font-semibold text-indigo-600 focus-within:outline-none hover:text-indigo-500"
                           >
                             <span>Upload a file</span>
+
                             <input
                               id="file-upload"
                               name="file-upload"
                               type="file"
                               className="sr-only"
+                              onChange={uplaodImage}
                             />
+                            {bannerUplaoding && (
+                              <p className="text-blue-600 bg-blue-200 p-3">
+                                Uploading...
+                              </p>
+                            )}
                           </label>
-                          <p className="pl-1">or drag and drop</p>
                         </div>
                         <p className="text-xs leading-5 text-gray-600">
                           PNG, JPG, GIF up to 10MB
@@ -294,12 +423,31 @@ export default function AddCourse() {
             <div className="space-y-12">
               <CardActions className="justify-between">
                 <Button onClick={handleBack}>Back</Button>
-                {noOfLectures && lectureNoteUrl && lectureVideoUrl ? (
+                {courseCode &&
+                courseName &&
+                price &&
+                quizQuestion &&
+                noOfLectures ? (
                   <Button onClick={handleNext}>Next</Button>
                 ) : (
                   <div className="text-red-400">Please fill all the Fields</div>
                 )}
               </CardActions>
+              <div className="border-b border-gray-900/10 pb-12">
+                {/* {steps0To3Complete ? (
+                  <div className="text-green-700 font-bold bg-green-200 p-3 rounded">
+                    Previous fields are completed, Review the data and click
+                    Submit
+                  </div>
+                ) : (
+                  <div className="text-red-900 font-bold bg-red-100 p-3 rounded">
+                    You Have Missed Some Fields, Please Fill All The Fields
+                  </div>
+                )} */}
+
+                <div className="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6"></div>
+              </div>
+
               <div className="border-b border-gray-900/10 pb-12">
                 <div className="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
                   <div className="sm:col-span-3">
@@ -324,100 +472,6 @@ export default function AddCourse() {
                       </div>
                     </div>
                   </div>
-
-                  <div className="col-span-full">
-                    <label
-                      htmlFor="banner_image"
-                      className="block text-sm font-medium leading-6 text-gray-900"
-                    >
-                      Lecture Note
-                    </label>
-                    <div className="mt-2 flex justify-center rounded-lg border border-dashed border-gray-900/25 px-6 py-10">
-                      <div className="text-center">
-                        <div className="mt-4 flex text-sm leading-6 text-gray-600">
-                          {/* {bannerImage ? (
-                            <img
-                              src={bannerImage}
-                              alt="banner"
-                              className="h-16 w-16 rounded-md"
-                            />
-                          ) : null} */}
-                          <label
-                            htmlFor="file-upload"
-                            className="relative cursor-pointer rounded-md bg-white font-semibold text-indigo-600 focus-within:outline-none hover:text-indigo-500"
-                          >
-                            <span>Upload a file</span>
-                            <input
-                              id="file-upload"
-                              name="file-upload"
-                              type="file"
-                              className="sr-only"
-                            />
-                          </label>
-                          <p className="pl-1">or drag and drop</p>
-                        </div>
-                        <p className="text-xs leading-5 text-gray-600">
-                          pdf up to 20MB
-                        </p>
-                      </div>
-                    </div>
-
-                    {/* upload video */}
-                    <div className="col-span-full">
-                      <label
-                        htmlFor="banner_image"
-                        className="block text-sm font-medium leading-6 text-gray-900"
-                      >
-                        Lecture Video
-                      </label>
-                      <div className="mt-2 flex justify-center rounded-lg border border-dashed border-gray-900/25 px-6 py-10">
-                        <div className="text-center">
-                          <div className="mt-4 flex text-sm leading-6 text-gray-600">
-                            {/* {bannerImage ? (
-                            <img
-                              src={bannerImage}
-                              alt="banner"
-                              className="h-16 w-16 rounded-md"
-                            />
-                          ) : null} */}
-                            <label
-                              htmlFor="file-upload"
-                              className="relative cursor-pointer rounded-md bg-white font-semibold text-indigo-600 focus-within:outline-none hover:text-indigo-500"
-                            >
-                              <span>Upload a file</span>
-                              <input
-                                id="file-upload"
-                                name="file-upload"
-                                type="file"
-                                className="sr-only"
-                              />
-                            </label>
-                            <p className="pl-1">or drag and drop</p>
-                          </div>
-                          <p className="text-xs leading-5 text-gray-600">
-                            pdf up to 20MB
-                          </p>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          )}
-          {activeStep === 2 && (
-            <div className="space-y-12">
-              <CardActions className="justify-between">
-                <Button onClick={handleBack}>Back</Button>
-                {noOfQuizzes && quizQuestion ? (
-                  <Button onClick={handleNext}>Next</Button>
-                ) : (
-                  <div className="text-red-400">Please fill all the Fields</div>
-                )}
-              </CardActions>
-
-              <div className="border-b border-gray-900/10 pb-12">
-                <div className="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
                   <div className="sm:col-span-3">
                     <label
                       htmlFor="noOfQuizzes"
@@ -551,56 +605,107 @@ export default function AddCourse() {
               )}
             </div>
           )}
-          {activeStep === 3 && (
+          {activeStep === 2 && (
             <div className="space-y-12">
               <CardActions className="justify-between">
-                <Button onClick={handleBack}>Back</Button>
-                {SetSteps0To3Complete && price ? (
-                  <Button onClick={handleSubmit}>
-                    <div className="text-green-700 font-bold">Submit</div>
-                  </Button>
+                {courseCreated ? (
+                  <Button>Course Created</Button>
+                ) : steps0To3Complete ? (
+                  <Button onClick={handleSubmit}>Submit</Button>
                 ) : (
                   <div className="text-red-400">Please fill all the Fields</div>
                 )}
               </CardActions>
-
               <div className="border-b border-gray-900/10 pb-12">
                 {steps0To3Complete ? (
-                  price ? (
-                    <div className="text-green-900 font-bold bg-green-200 rounded p-3">
-                      Your Course is Ready to Submit, Please Review The Details
-                    </div>
-                  ) : (
-                    <div className="text-blue-900 font-bold bg-blue-100 p-3 rounded">
-                      Previous fields are completed, Please Fill The Price Field
-                    </div>
-                  )
+                  <div className="text-green-700 font-bold bg-green-200 p-3 rounded">
+                    Previous fields are completed, Review the data and click
+                    Submit
+                  </div>
                 ) : (
                   <div className="text-red-900 font-bold bg-red-100 p-3 rounded">
                     You Have Missed Some Fields, Please Fill All The Fields
                   </div>
                 )}
-
                 <div className="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
-                  <div className="sm:col-span-3">
+                  <div className="col-span-full">
                     <label
-                      htmlFor="noOFlectures"
+                      htmlFor="banner_image"
                       className="block text-sm font-medium leading-6 text-gray-900"
                     >
-                      Price (USD)
+                      Lecture Note
                     </label>
-                    <div className="mt-2">
-                      <div className="flex rounded-md shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-indigo-600 sm:max-w-md">
-                        <input
-                          type="text"
-                          name="noOFlectures"
-                          id="noOFlectures"
-                          autoComplete="noOFlectures"
-                          className="block flex-1 border-0 bg-transparent py-1.5 pl-1 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6"
-                          placeholder="Price in USD"
-                          value={price}
-                          onChange={(e) => setPrice(e.target.value)}
-                        />
+                    {lectureNoteUrl ? (
+                      <div className="w-100 h-7 bg-primary-50 text-wrap overflow-hidden p-2 rounded">
+                        Note Uploaded : {lectureNoteUrl}
+                      </div>
+                    ) : null}
+
+                    <div className="mt-2 flex justify-center rounded-lg border border-dashed border-gray-900/25 px-6 py-10">
+                      <div className="text-center">
+                        <div className="mt-4 flex text-sm leading-6 text-gray-600">
+                          <label
+                            htmlFor="file-upload"
+                            className="relative cursor-pointer rounded-md bg-white font-semibold text-indigo-600 focus-within:outline-none hover:text-indigo-500"
+                          >
+                            <span>Upload a file</span>
+                            <input
+                              id="file-upload"
+                              name="file-upload"
+                              type="file"
+                              className="sr-only"
+                              onChange={handleFileChange}
+                            />
+                          </label>
+                          {fileUploading && (
+                            <p className="text-blue-600 bg-blue-200 p-3">
+                              Uploading...
+                            </p>
+                          )}
+                        </div>
+                        <p className="text-xs leading-5 text-gray-600">
+                          pdf up to 20MB
+                        </p>
+                      </div>
+                    </div>
+
+                    {/* upload video */}
+                    <div className="col-span-full">
+                      <label
+                        htmlFor="banner_image"
+                        className="block text-sm font-medium leading-6 text-gray-900"
+                      >
+                        Lecture Video
+                      </label>
+                      {lectureVideoUrl ? (
+                        <div className="w-100 h-7 bg-primary-50 text-wrap overflow-hidden p-2 rounded">
+                          Video Uploaded : {lectureVideoUrl}
+                        </div>
+                      ) : null}
+                      <div className="mt-2 flex justify-center rounded-lg border border-dashed border-gray-900/25 px-6 py-10">
+                        <div className="text-center">
+                          <div className="mt-4 flex text-sm leading-6 text-gray-600">
+                            <label
+                              htmlFor="file-upload"
+                              className="relative cursor-pointer rounded-md bg-white font-semibold text-indigo-600 focus-within:outline-none hover:text-indigo-500"
+                            >
+                              <input
+                                type="file"
+                                id="fileInput"
+                                onChange={handleVideoChange}
+                              />
+                            </label>
+                            {uploading && (
+                              <p className="text-blue-600 bg-blue-200 p-3">
+                                Uploading...
+                              </p>
+                            )}
+                            {/* <p className="pl-1">or drag and drop</p> */}
+                          </div>
+                          <p className="text-xs leading-5 text-gray-600">
+                            pdf up to 20MB
+                          </p>
+                        </div>
                       </div>
                     </div>
                   </div>
