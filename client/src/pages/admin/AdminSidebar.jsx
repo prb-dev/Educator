@@ -27,20 +27,7 @@ export default function Sidebar() {
       disabled,
     };
   }
-  const dispatch = useDispatch();
-  const navigate = useNavigate();
 
-  const handleLogout = () => {
-    try {
-      dispatch(signoutStart());
-
-      dispatch(signoutSuccess());
-      navigate("/");
-    } catch (error) {
-      console.log(error);
-      dispatch(signoutFail(error.message));
-    }
-  };
   const items = [
     getItem(<Link to="/">Courses</Link>, "Courses", <HomeOutlinedIcon />),
     getItem(
@@ -57,9 +44,6 @@ export default function Sidebar() {
       <h1 className="text-lg ml-5 text-slate-700">Admin Panel</h1>
       <br />
       <br />
-      <div className="flex justify-start m-5 cursor-pointer">
-        <div onClick={handleLogout}>Logout</div>
-      </div>
       <Sider
         collapsible
         collapsedWidth={70}

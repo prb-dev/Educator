@@ -21,9 +21,6 @@ export default function Sidebar() {
   const [courses, setCourses] = useState([]);
   const { user } = useSelector((state) => state.user);
 
-  const dispatch = useDispatch();
-  const navigate = useNavigate();
-
   useEffect(() => {
     fetch(`http://localhost:80/course/instructor/${user.user._id}`)
       .then((res) => res.json())
@@ -52,18 +49,6 @@ export default function Sidebar() {
       course._id
     )
   );
-
-  const handleLogout = () => {
-    try {
-      dispatch(signoutStart());
-
-      dispatch(signoutSuccess());
-      navigate("/");
-    } catch (error) {
-      console.log(error);
-      dispatch(signoutFail(error.message));
-    }
-  };
 
   const items = [
     getItem(<Link to="/">Dashboard</Link>, "Dashboard", <HomeOutlinedIcon />),
@@ -104,9 +89,6 @@ export default function Sidebar() {
       <br />
       <br />
       <h1 className="text-lg ml-5 text-slate-700">Intructor Panel</h1>
-      <div className="flex justify-start m-5 cursor-pointer">
-        <div onClick={handleLogout}>Logout</div>
-      </div>
       <br />
       <br />
       <Sider
