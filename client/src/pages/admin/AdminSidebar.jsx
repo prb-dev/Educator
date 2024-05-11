@@ -6,8 +6,13 @@ import CalendarMonthOutlinedIcon from "@mui/icons-material/CalendarMonthOutlined
 import AddCircleOutlineOutlinedIcon from "@mui/icons-material/AddCircleOutlineOutlined";
 import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
 import DeleteOutlineOutlinedIcon from "@mui/icons-material/DeleteOutlineOutlined";
-import { Link } from "react-router-dom";
-import { useSelector } from "react-redux";
+import { Link, useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  signoutFail,
+  signoutStart,
+  signoutSuccess,
+} from "../../redux/user/userSlice";
 
 const { Sider, Header, Content } = Layout;
 
@@ -22,7 +27,20 @@ export default function Sidebar() {
       disabled,
     };
   }
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
 
+  const handleLogout = () => {
+    try {
+      dispatch(signoutStart());
+
+      dispatch(signoutSuccess());
+      navigate("/");
+    } catch (error) {
+      console.log(error);
+      dispatch(signoutFail(error.message));
+    }
+  };
   const items = [
     getItem(<Link to="/">Courses</Link>, "Courses", <HomeOutlinedIcon />),
     getItem(
@@ -39,6 +57,9 @@ export default function Sidebar() {
       <h1 className="text-lg ml-5 text-slate-700">Admin Panel</h1>
       <br />
       <br />
+      <div className="flex justify-start m-5 cursor-pointer">
+        <div onClick={handleLogout}>Logout</div>
+      </div>
       <Sider
         collapsible
         collapsedWidth={70}
