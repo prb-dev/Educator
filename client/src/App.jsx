@@ -1,4 +1,5 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import CourseDetails from "./pages/UserViewCourses/courses.jsx";
 import "./index.css";
 import Dashboard from "./pages/instructor/Dashboard.jsx";
 import Sidebar from "./components/Sidebar.jsx";
@@ -76,8 +77,10 @@ function App() {
                     path="/student/course/:courseId"
                     element={<SingleCourse />}
                   />
+                   <Route path="/courses/:id"  element={<CourseDetails />} />  
                   <Route path="/courses" element={<AllCourses />} />
                   <Route path="/StudentDashboard" element={<DashboardS />} />
+
                   <Route path="/payment-cancel" element={<PaymentCancel />} />
                   <Route path="/success-payment" element={<SuccessPayment />} />
                 </Routes>
