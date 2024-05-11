@@ -170,6 +170,7 @@ export default function AddCourse() {
         lectureCount: parseInt(noOfLectures),
         quizCount: parseInt(noOfQuizzes),
       },
+      description: description,
 
       instructor: user.user._id,
       price: parseInt(price),

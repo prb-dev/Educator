@@ -28,9 +28,7 @@ export default function EditCourse() {
 
   const [courseName, setCourseName] = useState(courseData.name);
   const [courseCode, setCourseCode] = useState(courseData.code);
-  const [description, setDescription] = useState(
-    courseData.description || "empty description"
-  );
+  const [description, setDescription] = useState(courseData.description);
   const [bannerImage, setBannerImage] = useState(courseData.image);
   const [noOfLectures, setNoOfLectures] = useState(
     courseData.steps.lectureCount
@@ -42,7 +40,7 @@ export default function EditCourse() {
   const [lectureVideoUrl, setLectureVideoUrl] = useState(
     courseData.lectureVideosUrl
   );
-  const [questions, setQuestions] = useState([courseData.questions]);
+  const [questions, setQuestions] = useState(courseData.questions);
   // const [courseVideo, setCourseVideo] = useState();
 
   const [question, setQuestion] = useState();
@@ -185,6 +183,7 @@ export default function EditCourse() {
         lectureCount: parseInt(noOfLectures),
         quizCount: parseInt(noOfQuizzes),
       },
+      description: description,
 
       instructor: user.user._id,
       price: parseInt(price),
@@ -508,7 +507,84 @@ export default function EditCourse() {
                       </div>
                     </div>
                   </div>
+
+                  <div className="col-span-full">
+                    <label
+                      htmlFor="banner_image"
+                      className="block text-sm font-medium leading-6 text-gray-900"
+                    >
+                      {questions.length + 1}. Question
+                    </label>
+
+                    <div className="mt-2">
+                      <textarea
+                        id="question"
+                        name="question"
+                        rows={3}
+                        className="block w-full bg-transparent rounded-md border-2 p-3 text-gray-900 shadow-sm placeholder:text-gray-400 focus:ring-2 focus:ring-inset  focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                        defaultValue={""}
+                        placeholder="Add your question."
+                        value={question}
+                        onChange={(e) => setQuestion(e.target.value)}
+                      />
+                    </div>
+                  </div>
+
+                  {/* for loop with 4 repetition */}
+                  {[...Array(4)].map((_, i) => (
+                    <div key={i} className="sm:col-span-3">
+                      <label
+                        htmlFor={`option${i + 1}`}
+                        className="block text-sm font-medium leading-6 text-gray-900"
+                      >
+                        Option {i + 1}
+                      </label>
+                      <div className="mt-2">
+                        <div className="flex rounded-md shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-indigo-600 sm:max-w-md">
+                          <input
+                            type="text"
+                            name={`option${i + 1}`}
+                            id={`option${i + 1}`}
+                            autoComplete={`option${i + 1}`}
+                            className="block flex-1 border-0 bg-transparent py-1.5 pl-1 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6"
+                            placeholder={`Answer Option ${i + 1}`}
+                            value={options[i]}
+                            onChange={(e) =>
+                              setOptions((prevOptions) => {
+                                const updatedOptions = [...prevOptions];
+                                updatedOptions[i] = e.target.value;
+                                return updatedOptions;
+                              })
+                            }
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                  <div className="mt-2">
+                    <label
+                      htmlFor="answer"
+                      className="block text-sm font-medium leading-6 text-gray-900"
+                    >
+                      Correct Answer
+                    </label>
+                    <div className="flex rounded-md shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-indigo-600 sm:max-w-md">
+                      <input
+                        type="text"
+                        name="answer"
+                        id="answer"
+                        autoComplete="answer"
+                        className="block flex-1 border-0 bg-transparent py-1.5 pl-1 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6"
+                        placeholder="Correct Answer (1/2/3/4)"
+                        value={correctAnswerIndex}
+                        onChange={(e) => setCorrectAnswerIndex(e.target.value)}
+                      />
+                    </div>
+                  </div>
                 </div>
+                <CardActions className="justify-end">
+                  <Button onClick={handleAddQuiz}>Add to Quiz</Button>
+                </CardActions>
               </div>
               <h2 className="text-center font-semibold leading-7 text-gray-900 bg-primary-50 ">
                 Added Quizzes
@@ -522,10 +598,10 @@ export default function EditCourse() {
                           htmlFor="question"
                           className="block text-sm font-medium leading-6 text-gray-900"
                         >
-                          {i + 1}. {quiz[i].question}
+                          {i + 1}. {quiz.question}
                         </label>
                         <div>
-                          {quiz[i].options.map((option, j) => (
+                          {quiz.options.map((option, j) => (
                             <div key={j} className="ml-5 sm:col-span-3">
                               <label htmlFor="answer" className="text-gray-900">
                                 {j + 1}. {option}
@@ -534,9 +610,7 @@ export default function EditCourse() {
                           ))}
                           {console.log("options", quiz)}
                         </div>
-                        <div>
-                          Correct Answer is : {quiz[i].correctAnswerIndex}
-                        </div>
+                        <div>Correct Answer is : {quiz.correctAnswerIndex}</div>
                       </div>
                     </div>
                   </div>
@@ -549,8 +623,9 @@ export default function EditCourse() {
           {activeStep === 2 && (
             <div className="space-y-12">
               <CardActions className="justify-between">
+                <Button onClick={handleBack}>Back</Button>
                 {courseCreated ? (
-                  <Button>Course Created</Button>
+                  <Button>Course Updated</Button>
                 ) : steps0To3Complete ? (
                   <Button onClick={handleSubmit}>Submit</Button>
                 ) : (
