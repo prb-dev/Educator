@@ -52,12 +52,16 @@ const courseSchema = new mongoose.Schema({
     type: Number,
     required: true,
   },
-  lectureNotesUrl: {
-    type: String,
-  },
-  lectureVideosUrl: {
-    type: String,
-  },
+  lectureNotesUrl: [
+    {
+      type: String,
+    },
+  ],
+  lectureVideosUrl: [
+    {
+      type: String,
+    },
+  ],
   questions: [questionSchema], // Array of questions
   approved: {
     type: Boolean,
