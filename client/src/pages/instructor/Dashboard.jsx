@@ -108,7 +108,7 @@ export default function Dashboard() {
           <div className="h-fit w-full cursor-pointer shadow-lg hover:brightness-105 shadow-slate-200 rounded-lg p-5 m-5">
             <Doughnutchart data={doughnutData} />
           </div>
-          <div className="h-fit w-full cursor-pointer shadow-lg hover:brightness-105 shadow-slate-200 rounded-lg p-5 m-5">
+          <div className="h-fit w-fit cursor-pointer shadow-lg hover:brightness-105 shadow-slate-200 rounded-lg p-5 m-5">
             <Linechart data={lineData} />
           </div>
         </div>

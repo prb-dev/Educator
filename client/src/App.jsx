@@ -38,7 +38,6 @@ function App() {
               <Layout>
                 <Routes>
                   <Route path="/" element={<Dashboard />} />
-                  <Route path="/StudentDashboard" element={<DashboardS />} />
                   <Route path="/students" element={<Students />} />
                   <Route path="/schedules/add" element={<AddSchedule />} />
                   <Route path="/schedules/edit" element={<EditSchedule />} />
@@ -78,6 +77,7 @@ function App() {
                     element={<SingleCourse />}
                   />
                   <Route path="/courses" element={<AllCourses />} />
+                  <Route path="/StudentDashboard" element={<DashboardS />} />
                   <Route path="/payment-cancel" element={<PaymentCancel />} />
                   <Route path="/success-payment" element={<SuccessPayment />} />
                 </Routes>

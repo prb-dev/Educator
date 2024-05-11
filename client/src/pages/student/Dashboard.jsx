@@ -1,68 +1,66 @@
- 
 import Progress from "../../components/charts/Progress";
+import { useSelector } from 'react-redux';
+
 import FetchEnrolledCourse from "../../components/student/FetchEnrolledCourse";
 import React, { useState, useEffect } from "react";
-import StudentDetails from "../../components/student/StudentDetails"
-export default function DashboardS({ studentName }) {
+import StudentDetails from "../../components/student/StudentDetails";
+import Calendar from 'react-calendar';
+
+ 
+ 
+export default function DashboardS() {
   const currentDate = new Date().toLocaleDateString();
+  const [date, setDate] = useState(new Date());
+
+  const handleDateChange = (newDate) => {
+    setDate(newDate);
+    console.log(newDate);
+  };
+  const { user } = useSelector((state) => state.user);
   const [selectedCourse, setSelectedCourse] = useState(null);
-  const [enrolledCourses, setEnrolledCourses] = useState([]);
-  const [loading, setLoading] = useState(true);
-
- 
-    
-
- 
+  console.log(user.user)
   const handleCourseClick = (course) => {
     setSelectedCourse(course);
   };
 
-  const handleCloseModal = () => {
-    setSelectedCourse(null);
-  };
-
-   
- 
-
   return (
-    <div className="min-h-screen bg-gray-100 py-6 px-4 sm:px-6 lg:px-8">
-      <div className="flex items-center justify-between shadow-lg p-10 shadow-lg rounded-lg">
+    <div className="min-h-screen pt-20 bg-blue-50 pt-10 px-4 sm:px-6 lg:px-8">
+      <div className="flex items-center justify-between shadow-lg p-10 shadow-lg rounded-lg bg-white">
         <div className="text-5xl font-semibold text-gray-800">
           {currentDate}
+         <a className="text-blue-500   ">&nbsp; STUDENT DASHBOARD </a> 
         </div>
         <div className="flex items-center space-x-4">
           <div className="text-lg font-semibold text-gray-800">
-            {studentName}UserNAME
+            <h1>Welcome   {user.user.username}</h1>
           </div>
           <img src="path/to/avatar-image.jpg" alt="avatar" className="w-12 h-12 rounded-full" />
         </div>
       </div>
+
       <div className="flex mt-10">
-        <div className="mt-10 pt-10 pd-10 shadow-xl shadow-yl h-96 rounded-lg flex-row w-96">
-          <h1 className="text-center text-3xl mt-10">Enrolled courses</h1>
-          <FetchEnrolledCourse/>
-        </div>
-        <div className="mt-10 pt-10 pd-10 ml-20 shadow-xl shadow-yl rounded-lg flex-row w-96">
-          {!selectedCourse && <Progress />}
-          {selectedCourse && (
-            <div className="absolute top-0 left-0 w-full h-full bg-gray-800 bg-opacity-50 flex justify-center items-center">
-              <div className="bg-white p-8 rounded-lg">
-                <h1 className="text-3xl font-semibold mb-4">{selectedCourse}</h1>
-                {/* Add course details here */}
-                {/* For example, you can render a component with course details */}
-                {/* <CourseDetails course={selectedCourse} /> */}
-                <button onClick={handleCloseModal} className="bg-blue-500 text-white px-4 py-2 rounded-md">Close</button>
-              </div>
-            </div>
-          )}
-        </div>
-        <div className="mt-10 pt-10 pd-10 ml-20 shadow-xl shadow-yl rounded-lg flex-row w-96">
-          <div>
-             
-         <StudentDetails></StudentDetails>
+        <div className="w-3/4 mr-4">
+          <div className="shadow-lg bg-white rounded-lg">
+            <FetchEnrolledCourse />
           </div>
-          <div className="mt-4">
-            
+        </div>
+
+        <div className="w-1/4">
+          <div className="shadow-lg bg-white rounded-lg p-4">
+            <h1 className="text-lg font-semibold text-gray-800 mb-2"> <a className="text-right text-blue-500">USERNAME &nbsp; &nbsp;&nbsp; </a> {user.user.username}</h1>
+            <h1 className="text-lg font-semibold text-gray-800 mb-2"> <a className="text-right text-blue-500">EMAIL &nbsp; &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;</a> {user.user.Email}</h1>
+
+            <div className="mt-10 p-4 bg-white shadow-lg rounded-lg">
+        <h2 className="text-lg font-semibold text-gray-800 mb-4">Calendar</h2>
+        <Calendar value={date} onChange={handleDateChange} />
+      </div>
+          </div>
+          <div className="shadow-sm text-lg pt-20 text-blue-500 ">
+            <div>
+              <h1>The only way to do great work is to love what you do. - Steve Jobs</h1>
+            </div>
+
+
           </div>
         </div>
       </div>

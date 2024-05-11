@@ -1,5 +1,5 @@
 import { Box, Container, Modal } from "@mui/material";
-import courseData from "../../../data/courseData";
+// import courseData from "../../../data/courseData";
 import PreviewOutlinedIcon from "@mui/icons-material/PreviewOutlined";
 import { useNavigate } from "react-router-dom";
 
@@ -15,7 +15,9 @@ import {
 } from "@mui/material";
 
 import Grid from "@mui/material/Grid";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import axios from "axios";
+import { useSelector } from "react-redux";
 
 const cardStyles = {
   backgroundColor: "transparent",
@@ -51,9 +53,27 @@ const modelActionStyle = {
 };
 export default function ViewCourses() {
   const navigator = useNavigate();
+  const { user } = useSelector((state) => state.user);
 
   const [open, setOpen] = useState(false);
   const [selectedCourse, setSelectedCourse] = useState({});
+  const [courseData, setCourseData] = useState([]);
+
+  const handleGetCourses = async (id) => {
+    try {
+      const response = await axios.get(
+        `http://localhost:8004/course/instructor/${id}`
+      );
+      console.log(response.data);
+      setCourseData(response.data);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  useEffect(() => {
+    handleGetCourses(user.user._id);
+  }, [user]);
 
   const handleOpen = (course) => {
     setSelectedCourse(course);
@@ -64,8 +84,17 @@ export default function ViewCourses() {
   };
 
   const handleDelete = () => {
-    setOpen(false);
-    console.log("delete");
+    console.log("Delete", selectedCourse);
+    axios
+      .delete(`http://localhost:8004/course/${selectedCourse._id}`)
+      .then((response) => {
+        console.log(response.data);
+        handleGetCourses(user.user._id);
+        setOpen(false);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
   };
 
   const handleEdit = (course) => {
@@ -95,7 +124,7 @@ export default function ViewCourses() {
                   <CardMedia
                     component="img"
                     height="140"
-                    image={course.img}
+                    image={course.image}
                     alt="green iguana"
                   />
                   <CardContent>
