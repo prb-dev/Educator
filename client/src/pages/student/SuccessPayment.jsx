@@ -14,6 +14,24 @@ export default function SuccessPayment() {
   const sucessTost = () => toast.success("Enrollment Successful!");
   // const { user } = useSelector((state) => state.user);
 
+  const sendPaymentDataTOBackend = async (paymentData) => {
+    console.log("Sending payment data to backend");
+    if (!paymentData) {
+      console.log("No payment data found");
+      return;
+    } else {
+      try {
+        const response = await axios.post(
+          "http://localhost:8006/payment/new",
+          paymentData
+        );
+        console.log(response);
+      } catch (error) {
+        console.log(error);
+      }
+    }
+  };
+
   const createNewPaymentInDb = async (paymentData) => {
     console.log(paymentData);
     console.log("Creating new payment in db");
@@ -34,13 +52,7 @@ export default function SuccessPayment() {
         ).catch((err) => {
           console.log(err);
         });
-
-        const response = await axios.post(
-          "http://localhost:8006/payment/new",
-          paymentData
-        );
-        console.log(response);
-        sucessTost();
+        sendPaymentDataTOBackend(paymentData);
       } catch (error) {
         console.log(error);
       }
