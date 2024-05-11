@@ -28,9 +28,13 @@ export default function AdminCourses() {
     fetch(`http://localhost:80/course/`)
       .then((res) => res.json())
       .then((data) => {
+        console.log(data);
         data.forEach((d, i) => {
           if (!d.approved) {
             d.id = i + 1;
+            if (d.schedule) d.hasSchedule = true;
+            else d.hasSchedule = false;
+
             setCourses((c) => [...c, d]);
           }
         });
@@ -71,6 +75,11 @@ export default function AdminCourses() {
     {
       field: "name",
       headerName: "Name",
+      flex: 1,
+    },
+    {
+      field: "hasSchedule",
+      headerName: "Schedule exist",
       flex: 1,
     },
     {
