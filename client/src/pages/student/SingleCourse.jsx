@@ -14,7 +14,7 @@ export default function SingleCourse() {
   const courseData = location.state.course;
 
   const courseInfo = {
-    _id: courseData.id,
+    _id: courseData._id,
     price: courseData.price,
     title: courseData.name,
     description: courseData.description,
@@ -23,7 +23,7 @@ export default function SingleCourse() {
   const userData = {
     _id: user.user._id,
     name: user.user.username,
-    email: user.user.email,
+    email: user.user.Email,
   };
 
   console.log(userData);

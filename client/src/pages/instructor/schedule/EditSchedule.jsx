@@ -217,7 +217,7 @@ export default function EditSchedule() {
         if (data.errorMessage)
           messageApi.open({
             type: "error",
-            content: "Failed to update the schedule",
+            content: data.errorMessage,
           });
         else
           messageApi.open({

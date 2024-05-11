@@ -21,6 +21,9 @@ import AddCourse from "./pages/instructor/Courses/AddCourse.jsx";
 import EditCourse from "./pages/instructor/Courses/EditCourse.jsx";
 import DashboardS from "./pages/student/Dashboard.jsx";
 import { useSelector } from "react-redux";
+import AdminCourses from "./pages/admin/AdminCourses.jsx";
+import AdminSidebar from "./pages/admin/AdminSidebar.jsx";
+import AdminPayments from "./pages/admin/AdminPayments.jsx";
 
 function App() {
   const { user } = useSelector((state) => state.user);
@@ -35,7 +38,6 @@ function App() {
               <Layout>
                 <Routes>
                   <Route path="/" element={<Dashboard />} />
-                  <Route path="/StudentDashboard" element={<DashboardS />} />
                   <Route path="/students" element={<Students />} />
                   <Route path="/schedules/add" element={<AddSchedule />} />
                   <Route path="/schedules/edit" element={<EditSchedule />} />
@@ -46,6 +48,18 @@ function App() {
                   <Route path="/courses/view" element={<ViewCourses />} />
                   <Route path="/courses/add" element={<AddCourse />} />
                   <Route path="/courses/edit" element={<EditCourse />} />
+                </Routes>
+              </Layout>
+            </Layout>
+          </Layout>
+        ) : user.user.role == "admin" ? (
+          <Layout className="app">
+            <Layout>
+              <AdminSidebar />
+              <Layout>
+                <Routes>
+                  <Route path="/" element={<AdminCourses />} />
+                  <Route path="/payments" element={<AdminPayments />} />
                 </Routes>
               </Layout>
             </Layout>
@@ -63,6 +77,7 @@ function App() {
                     element={<SingleCourse />}
                   />
                   <Route path="/courses" element={<AllCourses />} />
+                  <Route path="/StudentDashboard" element={<DashboardS />} />
                   <Route path="/payment-cancel" element={<PaymentCancel />} />
                   <Route path="/success-payment" element={<SuccessPayment />} />
                 </Routes>
