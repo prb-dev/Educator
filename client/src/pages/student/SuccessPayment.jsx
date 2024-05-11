@@ -25,6 +25,7 @@ export default function SuccessPayment() {
           "http://localhost:8006/payment/new",
           paymentData
         );
+        sucessTost();
         console.log(response);
       } catch (error) {
         console.log(error);
