@@ -4,6 +4,10 @@ import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { signinStart, signinSuccess } from "../../redux/user/userSlice.js";
 import { Button } from "@mui/material";
+ 
+
+
+
 
 function Login() {
   const [username, setUsername] = useState("");
@@ -16,7 +20,7 @@ function Login() {
     try {
       dispatch(signinStart());
 
-      const response = await axios.post("http://localhost:80/user/login", {
+      const response = await axios.post("http://localhost:8008/user/login", {
         username,
         password,
       });
@@ -31,6 +35,10 @@ function Login() {
 
       console.log(response.data);
       navigate("/StudentDashboard");
+
+
+
+
     } catch (error) {
       console.error("Error Login:", error.message);
     }
@@ -66,7 +74,7 @@ function Login() {
         </Button>
         <br />
         <Button>
-          <a href="/Signup" className="text-blue-500">
+          <a href="/signup" className="text-blue-500">
             Sign up
           </a>
         </Button>

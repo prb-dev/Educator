@@ -10,11 +10,12 @@ function Signup() {
   const [password, setPassword] = useState('');
   const [email, setEmail] = useState('');
   const [role, setRole] = useState('');
- 
+  const [errorMessage, setErrorMessage] = useState(''); // Define errorMessage state
+
   const handleSubmit = async (event) => {
     event.preventDefault();
     try {
-      const response = await axios.post('http://localhost:80/user/signup', {
+      const response = await axios.post('http://localhost:8008/user/signup', {
         username,
         password,
         Email: email,
@@ -56,6 +57,7 @@ function Signup() {
           onChange={(e) => setUsername(e.target.value)}
           className="input-field bg-gray-100 pl-10 pr-10 mb-4 rounded-lg border border-gray-500"
         />
+        <br></br>
         <input
           type="password"
           placeholder="Password"
@@ -63,6 +65,7 @@ function Signup() {
           onChange={(e) => setPassword(e.target.value)}
           className="input-field bg-gray-100 pl-10 pr-10 mb-4 rounded-lg border border-gray-500"
         />
+        <br></br>
         <input
           type="email"
           placeholder="Email"

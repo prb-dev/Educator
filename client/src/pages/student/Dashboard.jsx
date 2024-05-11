@@ -6,8 +6,8 @@ import React, { useState, useEffect } from "react";
 import StudentDetails from "../../components/student/StudentDetails";
 import Calendar from 'react-calendar';
 
- 
- 
+
+
 export default function DashboardS() {
   const currentDate = new Date().toLocaleDateString();
   const [date, setDate] = useState(new Date());
@@ -16,9 +16,16 @@ export default function DashboardS() {
     setDate(newDate);
     console.log(newDate);
   };
+
   const { user } = useSelector((state) => state.user);
+
+  // Add a conditional check to ensure that the user object exists before accessing its properties
+  if (!user || !user.user) {
+    return <div>Loading...</div>; // Or any other loading indicator
+  }
+
   const [selectedCourse, setSelectedCourse] = useState(null);
-  console.log(user.user)
+
   const handleCourseClick = (course) => {
     setSelectedCourse(course);
   };
@@ -28,7 +35,7 @@ export default function DashboardS() {
       <div className="flex items-center justify-between shadow-lg p-10 shadow-lg rounded-lg bg-white">
         <div className="text-5xl font-semibold text-gray-800">
           {currentDate}
-         <a className="text-blue-500   ">&nbsp; STUDENT DASHBOARD </a> 
+          <a className="text-blue-500   ">&nbsp; STUDENT DASHBOARD </a> 
         </div>
         <div className="flex items-center space-x-4">
           <div className="text-lg font-semibold text-gray-800">
@@ -51,16 +58,14 @@ export default function DashboardS() {
             <h1 className="text-lg font-semibold text-gray-800 mb-2"> <a className="text-right text-blue-500">EMAIL &nbsp; &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;</a> {user.user.Email}</h1>
 
             <div className="mt-10 p-4 bg-white shadow-lg rounded-lg">
-        <h2 className="text-lg font-semibold text-gray-800 mb-4">Calendar</h2>
-        <Calendar value={date} onChange={handleDateChange} />
-      </div>
+              <h2 className="text-lg font-semibold text-gray-800 mb-4">Calendar</h2>
+              <Calendar value={date} onChange={handleDateChange} />
+            </div>
           </div>
           <div className="shadow-sm text-lg pt-20 text-blue-500 ">
             <div>
               <h1>The only way to do great work is to love what you do. - Steve Jobs</h1>
             </div>
-
-
           </div>
         </div>
       </div>
