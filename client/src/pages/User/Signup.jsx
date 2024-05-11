@@ -1,20 +1,21 @@
-import React, { useState } from 'react';
-import axios from 'axios';
+import React, { useState } from "react";
+import axios from "axios";
 
-import { useNavigate } from 'react-router-dom';
-import { Button } from '@mui/material';
+import { useNavigate } from "react-router-dom";
+import { Button } from "@mui/material";
 
 function Signup() {
   const navigate = useNavigate();
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
-  const [email, setEmail] = useState('');
-  const [role, setRole] = useState('');
- 
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const [email, setEmail] = useState("");
+  const [role, setRole] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
+
   const handleSubmit = async (event) => {
     event.preventDefault();
     try {
-      const response = await axios.post('http://localhost:80/user/signup', {
+      const response = await axios.post("http://localhost:80/user/signup", {
         username,
         password,
         Email: email,
@@ -24,27 +25,29 @@ function Signup() {
       console.log(response.data);
 
       // Redirect to the login page
-      navigate('/StudentDashboard');
+      navigate("/");
     } catch (error) {
       if (error.response) {
         // The request was made and the server responded with a status code
         // that falls out of the range of 2xx
-        setErrorMessage(`Server responded with status ${error.response.status}`);
-        console.error('Error signing up:', error.response.data);
+        setErrorMessage(
+          `Server responded with status ${error.response.status}`
+        );
+        console.error("Error signing up:", error.response.data);
       } else if (error.request) {
         // The request was made but no response was received
-        setErrorMessage('No response received from the server');
-        console.error('Error signing up:', error.request);
+        setErrorMessage("No response received from the server");
+        console.error("Error signing up:", error.request);
       } else {
         // Something happened in setting up the request that triggered an Error
-        setErrorMessage('Error setting up the request');
-        console.error('Error signing up:', error.message);
+        setErrorMessage("Error setting up the request");
+        console.error("Error signing up:", error.message);
       }
     }
   };
 
   return (
-    <div className='flex flex-col items-center justify-center h-screen bg-blue-50 text-blue-900'>
+    <div className="flex flex-col items-center justify-center h-screen bg-blue-50 text-blue-900">
       <h1 className="text-5xl mb-10">Signup</h1>
       {errorMessage && <p className="text-red-500 mb-4">{errorMessage}</p>}
 
@@ -76,8 +79,8 @@ function Signup() {
               type="radio"
               name="role"
               value="student"
-              checked={role === 'student'}
-              onChange={() => setRole('student')}
+              checked={role === "student"}
+              onChange={() => setRole("student")}
               className="mr-1"
             />
             Student
@@ -87,14 +90,14 @@ function Signup() {
               type="radio"
               name="role"
               value="lecturer"
-              checked={role === 'lecturer'}
-              onChange={() => setRole('lecturer')}
+              checked={role === "lecturer"}
+              onChange={() => setRole("lecturer")}
               className="mr-1"
             />
             Lecturer
           </label>
         </div>
-        <Button variant='contained' type="submit" className="button mb-4">
+        <Button variant="contained" type="submit" className="button mb-4">
           Sign Up
         </Button>
       </form>

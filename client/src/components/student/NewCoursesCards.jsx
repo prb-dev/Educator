@@ -15,7 +15,12 @@ export default function NewCoursesCards() {
     fetch("http://localhost:8004/course")
       .then((res) => res.json())
       .then((data) => {
-        setCourseData(data);
+        data.forEach((d) => {
+          if (d.approved) {
+            setCourseData((c) => [...c, d]);
+          }
+        });
+        console.log(data);
       })
       .catch((err) => {
         console.log(err);
