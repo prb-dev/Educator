@@ -85,6 +85,7 @@ function App() {
                   <Route path="/courses" element={<AllCourses />} />
  
                   <Route path="/StudentDashboard" element={<DashboardS/>} />
+ 
                   <Route path="/StudentDashboard" element={<DashboardS />} />
                   <Route path="/Userprofile" element={<UserProfile />} />
  
