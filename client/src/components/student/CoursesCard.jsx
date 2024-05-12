@@ -28,7 +28,7 @@ export default function CoursesCard(course) {
       </figure>
       <div className="card-body">
         <h2 className="card-title">{item.name}</h2>
-        {/* <p>{item.instructor}</p> */}
+        <p>{item.description}</p>
         <div>{item.price} USD</div>
         <div className="card-actions justify-end">
           <button className="btn btn-primary">Enroll Now</button>

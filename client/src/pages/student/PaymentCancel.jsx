@@ -75,8 +75,8 @@ export default function PaymentCancel() {
       event: "ENROLL_FAILED",
     };
 
-    //unEnroll(formattedPaymentData);
-    //sendEmail(emailPayload);
+    unEnroll(formattedPaymentData);
+    sendEmail(emailPayload);
   }, []);
   return (
     <>
