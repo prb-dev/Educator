@@ -27,6 +27,7 @@ const pages = [
   { name: "Offers", link: "/offers" },
   { name: "Contact", link: "/contact" },
   { name: "About", link: "/about" },
+  { name: "Dashboard", link: "/StudentDashboard" },
 ];
 const settings = ["Profile", "Account", "Dashboard", "Logout"];
 
