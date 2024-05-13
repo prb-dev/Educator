@@ -63,7 +63,7 @@ function Login() {
           placeholder="Password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
-          className="input-field rounded-lg  bg-gray-100 border border-gray-400 mb-10"
+          className="input-field  p-2 rounded-lg   bg-gray-100 border border-gray-400 mb-10"
         />
         <br />
         <Button

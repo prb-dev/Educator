@@ -28,6 +28,7 @@ const pages = [
   { name: "Contact", link: "/contact" },
   { name: "About", link: "/about" },
   { name: "Dashboard", link: "/StudentDashboard" },
+  { name: "User profile", link: "/Userprofile" },
 ];
 const settings = ["Profile", "Account", "Dashboard", "Logout"];
 

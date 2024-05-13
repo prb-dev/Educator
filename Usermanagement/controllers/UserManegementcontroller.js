@@ -119,6 +119,15 @@ exports.updateUserByID = async (req, res) => {
     const userId = req.params.userId;
     const updateFields = req.body;
 
+    // Check if the request body contains a password field
+    if (updateFields.password) {
+      // Hash the password
+      const hashedPassword = await bcrypt.hash(updateFields.password, 10); // 10 is the salt rounds
+
+      // Replace the plain password with the hashed password
+      updateFields.password = hashedPassword;
+    }
+
     const allowedFields = ["username", "courses", "password", "Email", "role"];
     const filteredUpdateFields = Object.keys(updateFields)
       .filter((key) => allowedFields.includes(key))
@@ -143,7 +152,6 @@ exports.updateUserByID = async (req, res) => {
       .json({ message: "Error updating user", error: error.message });
   }
 };
-
 exports.getUserByID = async (req, res) => {
   try {
     const userId = req.params.userId;
