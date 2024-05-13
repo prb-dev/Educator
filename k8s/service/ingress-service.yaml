@@ -1,0 +1,59 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: nginx-ingress
+  namespace: cms-namespace
+spec:
+  ingressClassName: nginx
+  rules:
+  - http:
+      paths:
+      - path: /schedule/?(.*)
+        pathType: ImplementationSpecific
+        backend:
+          service:
+            name: schedule-service
+            port:
+              number: 8000
+      - path: /enrollment/?(.*)
+        pathType: ImplementationSpecific
+        backend:
+          service:
+            name: enrollment-service
+            port:
+              number: 8002
+      - path: /analyse/?(.*)
+        pathType: ImplementationSpecific
+        backend:
+          service:
+            name: analyse-service
+            port:
+              number: 8003
+      - path: /course/?(.*)
+        pathType: ImplementationSpecific
+        backend:
+          service:
+            name: course-service
+            port:
+              number: 8004
+      - path: /payment/?(.*)
+        pathType: ImplementationSpecific
+        backend:
+          service:
+            name: payment-service
+            port:
+              number: 8006
+      - path: /notification/?(.*)
+        pathType: ImplementationSpecific
+        backend:
+          service:
+            name: notification-service
+            port:
+              number: 8007
+      - path: /user/?(.*)
+        pathType: ImplementationSpecific
+        backend:
+          service:
+            name: user-service
+            port:
+              number: 8008
