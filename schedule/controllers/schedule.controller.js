@@ -8,7 +8,7 @@ export const addSchedule = async (req, res, next) => {
   const { schedule } = req.body;
   try {
     //calling the addSchedule function of the service class and getting the new schedule object
-    const newSchedule = await service.addSchedule(schedule);
+    const newSchedule = await service.addSchedule(req.params.iid, schedule);
 
     res.status(201).json(newSchedule);
   } catch (error) {
@@ -21,6 +21,7 @@ export const deleteSchedule = async (req, res, next) => {
   try {
     //calling the deleteSchedule function of the service class and getting the message
     const message = await service.deleteSchedule(
+      req.params.iid,
       req.params.scid,
       req.params.cid
     );
@@ -36,7 +37,10 @@ export const updateSchedule = async (req, res, next) => {
   try {
     const { schedule } = req.body;
     //calling the updateSchedule function of the service class and getting the updated schedule
-    const updatedSchedule = await service.updateSchedule(schedule);
+    const updatedSchedule = await service.updateSchedule(
+      req.params.iid,
+      schedule
+    );
 
     res.status(200).json(updatedSchedule);
   } catch (error) {
@@ -109,7 +113,7 @@ export const deleteSession = async (req, res, next) => {
 export const getSchedule = async (req, res, next) => {
   try {
     //calling the getSchedule function of the service class and getting the schedule
-    const schedule = await service.getSchedule(req.params.cid);
+    const schedule = await service.getSchedule(req.params.iid, req.params.cid);
     res.status(200).json(schedule);
   } catch (error) {
     next(error);

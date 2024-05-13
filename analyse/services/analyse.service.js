@@ -1,3 +1,4 @@
+import { customError } from "../utils/error.js";
 import { RPCRequest } from "../utils/message passing/rabbit_mq.js";
 
 class AnalyseService {
@@ -57,8 +58,24 @@ class AnalyseService {
 
   //this function gives the dashboard data for a instructor
   async getDashboardData(iid) {
-    //payload for getting courses of a instructor
+    //payload for getting permission
     let requestPayload = {
+      event: "INSTRUCTOR_PERMISSION",
+      iid,
+    };
+
+    //send payload to the user queue and getting permission
+    const permission = await RPCRequest(
+      process.env.USER_QUEUE_NAME,
+      requestPayload
+    );
+
+    if (!permission) {
+      throw customError(401, "Only instructors can perform this task.")
+    }
+
+    //payload for getting courses of a instructor
+    requestPayload = {
       event: "GET_COURSES_BY_INSTRUCTOR",
       iid,
     };
