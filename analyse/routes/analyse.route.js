@@ -8,9 +8,9 @@ import { verifyToken } from "../utils/verifyToken.js";
 const router = express.Router();
 
 //route to get the dashboard data
-router.get("/dashboard/:iid", verifyToken, getDashboardData);
+router.get("/dashboard/:iid", getDashboardData);
 
 //route to get the student progress
-router.get("/:uid/:cid", verifyToken, studentCourseProgress);
+router.get("/:uid/:cid", studentCourseProgress);
 
 export default router;
