@@ -4,6 +4,7 @@ import { Backdrop, Box, Button, Fade, IconButton, Modal } from "@mui/material";
 import MoreVertOutlinedIcon from "@mui/icons-material/MoreVertOutlined";
 import VisibilityOutlinedIcon from "@mui/icons-material/VisibilityOutlined";
 import ShowChartOutlinedIcon from "@mui/icons-material/ShowChartOutlined";
+import LogoutOutlinedIcon from "@mui/icons-material/LogoutOutlined";
 import {
   Popover,
   Progress,
@@ -15,12 +16,24 @@ import {
 } from "antd";
 import { useLocation } from "react-router-dom";
 import DeleteOutlineOutlinedIcon from "@mui/icons-material/DeleteOutlineOutlined";
+import { useDispatch } from "react-redux";
+import { signoutStart, signoutSuccess } from "../../redux/user/userSlice";
 
 export default function AdminCourses() {
   const [open, setOpen] = useState(false);
   const [courses, setCourses] = useState([]);
   const [loading, setLoading] = useState(false);
   const [messageApi, contextHolder] = message.useMessage();
+  const dispatch = useDispatch();
+
+  const handleSignout = () => {
+    try {
+      dispatch(signoutStart());
+      dispatch(signoutSuccess());
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   useEffect(() => {
     setLoading(true);
@@ -28,9 +41,13 @@ export default function AdminCourses() {
     fetch(`http://localhost:80/course/`)
       .then((res) => res.json())
       .then((data) => {
+        console.log(data);
         data.forEach((d, i) => {
           if (!d.approved) {
             d.id = i + 1;
+            if (d.schedule) d.hasSchedule = true;
+            else d.hasSchedule = false;
+
             setCourses((c) => [...c, d]);
           }
         });
@@ -74,6 +91,11 @@ export default function AdminCourses() {
       flex: 1,
     },
     {
+      field: "hasSchedule",
+      headerName: "Schedule exist",
+      flex: 1,
+    },
+    {
       field: "price",
       headerName: "Price",
       flex: 1,
@@ -111,6 +133,19 @@ export default function AdminCourses() {
       {contextHolder}
       <Spin spinning={loading}>
         <main className="w-full h-[100vh] bg-gradient-to-r from-slate-200 to-white p-5 overflow-y-scroll">
+          <Button
+            size="small"
+            onClick={handleSignout}
+            sx={{
+              position: "absolute",
+              top: "10px",
+              right: "30px",
+            }}
+            startIcon={<LogoutOutlinedIcon />}
+          >
+            Signout
+          </Button>
+
           <h1 className="text-slate-700 text-2xl m-5 mb-6">
             Monitor courses <ShowChartOutlinedIcon />
           </h1>

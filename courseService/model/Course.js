@@ -44,16 +44,24 @@ const courseSchema = new mongoose.Schema({
   instructor: {
     type: mongoose.Schema.Types.ObjectId,
   },
+  description: {
+    type: String,
+    required: true,
+  },
   price: {
     type: Number,
     required: true,
   },
-  lectureNotesUrl: {
-    type: String,
-  },
-  lectureVideosUrl: {
-    type: String,
-  },
+  lectureNotesUrl: [
+    {
+      type: String,
+    },
+  ],
+  lectureVideosUrl: [
+    {
+      type: String,
+    },
+  ],
   questions: [questionSchema], // Array of questions
   approved: {
     type: Boolean,

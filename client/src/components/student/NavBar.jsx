@@ -15,10 +15,16 @@ import MenuItem from "@mui/material/MenuItem";
 import SearchIcon from "@mui/icons-material/Search";
 import { styled, alpha } from "@mui/material/styles";
 import InputBase from "@mui/material/InputBase";
+import { Link, useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
 
 //import Images
 import Logo from "../../assets/logo.png";
-import { Link } from "react-router-dom";
+import {
+  signoutFail,
+  signoutStart,
+  signoutSuccess,
+} from "../../redux/user/userSlice";
 
 // const pages = ["Courses", "Offers", "Contact", "About"];
 const pages = [
@@ -33,6 +39,21 @@ const pages = [
 const settings = ["Profile", "Account", "Dashboard", "Logout"];
 
 function NavBar() {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    try {
+      dispatch(signoutStart());
+
+      dispatch(signoutSuccess());
+      navigate("/");
+    } catch (error) {
+      console.log(error);
+      dispatch(signoutFail(error.message));
+    }
+  };
+
   const Search = styled("div")(({ theme }) => ({
     position: "relative",
     borderRadius: theme.shape.borderRadius,
@@ -181,6 +202,13 @@ function NavBar() {
               </Link>
             ))}
           </Box>
+          <Typography
+            textAlign="center "
+            className="cursor-pointer"
+            onClick={handleLogout}
+          >
+            Logout
+          </Typography>
           <Search>
             <SearchIconWrapper>
               <SearchIcon />

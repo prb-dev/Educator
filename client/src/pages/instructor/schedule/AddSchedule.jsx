@@ -199,7 +199,7 @@ export default function AddSchedule() {
         if (data.errorMessage)
           messageApi.open({
             type: "error",
-            content: "Failed to create the schedule",
+            content: data.errorMessage,
           });
         else
           messageApi.open({

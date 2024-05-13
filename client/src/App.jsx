@@ -41,7 +41,6 @@ function App() {
               <Layout>
                 <Routes>
                   <Route path="/" element={<Dashboard />} />
-                  
                   <Route path="/students" element={<Students />} />
                   <Route path="/schedules/add" element={<AddSchedule />} />
                   <Route path="/schedules/edit" element={<EditSchedule />} />

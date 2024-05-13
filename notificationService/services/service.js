@@ -23,7 +23,8 @@ class EmailService {
   async successEnrollEmail(receiverEmail, courseName) {
     const subject = "Enrollment Successful";
     const text = `Dear student,
-      you have successfully enrolled in the ${courseName} course. We look forward to seeing you in class!
+      you have successfully enrolled in the course. We look forward to seeing you in class!
+      course name: ${courseName}
       💐💐
       Visit your dashboard to access the course.
     Best Regards,
@@ -36,7 +37,8 @@ class EmailService {
   async failedEmail(receiverEmail, courseName) {
     const subject = "Enrollment Failed";
     const text = `Dear student,
-      we regret to inform you that your enrollment in the ${courseName} course was unsuccessful. Please try again or contact support for assistance.
+      we regret to inform you that your enrollment in the course was unsuccessful. Please try again or contact support for assistance.
+      course name: ${courseName}
       😢😢
     Best Regards,
     The educator team`;

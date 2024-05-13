@@ -1,5 +1,8 @@
-import { CardActions, Container } from "@mui/material";
+import { Alert, CardActions, Container } from "@mui/material";
 import LibraryAddOutlinedIcon from "@mui/icons-material/LibraryAddOutlined";
+import axios from "axios";
+import { useSelector } from "react-redux";
+import { uploadVideo } from "../../../firebaseUtilty";
 import Box from "@mui/material/Box";
 import Stepper from "@mui/material/Stepper";
 import Step from "@mui/material/Step";
@@ -9,38 +12,54 @@ import Typography from "@mui/material/Typography";
 import React, { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 
-const steps = ["Course Details", "Lectures", " Quizzes", "Pricing and Submit"];
+const steps = ["Course Details", "Lectures & Quizzes", "Upload Material"];
 
 export default function EditCourse() {
   const location = useLocation();
   const courseData = location.state.course;
   console.log(courseData);
+  console.log("course", courseData._id);
+  // console.log("quiz", courseData.questions);
+  const { user } = useSelector((state) => state.user);
 
   const [activeStep, setActiveStep] = useState(0);
   const [completed, setCompleted] = useState({});
   const [steps0To3Complete, SetSteps0To3Complete] = useState(false);
 
   const [courseName, setCourseName] = useState(courseData.name);
-  const [courseCode, setCourseCode] = useState(courseData.id);
+  const [courseCode, setCourseCode] = useState(courseData.code);
   const [description, setDescription] = useState(courseData.description);
-  const [bannerImage, setBannerImage] = useState(
-    "https://getblogo.com/wp-content/uploads/2020/06/1-8.jpg"
+  const [bannerImage, setBannerImage] = useState(courseData.image);
+  const [noOfLectures, setNoOfLectures] = useState(
+    courseData.steps.lectureCount
   );
-  const [noOfLectures, setNoOfLectures] = useState(courseData.noOfLectures);
-  const [noOfQuizzes, setNoOfQuizzes] = useState(courseData.noOfQuizzes);
+  const [noOfQuizzes, setNoOfQuizzes] = useState(courseData.steps.quizCount);
   const [lectureNoteUrl, setLectureNoteUrl] = useState(
-    "https://getblogo.com/wp-content/uploads/2020/06/1-8.jpg"
+    courseData.lectureNotesUrl
   );
-  const [lectureVideoUrl, setLectureVideoUrl] = useState(
-    "https://getblogo.com/wp-content/uploads/2020/06/1-8.jpg"
-  );
-  const [quizQuestion, setQuizQuestion] = useState(courseData.quizQuestion);
+  const [lectureVideoUrl, setLectureVideoUrl] = useState();
+  const [quizQuestion, setQuestions] = useState(courseData.questions);
+  // const [courseVideo, setCourseVideo] = useState();
 
   const [question, setQuestion] = useState();
   const [options, setOptions] = useState([]);
-  const [answer, setAnswer] = useState();
+  const [correctAnswerIndex, setCorrectAnswerIndex] = useState();
 
   const [price, setPrice] = useState(courseData.price);
+
+  const [courseCreated, setCourseCreated] = useState(false);
+  const [course, setCourse] = useState({});
+  const [courseID, setCourseID] = useState("663dfe4b80ee48a36e8e806a");
+  const [uploading, setUploading] = useState(false);
+  const [fileUploading, setFileUploading] = useState(false);
+  const [fileUpaodError, setFileUploadError] = useState(false);
+  const [bannerUplaodError, setBannerUploadError] = useState(false);
+  const [bannerUplaoding, setBannerUploading] = useState(false);
+  const [lectureVideoList, setLectureVideoList] = useState(
+    courseData.lectureVideosUrl
+  );
+
+  const [error, setError] = useState(null);
 
   const totalSteps = () => {
     return steps.length;
@@ -74,19 +93,19 @@ export default function EditCourse() {
   };
 
   const handleAddQuiz = () => {
-    setQuizQuestion((prevQuizQuestion) => {
+    setQuestions((prevQuizQuestion) => {
       const updatedQuizQuestion = [...prevQuizQuestion];
       updatedQuizQuestion.push({
         question: question,
         options: options,
-        correctAnswer: answer,
+        correctAnswerIndex: parseInt(correctAnswerIndex),
       });
-      setNoOfQuizzes(updatedQuizQuestion.length);
 
+      // Clearing input fields and options array
       setQuestion("");
-      setOptions([]);
-      setAnswer("");
       setOptions(["", "", "", ""]);
+      setCorrectAnswerIndex("");
+      setNoOfQuizzes(updatedQuizQuestion.length);
 
       return updatedQuizQuestion;
     });
@@ -99,10 +118,11 @@ export default function EditCourse() {
       description &&
       bannerImage &&
       noOfLectures &&
-      lectureNoteUrl &&
-      lectureVideoUrl &&
+      price &&
       noOfQuizzes &&
-      quizQuestion
+      quizQuestion &&
+      lectureNoteUrl &&
+      lectureVideoUrl
     ) {
       SetSteps0To3Complete(true);
     }
@@ -112,32 +132,124 @@ export default function EditCourse() {
     checkStepZeroToThreeComplete();
   });
 
+  //handle async for add courses
+  const handleAddCourse = async (data) => {
+    console.log("Data", data);
+    try {
+      const response = await axios.put(
+        `http://localhost:8004/course/${courseData._id}`,
+        data
+      );
+      console.log(response);
+      setCourseCreated(true);
+      setCourse(response.data);
+      console.log("repsonse", response.data);
+      //CLEAR ALL THE FIELDS
+      setCourseName("");
+      setCourseCode("");
+      setDescription("");
+      setBannerImage("");
+      setNoOfLectures(0);
+      setNoOfQuizzes(0);
+      setLectureNoteUrl("");
+      setLectureVideoUrl("");
+      setQuestions([]);
+      setPrice(0);
+      SetSteps0To3Complete(false);
+
+      alert("Course edited Successfully");
+    } catch (error) {
+      const response = error.response;
+      alert(response.data.message);
+    }
+  };
+
   const handleSubmit = () => {
     console.log("Course Details", {
       courseCode,
       courseName,
       description,
-      bannerImage,
     });
     console.log("Lectures", {
       noOfLectures,
-      lectureNoteUrl,
-      lectureVideoUrl,
     });
     console.log("Quizzes", { noOfQuizzes, quizQuestion });
     console.log("Pricing and Submit", { price });
 
+    const data = {
+      name: courseName,
+      code: courseCode,
+      image: bannerImage,
+      steps: {
+        lectureCount: parseInt(noOfLectures),
+        quizCount: parseInt(noOfQuizzes),
+      },
+      description: description,
+
+      instructor: user.user._id,
+      price: parseInt(price),
+      lectureNotesUrl: lectureNoteUrl,
+      lectureVideosUrl: lectureVideoList,
+      questions: quizQuestion,
+    };
+
+    console.log("question", quizQuestion);
+    // console.log(data);
+    handleAddCourse(data);
     //alert
-    alert("Course Added Successfully");
+  };
+  const handleVideoChange = async (e) => {
+    const file = e.target.files[0];
+    setUploading(true);
+    try {
+      const url = await uploadVideo(file);
+      setLectureVideoUrl(url);
+      setLectureVideoList((prevLectureVideoList) => {
+        const updatedLectureVideoList = [...prevLectureVideoList];
+        updatedLectureVideoList.push(url);
+        return updatedLectureVideoList;
+      });
+
+      console.log("lectureVideoList", lectureVideoList);
+    } catch (error) {
+      setError(error.message);
+    } finally {
+      setUploading(false);
+    }
   };
 
+  const handleFileChange = async (e) => {
+    const file = e.target.files[0];
+    setFileUploading(true);
+    try {
+      const url = await uploadVideo(file);
+      setLectureNoteUrl(url);
+    } catch (error) {
+      setFileUploadError(error.message);
+    } finally {
+      setFileUploading(false);
+    }
+  };
+
+  const uplaodImage = async (e) => {
+    const file = e.target.files[0];
+    setBannerUploading(true);
+    try {
+      const url = await uploadVideo(file);
+      setBannerImage(url);
+    } catch (error) {
+      setBannerUploadError(error.message);
+    } finally {
+      setBannerUploading(false);
+    }
+  };
   return (
     <main
       className="w-full h-[100vh] bg-gradient-to-r from-slate-200 to-white
      text-slate-700 flex flex-col p-5 overflow-y-scroll"
     >
       <h1 className="text-2xl m-5 min-w-fit">
-        Add New Courses <LibraryAddOutlinedIcon />
+        Edit {courseData.name} Courses <LibraryAddOutlinedIcon />
       </h1>
 
       <Container>
@@ -178,7 +290,11 @@ export default function EditCourse() {
           {activeStep === 0 && (
             <div className="space-y-12">
               <CardActions className="justify-end">
-                {courseCode && courseName && description && bannerImage ? (
+                {courseCode &&
+                courseName &&
+                description &&
+                price &&
+                bannerImage ? (
                   <Button onClick={handleNext}>Next</Button>
                 ) : (
                   <div className="text-red-400">Please fill all the Fields</div>
@@ -251,6 +367,28 @@ export default function EditCourse() {
                       />
                     </div>
                   </div>
+                  <div className="sm:col-span-3">
+                    <label
+                      htmlFor="noOFlectures"
+                      className="block text-sm font-medium leading-6 text-gray-900"
+                    >
+                      Price (USD)
+                    </label>
+                    <div className="mt-2">
+                      <div className="flex rounded-md shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-indigo-600 sm:max-w-md">
+                        <input
+                          type="text"
+                          name="noOFlectures"
+                          id="noOFlectures"
+                          autoComplete="noOFlectures"
+                          className="block flex-1 border-0 bg-transparent py-1.5 pl-1 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6"
+                          placeholder="Price in USD"
+                          value={price}
+                          onChange={(e) => setPrice(e.target.value)}
+                        />
+                      </div>
+                    </div>
+                  </div>
 
                   <div className="col-span-full">
                     <label
@@ -259,6 +397,9 @@ export default function EditCourse() {
                     >
                       Banner Image
                     </label>
+                    {bannerImage ? (
+                      <img src={bannerImage} className="rounded w-24" />
+                    ) : null}
                     <div className="mt-2 flex justify-center rounded-lg border border-dashed border-gray-900/25 px-6 py-10">
                       <div className="text-center">
                         <div className="mt-4 flex text-sm leading-6 text-gray-600">
@@ -274,14 +415,20 @@ export default function EditCourse() {
                             className="relative cursor-pointer rounded-md bg-white font-semibold text-indigo-600 focus-within:outline-none hover:text-indigo-500"
                           >
                             <span>Upload a file</span>
+
                             <input
                               id="file-upload"
                               name="file-upload"
                               type="file"
                               className="sr-only"
+                              onChange={uplaodImage}
                             />
+                            {bannerUplaoding && (
+                              <p className="text-blue-600 bg-blue-200 p-3">
+                                Uploading...
+                              </p>
+                            )}
                           </label>
-                          <p className="pl-1">or drag and drop</p>
                         </div>
                         <p className="text-xs leading-5 text-gray-600">
                           PNG, JPG, GIF up to 10MB
@@ -297,12 +444,31 @@ export default function EditCourse() {
             <div className="space-y-12">
               <CardActions className="justify-between">
                 <Button onClick={handleBack}>Back</Button>
-                {noOfLectures && lectureNoteUrl && lectureVideoUrl ? (
+                {courseCode &&
+                courseName &&
+                price &&
+                quizQuestion &&
+                noOfLectures ? (
                   <Button onClick={handleNext}>Next</Button>
                 ) : (
                   <div className="text-red-400">Please fill all the Fields</div>
                 )}
               </CardActions>
+              <div className="border-b border-gray-900/10 pb-12">
+                {/* {steps0To3Complete ? (
+                  <div className="text-green-700 font-bold bg-green-200 p-3 rounded">
+                    Previous fields are completed, Review the data and click
+                    Submit
+                  </div>
+                ) : (
+                  <div className="text-red-900 font-bold bg-red-100 p-3 rounded">
+                    You Have Missed Some Fields, Please Fill All The Fields
+                  </div>
+                )} */}
+
+                <div className="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6"></div>
+              </div>
+
               <div className="border-b border-gray-900/10 pb-12">
                 <div className="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
                   <div className="sm:col-span-3">
@@ -327,100 +493,6 @@ export default function EditCourse() {
                       </div>
                     </div>
                   </div>
-
-                  <div className="col-span-full">
-                    <label
-                      htmlFor="banner_image"
-                      className="block text-sm font-medium leading-6 text-gray-900"
-                    >
-                      Lecture Note
-                    </label>
-                    <div className="mt-2 flex justify-center rounded-lg border border-dashed border-gray-900/25 px-6 py-10">
-                      <div className="text-center">
-                        <div className="mt-4 flex text-sm leading-6 text-gray-600">
-                          {/* {bannerImage ? (
-                            <img
-                              src={bannerImage}
-                              alt="banner"
-                              className="h-16 w-16 rounded-md"
-                            />
-                          ) : null} */}
-                          <label
-                            htmlFor="file-upload"
-                            className="relative cursor-pointer rounded-md bg-white font-semibold text-indigo-600 focus-within:outline-none hover:text-indigo-500"
-                          >
-                            <span>Upload a file</span>
-                            <input
-                              id="file-upload"
-                              name="file-upload"
-                              type="file"
-                              className="sr-only"
-                            />
-                          </label>
-                          <p className="pl-1">or drag and drop</p>
-                        </div>
-                        <p className="text-xs leading-5 text-gray-600">
-                          pdf up to 20MB
-                        </p>
-                      </div>
-                    </div>
-
-                    {/* upload video */}
-                    <div className="col-span-full">
-                      <label
-                        htmlFor="banner_image"
-                        className="block text-sm font-medium leading-6 text-gray-900"
-                      >
-                        Lecture Video
-                      </label>
-                      <div className="mt-2 flex justify-center rounded-lg border border-dashed border-gray-900/25 px-6 py-10">
-                        <div className="text-center">
-                          <div className="mt-4 flex text-sm leading-6 text-gray-600">
-                            {/* {bannerImage ? (
-                            <img
-                              src={bannerImage}
-                              alt="banner"
-                              className="h-16 w-16 rounded-md"
-                            />
-                          ) : null} */}
-                            <label
-                              htmlFor="file-upload"
-                              className="relative cursor-pointer rounded-md bg-white font-semibold text-indigo-600 focus-within:outline-none hover:text-indigo-500"
-                            >
-                              <span>Upload a file</span>
-                              <input
-                                id="file-upload"
-                                name="file-upload"
-                                type="file"
-                                className="sr-only"
-                              />
-                            </label>
-                            <p className="pl-1">or drag and drop</p>
-                          </div>
-                          <p className="text-xs leading-5 text-gray-600">
-                            pdf up to 20MB
-                          </p>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          )}
-          {activeStep === 2 && (
-            <div className="space-y-12">
-              <CardActions className="justify-between">
-                <Button onClick={handleBack}>Back</Button>
-                {noOfQuizzes && quizQuestion ? (
-                  <Button onClick={handleNext}>Next</Button>
-                ) : (
-                  <div className="text-red-400">Please fill all the Fields</div>
-                )}
-              </CardActions>
-
-              <div className="border-b border-gray-900/10 pb-12">
-                <div className="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
                   <div className="sm:col-span-3">
                     <label
                       htmlFor="noOfQuizzes"
@@ -511,8 +583,8 @@ export default function EditCourse() {
                         autoComplete="answer"
                         className="block flex-1 border-0 bg-transparent py-1.5 pl-1 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6"
                         placeholder="Correct Answer (1/2/3/4)"
-                        value={answer}
-                        onChange={(e) => setAnswer(e.target.value)}
+                        value={correctAnswerIndex}
+                        onChange={(e) => setCorrectAnswerIndex(e.target.value)}
                       />
                     </div>
                   </div>
@@ -543,8 +615,9 @@ export default function EditCourse() {
                               </label>
                             </div>
                           ))}
+                          {console.log("options", quiz)}
                         </div>
-                        <div>Correct Answer is : {quiz.correctAnswer}</div>
+                        <div>Correct Answer is : {quiz.correctAnswerIndex}</div>
                       </div>
                     </div>
                   </div>
@@ -554,56 +627,113 @@ export default function EditCourse() {
               )}
             </div>
           )}
-          {activeStep === 3 && (
+          {activeStep === 2 && (
             <div className="space-y-12">
               <CardActions className="justify-between">
                 <Button onClick={handleBack}>Back</Button>
-                {SetSteps0To3Complete && price ? (
-                  <Button onClick={handleSubmit}>
-                    <div className="text-green-700 font-bold">Submit</div>
-                  </Button>
+                {courseCreated ? (
+                  <Button>Course Updated</Button>
+                ) : steps0To3Complete ? (
+                  <Button onClick={handleSubmit}>Submit</Button>
                 ) : (
                   <div className="text-red-400">Please fill all the Fields</div>
                 )}
               </CardActions>
-
               <div className="border-b border-gray-900/10 pb-12">
                 {steps0To3Complete ? (
-                  price ? (
-                    <div className="text-green-900 font-bold bg-green-200 rounded p-3">
-                      Your Course is Ready to Submit, Please Review The Details
-                    </div>
-                  ) : (
-                    <div className="text-blue-900 font-bold bg-blue-100 p-3 rounded">
-                      Previous fields are completed, Please Fill The Price Field
-                    </div>
-                  )
+                  <div className="text-green-700 font-bold bg-green-200 p-3 rounded">
+                    Previous fields are completed, Review the data and click
+                    Submit
+                  </div>
                 ) : (
                   <div className="text-red-900 font-bold bg-red-100 p-3 rounded">
                     You Have Missed Some Fields, Please Fill All The Fields
                   </div>
                 )}
-
                 <div className="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
-                  <div className="sm:col-span-3">
+                  <div className="col-span-full">
                     <label
-                      htmlFor="noOFlectures"
+                      htmlFor="banner_image"
                       className="block text-sm font-medium leading-6 text-gray-900"
                     >
-                      Price (USD)
+                      Lecture Note
                     </label>
-                    <div className="mt-2">
-                      <div className="flex rounded-md shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-indigo-600 sm:max-w-md">
-                        <input
-                          type="text"
-                          name="noOFlectures"
-                          id="noOFlectures"
-                          autoComplete="noOFlectures"
-                          className="block flex-1 border-0 bg-transparent py-1.5 pl-1 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6"
-                          placeholder="Price in USD"
-                          value={price}
-                          onChange={(e) => setPrice(e.target.value)}
-                        />
+                    {lectureNoteUrl ? (
+                      <div className="w-100 h-7 bg-primary-50 text-wrap overflow-hidden p-2 rounded">
+                        Note Uploaded : {lectureNoteUrl}
+                      </div>
+                    ) : null}
+
+                    <div className="mt-2 flex justify-center rounded-lg border border-dashed border-gray-900/25 px-6 py-10">
+                      <div className="text-center">
+                        <div className="mt-4 flex text-sm leading-6 text-gray-600">
+                          <label
+                            htmlFor="file-upload"
+                            className="relative cursor-pointer rounded-md bg-white font-semibold text-indigo-600 focus-within:outline-none hover:text-indigo-500"
+                          >
+                            <span>Upload a file</span>
+                            <input
+                              id="file-upload"
+                              name="file-upload"
+                              type="file"
+                              className="sr-only"
+                              onChange={handleFileChange}
+                            />
+                          </label>
+                          {fileUploading && (
+                            <p className="text-blue-600 bg-blue-200 p-3">
+                              Uploading...
+                            </p>
+                          )}
+                        </div>
+                        <p className="text-xs leading-5 text-gray-600">
+                          pdf up to 20MB
+                        </p>
+                      </div>
+                    </div>
+
+                    {/* upload video */}
+                    <div className="col-span-full">
+                      <label
+                        htmlFor="banner_image"
+                        className="block text-sm font-medium leading-6 text-gray-900"
+                      >
+                        Lecture Video
+                      </label>
+                      {lectureVideoList.length > 0
+                        ? lectureVideoList.map((video, i) => (
+                            <div
+                              key={i}
+                              className="w-100 h-7 bg-primary-50 text-wrap overflow-hidden p-2 rounded"
+                            >
+                              {i + 1} . Video Uploaded : {video}
+                            </div>
+                          ))
+                        : null}
+                      <div className="mt-2 flex justify-center rounded-lg border border-dashed border-gray-900/25 px-6 py-10">
+                        <div className="text-center">
+                          <div className="mt-4 flex text-sm leading-6 text-gray-600">
+                            <label
+                              htmlFor="file-upload"
+                              className="relative cursor-pointer rounded-md bg-white font-semibold text-indigo-600 focus-within:outline-none hover:text-indigo-500"
+                            >
+                              <input
+                                type="file"
+                                id="fileInput"
+                                onChange={handleVideoChange}
+                              />
+                            </label>
+                            {uploading && (
+                              <p className="text-blue-600 bg-blue-200 p-3">
+                                Uploading...
+                              </p>
+                            )}
+                            {/* <p className="pl-1">or drag and drop</p> */}
+                          </div>
+                          <p className="text-xs leading-5 text-gray-600">
+                            pdf up to 20MB
+                          </p>
+                        </div>
                       </div>
                     </div>
                   </div>

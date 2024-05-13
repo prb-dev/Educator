@@ -18,11 +18,17 @@ export default function CoursesCard(course) {
       onClick={navigateToCoursePage}
     >
       <figure>
-        <img src={item.img} alt="Shoes" />
+        <img
+          src={
+            item.image ||
+            "https://res.cloudinary.com/daee4aeur/image/upload/v1715274537/k1yvluvkhvp4g21izn0i.png"
+          }
+          alt="Shoes"
+        />
       </figure>
       <div className="card-body">
         <h2 className="card-title">{item.name}</h2>
-        <p>{item.instructor}</p>
+        <p>{item.description}</p>
         <div>{item.price} USD</div>
         <div className="card-actions justify-end">
           <button className="btn btn-primary">Enroll Now</button>

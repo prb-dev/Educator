@@ -104,10 +104,13 @@ export default function Dashboard() {
           data={revenueBreakdown}
         />
 
-        <div className="h-fit w-1/2 flex md:flex-row lg:flex-col gap-20 cursor-pointer m-5 shadow-lg hover:brightness-105 shadow-slate-200 rounded-lg p-5">
-          <Doughnutchart data={doughnutData} />
-
-          <Linechart data={lineData} />
+        <div className="h-fit w-1/2 flex md:flex-row lg:flex-col lg:mr-5">
+          <div className="h-fit w-full cursor-pointer shadow-lg hover:brightness-105 shadow-slate-200 rounded-lg p-5 m-5">
+            <Doughnutchart data={doughnutData} />
+          </div>
+          <div className="h-fit w-fit cursor-pointer shadow-lg hover:brightness-105 shadow-slate-200 rounded-lg p-5 m-5">
+            <Linechart data={lineData} />
+          </div>
         </div>
         <Barchart data={barData} />
       </main>

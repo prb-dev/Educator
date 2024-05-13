@@ -34,11 +34,6 @@ function Login() {
       localStorage.setItem("token", token);
 
       console.log(response.data);
-      navigate("/StudentDashboard");
-
-
-
-
     } catch (error) {
       console.error("Error Login:", error.message);
     }

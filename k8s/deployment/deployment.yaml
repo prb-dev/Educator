@@ -1,0 +1,193 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: user-deployment
+  namespace: cms-namespace
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: user
+  template:
+    metadata:
+      labels:
+        app: user
+    spec:
+      containers:
+      - name: user
+        image: cms-user
+        imagePullPolicy: Never
+        resources:
+          limits:
+            memory: "128Mi"
+            cpu: "500m"
+        ports:
+        - containerPort: 8008
+
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: analyse-deployment
+  namespace: cms-namespace
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: analyse
+  template:
+    metadata:
+      labels:
+        app: analyse
+    spec:
+      containers:
+      - name: analyse
+        image: cms-analyse
+        imagePullPolicy: Never
+        resources:
+          limits:
+            memory: "128Mi"
+            cpu: "500m"
+        ports:
+        - containerPort: 8003
+
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: course-deployment
+  namespace: cms-namespace
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: course
+  template:
+    metadata:
+      labels:
+        app: course
+    spec:
+      containers:
+      - name: course
+        image: cms-course
+        imagePullPolicy: Never
+        resources:
+          limits:
+            memory: "128Mi"
+            cpu: "500m"
+        ports:
+        - containerPort: 8004
+
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: enrollment-deployment
+  namespace: cms-namespace
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: enrollment
+  template:
+    metadata:
+      labels:
+        app: enrollment
+    spec:
+      containers:
+      - name: enrollment
+        image: cms-enrollment
+        imagePullPolicy: Never
+        resources:
+          limits:
+            memory: "128Mi"
+            cpu: "500m"
+        ports:
+        - containerPort: 8002
+
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: notification-deployment
+  namespace: cms-namespace
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: notification
+  template:
+    metadata:
+      labels:
+        app: notification
+    spec:
+      containers:
+      - name: notification
+        image: cms-notification
+        imagePullPolicy: Never
+        resources:
+          limits:
+            memory: "128Mi"
+            cpu: "500m"
+        ports:
+        - containerPort: 8007
+
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: payment-deployment
+  namespace: cms-namespace
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: payment
+  template:
+    metadata:
+      labels:
+        app: payment
+    spec:
+      containers:
+      - name: payment
+        image: cms-payment
+        imagePullPolicy: Never
+        resources:
+          limits:
+            memory: "128Mi"
+            cpu: "500m"
+        ports:
+        - containerPort: 8006
+
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: schedule-deployment
+  namespace: cms-namespace
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: schedule
+  template:
+    metadata:
+      labels:
+        app: schedule
+    spec:
+      containers:
+      - name: schedule
+        image: cms-schedule
+        imagePullPolicy: Never
+        resources:
+          limits:
+            memory: "128Mi"
+            cpu: "500m"
+        ports:
+        - containerPort: 8000

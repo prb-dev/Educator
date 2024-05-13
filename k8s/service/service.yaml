@@ -1,0 +1,89 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: user-service
+  namespace: cms-namespace
+spec:
+  selector:
+    app: user
+  ports:
+    - port: 8008
+      targetPort: 8008
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: analyse-service
+  namespace: cms-namespace
+spec:
+  selector:
+    app: analyse
+  ports:
+    - port: 8003
+      targetPort: 8003
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: course-service
+  namespace: cms-namespace
+spec:
+  selector:
+    app: course
+  ports:
+    - port: 8004
+      targetPort: 8004
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: enrollment-service
+  namespace: cms-namespace
+spec:
+  selector:
+    app: enrollment
+  ports:
+    - port: 8002
+      targetPort: 8002
+      
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: notification-service
+  namespace: cms-namespace
+spec:
+  selector:
+    app: notification
+  ports:
+    - port: 8007
+      targetPort: 8007
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: payment-service
+  namespace: cms-namespace
+spec:
+  selector:
+    app: payment
+  ports:
+    - port: 8006
+      targetPort: 8006
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: schedule-service
+  namespace: cms-namespace
+spec:
+  selector:
+    app: schedule
+  ports:
+    - port: 8000
+      targetPort: 8000
