@@ -26,7 +26,9 @@ function Signup() {
       console.log(response.data);
 
       // Redirect to the login page
-      navigate("/");
+ 
+      navigate('/');
+ 
     } catch (error) {
       if (error.response) {
         // The request was made and the server responded with a status code

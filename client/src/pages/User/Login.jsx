@@ -4,17 +4,14 @@ import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { signinStart, signinSuccess } from "../../redux/user/userSlice.js";
 import { Button } from "@mui/material";
- 
- 
-import ReactPlayer from 'react-player';
- 
+
+import ReactPlayer from "react-player";
 
 function Login() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
   const dispatch = useDispatch();
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
@@ -34,14 +31,16 @@ function Login() {
       localStorage.setItem("token", token);
 
       console.log(response.data);
+ 
+      navigate("/StudentDashboard");
+ 
     } catch (error) {
       console.error("Error Login:", error.message);
     }
   };
 
   return (
-    <div className="h-screen flex flex-col items-center justify-center bg-cover bg-opacity-60 bg-center text-blue-500 relative" >
-       
+    <div className="h-screen flex flex-col items-center justify-center bg-cover bg-opacity-60 bg-center text-blue-500 relative">
       <a className="text-5xl mb-12 font-bold">EDUCATOR</a>
       <h1 className="text-4xl mb-8">Login</h1>
       <form onSubmit={handleSubmit} className="text-center rounded-lg">
