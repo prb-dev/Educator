@@ -12,7 +12,7 @@ const title = {
 export default function NewCoursesCards() {
   const [courseData, setCourseData] = useState([]);
   useEffect(() => {
-    fetch("http://localhost:8004/course")
+    fetch("http://localhost:80/course")
       .then((res) => res.json())
       .then((data) => {
         data.forEach((d) => {
