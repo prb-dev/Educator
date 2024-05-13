@@ -78,7 +78,7 @@ exports.logIn = async (req, res) => {
       process.env.JWT_SECRET
     );
 
-    res.status(200).json({ message: "Logged in successfully", token, user });
+    res.cookie("token", token, { httpOnly: true }).status(200).json({ message: "Logged in successfully", token, user });
   } catch (error) {
     res.status(500).json({ message: "Error logging in", error: error.message });
   }
