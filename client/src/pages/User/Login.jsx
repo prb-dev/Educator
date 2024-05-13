@@ -17,7 +17,7 @@ function Login() {
     try {
       dispatch(signinStart());
 
-      const response = await axios.post("http://localhost:8008/user/login", {
+      const response = await axios.post("http://localhost:80/user/login", {
         username,
         password,
       });
@@ -31,8 +31,6 @@ function Login() {
       localStorage.setItem("token", token);
 
       console.log(response.data);
- 
-      navigate("/StudentDashboard");
  
     } catch (error) {
       console.error("Error Login:", error.message);

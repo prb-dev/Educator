@@ -137,7 +137,7 @@ export default function EditCourse() {
     console.log("Data", data);
     try {
       const response = await axios.put(
-        `http://localhost:8004/course/${courseData._id}`,
+        `http://localhost:80/course/${courseData._id}`,
         data
       );
       console.log(response);

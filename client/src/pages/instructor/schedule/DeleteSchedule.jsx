@@ -56,7 +56,7 @@ export default function DeleteSchedule() {
         if (data.errorMessage)
           messageApi.open({
             type: "error",
-            content: "Failes to delete the schedule",
+            content: "Failed to delete the schedule",
           });
         else
           messageApi.open({

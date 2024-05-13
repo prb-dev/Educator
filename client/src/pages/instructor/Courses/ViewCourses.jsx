@@ -62,7 +62,7 @@ export default function ViewCourses() {
   const handleGetCourses = async (id) => {
     try {
       const response = await axios.get(
-        `http://localhost:8004/course/instructor/${id}`
+        `http://localhost:80/course/instructor/${id}`
       );
       console.log(response.data);
       setCourseData(response.data);
@@ -86,7 +86,7 @@ export default function ViewCourses() {
   const handleDelete = () => {
     console.log("Delete", selectedCourse);
     axios
-      .delete(`http://localhost:8004/course/${selectedCourse._id}`)
+      .delete(`http://localhost:80/course/${selectedCourse._id}`)
       .then((response) => {
         console.log(response.data);
         handleGetCourses(user.user._id);

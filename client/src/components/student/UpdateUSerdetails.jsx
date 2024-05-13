@@ -25,7 +25,7 @@ function UpdateUserDetails() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post(`http://localhost:8008/user/UpdateuserByID/${user.user._id}`, formData);
+      const response = await axios.post(`http://localhost:80/user/UpdateuserByID/${user.user._id}`, formData);
       console.log(response.data);
       setChangesPending(true); // Set changes pending flag to true upon successful submission
     } catch (error) {

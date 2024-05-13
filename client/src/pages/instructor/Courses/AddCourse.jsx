@@ -126,7 +126,7 @@ export default function AddCourse() {
   const handleAddCourse = async (data) => {
     console.log("Data", data);
     try {
-      const response = await axios.post("http://localhost:8004/course/", data);
+      const response = await axios.post("http://localhost:80/course/", data);
       console.log(response);
       setCourseCreated(true);
       setCourse(response.data);

@@ -33,7 +33,7 @@ export default function PaymentCancel() {
     } else {
       try {
         const response = await axios.post(
-          "http://localhost:8007/send_email/event_handler",
+          "http://localhost:80/notification/send_email/event_handler",
           payload
         );
         console.log(response);

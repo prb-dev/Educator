@@ -14,14 +14,14 @@ const CourseDetails = () => {
     const fetchCourseDetails = async () => {
       try {
         const courseResponse = await axios.get(
-          `http://localhost:8004/course/${id}`
+          `http://localhost:80/course/${id}`
         );
         setCourse(courseResponse.data);
         setLoading(false);
 
         // Fetch instructor details once the course details are fetched
         const instructorResponse = await axios.get(
-          `http://localhost:8008/user/getUserById/${courseResponse.data.instructor}`
+          `http://localhost:80/user/getUserById/${courseResponse.data.instructor}`
         );
         setInstructor(instructorResponse.data.user);
       } catch (error) {

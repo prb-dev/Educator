@@ -23,7 +23,7 @@ const FetchEnrolledCourse = () => {
 
         const coursePromises = courseIds.map(async (courseId) => {
           try {
-            const courseResponse = await axios.get(`http://localhost:8004/course/${courseId}`);
+            const courseResponse = await axios.get(`http://localhost:80/course/${courseId}`);
             return courseResponse.data; // Return the entire course object
           } catch (error) {
             console.error(`Error fetching course with ID ${courseId}:`, error.message);
