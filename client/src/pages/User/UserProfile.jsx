@@ -1,4 +1,5 @@
 import Progress from "../../components/charts/Progress";
+import UpdateUserDetails from "../../components/student/UpdateUSerdetails";
 import { useSelector } from 'react-redux';
 
 import FetchEnrolledCourse from "../../components/student/FetchEnrolledCourse";
@@ -8,7 +9,7 @@ import Calendar from 'react-calendar';
 
 
 
-export default function DashboardS() {
+export default function UserProfile() {
   const currentDate = new Date().toLocaleDateString();
   const [date, setDate] = useState(new Date());
 
@@ -34,8 +35,9 @@ export default function DashboardS() {
     <div className="min-h-screen pt-20 bg-blue-50 pt-10 px-4 sm:px-6 lg:px-8">
       <div className="flex items-center justify-between shadow-lg p-10 shadow-lg rounded-lg bg-white">
         <div className="text-5xl font-semibold text-gray-800">
-          {currentDate}
-          <a className="text-blue-500   ">&nbsp; STUDENT DASHBOARD </a> 
+          
+          <a className="text-blue-500   ">&nbsp; {user.user.username} </a>
+          
         </div>
         <div className="flex items-center space-x-4">
           <div className="text-lg font-semibold text-gray-800">
@@ -46,9 +48,21 @@ export default function DashboardS() {
       </div>
 
       <div className="flex mt-10">
-        <div className="w-3/4 mr-4">
+  <div className="w-3/4 mr-4">
+
+
+
+  <div className="shadow-lg pt-10 pb-10 bg-white rounded-lg">
+
+            <a className="text-3xl p-5   ">Update Your Details Here</a>
+          </div>
+
+
+
+
+
           <div className="shadow-lg bg-white rounded-lg">
-            <FetchEnrolledCourse />
+            <UpdateUserDetails/>
           </div>
         </div>
 

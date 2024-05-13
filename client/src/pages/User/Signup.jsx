@@ -6,6 +6,7 @@ import { Button } from "@mui/material";
 
 function Signup() {
   const navigate = useNavigate();
+
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [email, setEmail] = useState("");
@@ -57,24 +58,27 @@ function Signup() {
           placeholder="Username"
           value={username}
           onChange={(e) => setUsername(e.target.value)}
-          className="input-field bg-gray-100 pl-10 pr-10 mb-4 rounded-lg border border-gray-500"
+          className="input-field p-1 bg-gray-100 pl-10 pr-10 mb-4 rounded-lg border border-gray-500"
         />
+        <br></br>
         <input
           type="password"
           placeholder="Password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
-          className="input-field bg-gray-100 pl-10 pr-10 mb-4 rounded-lg border border-gray-500"
+          className="input-field p-1 bg-gray-100 pl-10 pr-10 mb-4 rounded-lg border border-gray-500"
         />
+        <br></br>
         <input
           type="email"
           placeholder="Email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
-          className="input-field bg-gray-100 pl-10 pr-10 mb-4 rounded-lg border border-gray-500"
+          className="input-field p-1 bg-gray-100 pl-10 pr-10 mb-4 rounded-lg border border-gray-500"
         />
-        <div className="flex items-center mb-4">
-          <label className="mr-4">
+        <br></br>
+        <div className="flex   items-center mb-4" >
+          <label className="mr-4 p-2">
             <input
               type="radio"
               name="role"

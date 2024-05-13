@@ -5,6 +5,7 @@ const router = express.Router();
 const {
   signUp,
   deleteUser,
+  updateUserByID,
   getAllUsers,
   logIn,
   protectedRoute,
@@ -14,6 +15,7 @@ const {
 } = require("../controllers/UserManegementcontroller");
 
 router.post("/signup", signUp);
+router.post("/UpdateuserByID/:userId", updateUserByID);
 router.post("/login", logIn);
 router.get('/getCoursesByID/', getCoursesOfUser);
 router.get("/getAllUsers", getAllUsers);

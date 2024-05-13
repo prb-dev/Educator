@@ -1,5 +1,7 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+ 
 import CourseDetails from "./pages/UserViewCourses/courses.jsx";
+import UserProfile from "./pages/User/UserProfile.jsx";
 import "./index.css";
 import Dashboard from "./pages/instructor/Dashboard.jsx";
 import Sidebar from "./components/Sidebar.jsx";
@@ -73,14 +75,19 @@ function App() {
               <Layout className="bg-gradient-to-r from-slate-200 to-white">
                 <Routes>
                   <Route path="/" element={<Home />} />
+                   
                   <Route
                     path="/student/course/:courseId"
                     element={<SingleCourse />}
                   />
                    <Route path="/courses/:id"  element={<CourseDetails />} />  
                   <Route path="/courses" element={<AllCourses />} />
+ 
+                  <Route path="/StudentDashboard" element={<DashboardS/>} />
+ 
                   <Route path="/StudentDashboard" element={<DashboardS />} />
-
+                  <Route path="/Userprofile" element={<UserProfile />} />
+ 
                   <Route path="/payment-cancel" element={<PaymentCancel />} />
                   <Route path="/success-payment" element={<SuccessPayment />} />
                 </Routes>
@@ -92,6 +99,7 @@ function App() {
         <Layout>
           <Routes>
             <Route path="/" element={<Login />} />
+           
             <Route path="/Signup" element={<Signup />} />
           </Routes>
         </Layout>

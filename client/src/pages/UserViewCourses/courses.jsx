@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useParams } from "react-router-dom";
+import ReactPlayer from 'react-player'
 
 const CourseDetails = () => {
   const { id } = useParams();
@@ -78,6 +79,31 @@ const CourseDetails = () => {
         </div>
         <p className="mt-2 text-sm">{progressPercentage}% Complete</p>
       </div>
+<hr></hr>
+
+      <h1 className="text-3xl mt-20 font-bold  text-black pt-10 pb-10 ">Watch Course Content</h1>
+      <div className="inline-flex bg-white shadow-lg rounded-md  p-10">
+  <div className="flex bg-white h-auto w-1/2 rounded-md overflow-hidden shadow-md">
+    <div>
+      <ReactPlayer
+        url={course.lectureVideosUrl}
+        controls={true}
+        width='100%'
+        height='100%'
+      />
+    </div>
+  </div>
+  <div className="  p-10 ml-10 bg-white h-auto w-1/2 rounded-md overflow-hidden shadow-lg">
+ 
+    <p className="text-2xl  font-bold text-black">Lecture Notes </p>
+    
+    <a className="text-xl  font-bold text-black"><br></br>{course.name}</a>
+     <br></br>
+     <div className="mt-20 bg-blue-500 p-5 rounded-md w-3/4 ">
+  <a href={course.lectureNotesUrl[0]} className = " text-white mt-10 " target="_blank" rel="noopener noreferrer">Open Lecture Notes</a>
+  </div>
+  </div>
+</div> 
     </div>
   );
 };
