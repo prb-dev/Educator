@@ -60,25 +60,25 @@ export default function SuccessPayment() {
     }
   };
 
-  const sendEmail = async (payload) => {
-    console.log("Sending email");
-    if (!payload) {
-      console.log("No payment data found");
-      return;
-    } else {
-      try {
-        const response = await axios.post(
-          "http://localhost:8007/send_email/event_handler",
-          payload
-        );
-        console.log(response);
-        //clear paymentData from local storage
-        localStorage.removeItem("paymentData");
-      } catch (error) {
-        console.log(error);
-      }
-    }
-  };
+  // const sendEmail = async (payload) => {
+  //   console.log("Sending email");
+  //   if (!payload) {
+  //     console.log("No payment data found");
+  //     return;
+  //   } else {
+  //     try {
+  //       const response = await axios.post(
+  //         "http://localhost:8007/send_email/event_handler",
+  //         payload
+  //       );
+  //       console.log(response);
+  //       //clear paymentData from local storage
+  //       localStorage.removeItem("paymentData");
+  //     } catch (error) {
+  //       console.log(error);
+  //     }
+  //   }
+  // };
 
   useEffect(() => {
     //get paymentData from local storage
@@ -104,11 +104,11 @@ export default function SuccessPayment() {
       amount: data.amount,
     };
 
-    const emailPayload = {
-      receiverEmail: data.user.email,
-      courseName: data.course.name,
-      event: "ENROLL_SUCCESS",
-    };
+    // const emailPayload = {
+    //   receiverEmail: data.user.email,
+    //   courseName: data.course.name,
+    //   event: "ENROLL_SUCCESS",
+    // };
 
     createNewPaymentInDb(formattedPaymentData);
     // sendEmail(emailPayload);
