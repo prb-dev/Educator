@@ -186,7 +186,7 @@ export default function AddSchedule() {
 
   const createSchedule = () => {
     setLoading(true);
-    fetch("http://localhost:80/schedule/", {
+    fetch(`http://localhost:80/schedule/${user.user._id}`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

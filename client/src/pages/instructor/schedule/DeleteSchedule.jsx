@@ -44,7 +44,7 @@ export default function DeleteSchedule() {
 
   const deleteSchedule = () => {
     setLoading(true);
-    fetch(`http://localhost:80/schedule/${course.schedule}/${course._id}`, {
+    fetch(`http://localhost:80/schedule/${user.user._id}/${course.schedule}/${course._id}`, {
       method: "DELETE",
       headers: {
         "Content-Type": "application/json",
