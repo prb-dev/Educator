@@ -32,8 +32,8 @@ export default function UserProfile() {
   };
 
   return (
-    <div className="min-h-screen pt-20 bg-blue-50 pt-10 px-4 sm:px-6 lg:px-8">
-      <div className="flex items-center justify-between shadow-lg p-10 shadow-lg rounded-lg bg-white">
+    <div className="min-h-screen bg-blue-50 pt-10 px-4 sm:px-6 lg:px-8">
+      <div className="flex items-center justify-between shadow-lg p-10 rounded-lg bg-white">
         <div className="text-5xl font-semibold text-gray-800">
           
           <a className="text-blue-500   ">&nbsp; {user.user.username} </a>
