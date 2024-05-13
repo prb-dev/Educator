@@ -22,7 +22,7 @@ export default function SuccessPayment() {
     } else {
       try {
         const response = await axios.post(
-          "http://localhost:8006/payment/new",
+          "http://localhost:80/payment/new",
           paymentData
         );
         sucessTost();

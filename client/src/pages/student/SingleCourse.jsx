@@ -73,7 +73,7 @@ export default function SingleCourse() {
     localStorage.setItem("paymentData", JSON.stringify(data));
 
     try {
-      const response = axios.post("http://localhost:8006/payment/stripe", data);
+      const response = axios.post("http://localhost:80/payment/stripe", data);
 
       response.then((res) => {
         console.log(res);
