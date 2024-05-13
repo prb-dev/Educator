@@ -1,13 +1,10 @@
-// controllers/authController.js
-
 const bcrypt = require("bcryptjs");
-const User = require("../models/User.js")
+const User = require("../models/User.js");
 const jwt = require("jsonwebtoken");
 const Service = require("../services/UserManagement.service.js");
 
 const service = new Service();
 
-// Sign up
 exports.signUp = async (req, res) => {
   try {
     const { username, password, Email, role } = req.body;
@@ -27,7 +24,6 @@ exports.signUp = async (req, res) => {
   }
 };
 
-
 //get courses of users
 
 exports.getCoursesOfUser = async (req, res) => {
@@ -36,12 +32,12 @@ exports.getCoursesOfUser = async (req, res) => {
     if (!user) {
       return res.status(404).json({
         success: false,
-        message: 'User not found',
+        message: "User not found",
       });
     }
- 
+
     const courseIds = user.courses;
- 
+
     const courses = await Course.find({ _id: { $in: courseIds } });
 
     res.status(200).json({
@@ -119,12 +115,9 @@ exports.updateUserByID = async (req, res) => {
     const userId = req.params.userId;
     const updateFields = req.body;
 
-    // Check if the request body contains a password field
     if (updateFields.password) {
-      // Hash the password
       const hashedPassword = await bcrypt.hash(updateFields.password, 10); // 10 is the salt rounds
 
-      // Replace the plain password with the hashed password
       updateFields.password = hashedPassword;
     }
 
@@ -204,7 +197,6 @@ exports.getStudentsByCid = async (req, res) => {
   }
 };
 
-// Protected route
 exports.protectedRoute = (req, res) => {
   res.status(200).json({ message: "You have accessed the protected route" });
 };

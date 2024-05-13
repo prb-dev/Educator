@@ -100,7 +100,7 @@ const CourseDetails = () => {
     <a className="text-xl  font-bold text-black"><br></br>{course.name}</a>
      <br></br>
      <div className="mt-20 bg-blue-500 p-5 rounded-md w-3/4 ">
-  <a href={course.lectureNotesUrl[0]} className = " text-white mt-10 " target="_blank" rel="noopener noreferrer">Open Lecture Notes</a>
+  <a href="https://firebasestorage.googleapis.com/v0/b/cms-ds-f9841.appspot.com/o/videos%2FMLBOOK.pdf?alt=media&token=eb873908-eb77-4fda-8e33-c5b47e1a8b5e">Open Lecture Notes</a>
   </div>
   </div>
 </div> 
