@@ -4,16 +4,32 @@ import { customError } from "../utils/error.js";
 
 class ScheduleService {
   //this function adds the schedule to the db
-  async addSchedule(schedule) {
+  async addSchedule(iid, schedule) {
+    //payload for getting permission
+    let requestPayload = {
+      event: "INSTRUCTOR_PERMISSION",
+      iid,
+    };
+
+    //send payload to the user queue and getting permission
+    const permission = await RPCRequest(
+      process.env.USER_QUEUE_NAME,
+      requestPayload
+    );
+
+    if (!permission) {
+      throw customError(401, "Only instructors can perform this task.");
+    }
+
     //calling conflictCheck to check any overlaps
     this.conflictCheck(schedule);
-    
+
     const { course, days } = schedule;
     const newSchedule = new Schedule({ course, days });
     await newSchedule.save();
 
     //payload to save schedule id in course db
-    let requestPayload = {
+    requestPayload = {
       event: "SAVE_SCHEDULE",
       cid: course,
       sid: newSchedule._id,
@@ -26,11 +42,27 @@ class ScheduleService {
   }
 
   //this function deletes the schedule from db
-  async deleteSchedule(scid, cid) {
+  async deleteSchedule(iid, scid, cid) {
+    //payload for getting permission
+    let requestPayload = {
+      event: "INSTRUCTOR_PERMISSION",
+      iid,
+    };
+
+    //send payload to the user queue and getting permission
+    const permission = await RPCRequest(
+      process.env.USER_QUEUE_NAME,
+      requestPayload
+    );
+
+    if (!permission) {
+      throw customError(401, "Only instructors can perform this task.");
+    }
+
     await Schedule.findByIdAndDelete(scid);
 
     //payload to remove the schedule id from course db
-    let requestPayload = {
+    requestPayload = {
       event: "DELETE_SCHEDULE",
       cid,
     };
@@ -148,7 +180,23 @@ class ScheduleService {
   }
 
   //this function returns a specific schedule
-  async getSchedule(cid) {
+  async getSchedule(iid, cid) {
+    //payload for getting permission
+    let requestPayload = {
+      event: "INSTRUCTOR_PERMISSION",
+      iid,
+    };
+
+    //send payload to the user queue and getting permission
+    const permission = await RPCRequest(
+      process.env.USER_QUEUE_NAME,
+      requestPayload
+    );
+
+    if (!permission) {
+      throw customError(401, "Only instructors can perform this task.");
+    }
+
     const schedule = await Schedule.findOne({
       course: cid,
     });
@@ -156,7 +204,23 @@ class ScheduleService {
   }
 
   //this function updates a schedule
-  async updateSchedule(schedule) {
+  async updateSchedule(iid, schedule) {
+    //payload for getting permission
+    let requestPayload = {
+      event: "INSTRUCTOR_PERMISSION",
+      iid,
+    };
+
+    //send payload to the user queue and getting permission
+    const permission = await RPCRequest(
+      process.env.USER_QUEUE_NAME,
+      requestPayload
+    );
+
+    if (!permission) {
+      throw customError(401, "Only instructors can perform this task.")
+    }
+
     //calling conflictCheck to check any overlaps
     this.conflictCheck(schedule);
 

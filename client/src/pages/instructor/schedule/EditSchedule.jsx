@@ -126,7 +126,7 @@ export default function EditSchedule() {
   useEffect(() => {
     setLoading(true);
     if (course)
-      fetch(`http://localhost:80/schedule/${course}`)
+      fetch(`http://localhost:80/schedule/${user.user._id}/${course}`)
         .then((res) => res.json())
         .then((data) => {
           setSchedule(data);
@@ -204,7 +204,7 @@ export default function EditSchedule() {
 
   const upateSchedule = () => {
     setLoading(true);
-    fetch(`http://localhost:80/schedule/${course}`, {
+    fetch(`http://localhost:80/schedule/${user.user._id}/${course}`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
