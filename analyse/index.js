@@ -3,17 +3,9 @@ import mongoose from "mongoose";
 import dotenv from "dotenv";
 import analyseRouter from "./routes/analyse.route.js";
 import cors from "cors";
+import cookieParser from "cookie-parser";
 
 dotenv.config();
-
-mongoose
-  .connect(process.env.MONGODB_URI)
-  .then(() => {
-    console.log("connected to mongodb");
-  })
-  .catch((error) => {
-    console.log(error);
-  });
 
 const app = express();
 
@@ -23,6 +15,7 @@ app.listen(8003, () => {
 
 app.use(express.json());
 app.use(cors());
+app.use(cookieParser());
 
 app.use("/analyse", analyseRouter);
 

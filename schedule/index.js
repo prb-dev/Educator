@@ -5,6 +5,7 @@ import scheduleRouter from "./routes/schedule.route.js";
 import { RPCObserver } from "./utils/message passing/rabbit_mq.js";
 import cors from "cors";
 import ScheduleService from "./services/schedule.service.js";
+import cookieParser from "cookie-parser";
 
 dotenv.config();
 
@@ -18,6 +19,7 @@ mongoose
   });
 
 const app = express();
+app.use(cookieParser());
 
 app.listen(8000, () => {
   console.log("schedule service is running on port 8000");
