@@ -71,8 +71,12 @@ export default function Students() {
   const handleOpen = (uid) => {
     setLoading(true);
     setOpen(true);
-
-    fetch(`http://localhost:80/analyse/${uid}/${cid}`)
+    const token = localStorage.getItem("token");
+    fetch(`http://localhost:80/analyse/${uid}/${cid}`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    })
       .then((res) => res.json())
       .then((data) => {
         setLecProg(Math.ceil(data.lectureProgress * 100));

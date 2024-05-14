@@ -186,10 +186,12 @@ export default function AddSchedule() {
 
   const createSchedule = () => {
     setLoading(true);
+    const token = localStorage.getItem("token");
     fetch(`http://localhost:80/schedule/${user.user._id}`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
       },
       body: JSON.stringify({ schedule: schedule }),
     })

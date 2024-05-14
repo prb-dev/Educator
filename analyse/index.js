@@ -17,7 +17,7 @@ app.listen(8003, () => {
 
 //using important packages
 app.use(express.json());
-app.use(cors());
+app.use(cors({ origin: "http://localhost:8081", credentials: true }));
 app.use(cookieParser());
 
 app.use("/analyse", analyseRouter);

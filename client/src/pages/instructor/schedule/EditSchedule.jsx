@@ -125,8 +125,13 @@ export default function EditSchedule() {
 
   useEffect(() => {
     setLoading(true);
+    const token = localStorage.getItem("token");
     if (course)
-      fetch(`http://localhost:80/schedule/${user.user._id}/${course}`)
+      fetch(`http://localhost:80/schedule/${user.user._id}/${course}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
         .then((res) => res.json())
         .then((data) => {
           setSchedule(data);
@@ -204,10 +209,12 @@ export default function EditSchedule() {
 
   const upateSchedule = () => {
     setLoading(true);
+    const token = localStorage.getItem("token");
     fetch(`http://localhost:80/schedule/${user.user._id}/${course}`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
       },
       body: JSON.stringify({ schedule: schedule }),
     })

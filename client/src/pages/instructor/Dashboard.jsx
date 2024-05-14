@@ -30,7 +30,12 @@ export default function Dashboard() {
 
   useEffect(() => {
     setLoading(true);
-    fetch(`http://localhost:80/analyse/dashboard/${user.user._id}`)
+    const token = localStorage.getItem("token");
+    fetch(`http://localhost:80/analyse/dashboard/${user.user._id}`,{
+      headers: {
+        'Authorization': `Bearer ${token}`
+      }
+    })
       .then((res) => res.json())
       .then((data) => {
         setTotalStudents(data.totalStudents);

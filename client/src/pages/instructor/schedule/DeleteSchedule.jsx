@@ -44,12 +44,17 @@ export default function DeleteSchedule() {
 
   const deleteSchedule = () => {
     setLoading(true);
-    fetch(`http://localhost:80/schedule/${user.user._id}/${course.schedule}/${course._id}`, {
-      method: "DELETE",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    })
+    const token = localStorage.getItem("token");
+    fetch(
+      `http://localhost:80/schedule/${user.user._id}/${course.schedule}/${course._id}`,
+      {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    )
       .then((res) => res.json())
       .then((data) => {
         setLoading(false);

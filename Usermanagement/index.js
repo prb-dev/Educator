@@ -1,9 +1,9 @@
-const express = require('express');
-const mongoose = require('mongoose');
-const dotenv = require('dotenv');
-const cors = require('cors');
-const UserManagementRouter = require('./routes/UserManagement.route');
-const { RPCObserver } = require('./utils/message passing/rabbit_mq.js');
+const express = require("express");
+const mongoose = require("mongoose");
+const dotenv = require("dotenv");
+const cors = require("cors");
+const UserManagementRouter = require("./routes/UserManagement.route");
+const { RPCObserver } = require("./utils/message passing/rabbit_mq.js");
 
 dotenv.config();
 
@@ -25,7 +25,7 @@ app.listen(8008, () => {
 RPCObserver(process.env.USER_QUEUE_NAME);
 
 app.use(express.json());
-app.use(cors());
+app.use(cors({ origin: "http://localhost:8081", credentials: true }));
 
 app.use("/user", UserManagementRouter);
 

@@ -4,6 +4,7 @@ import {
   enrollmentConflictCheck,
   unenroll,
 } from "../controllers/enrollment.controller.js";
+import { verifyToken } from "../utils/verifyToken.js";
 
 const router = express.Router();
 
@@ -11,9 +12,9 @@ const router = express.Router();
 router.post("/validate/:uid/:cid", enrollmentConflictCheck);
 
 //route to enroll a student
-router.post("/:uid/:cid", enroll);
+router.post("/:uid/:cid", verifyToken, enroll);
 
 //route to unenroll a student
-router.post("/unenroll/:uid/:cid", unenroll);
+router.post("/unenroll/:uid/:cid", verifyToken, unenroll);
 
 export default router;
